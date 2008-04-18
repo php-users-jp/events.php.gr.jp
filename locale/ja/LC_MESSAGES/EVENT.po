@@ -1,0 +1,11 @@
+msgid "Recent News"
+msgstr "新着News"
+
+msgid "bbb"
+msgstr "bbb_jp"
+
+msgid "Recent Event"
+msgstr "直近のイベント"
+
+msgid "Event List"
+msgstr "イベント一覧"
