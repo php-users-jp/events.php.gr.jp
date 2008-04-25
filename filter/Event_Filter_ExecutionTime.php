@@ -35,8 +35,7 @@ class Event_Filter_ExecutionTime extends Ethna_Filter
 	 */
 	function preFilter()
 	{
-		$stime = explode(' ', microtime());
-		$stime = $stime[1] + $stime[0];
+		$stime = microtime(true);
 		$this->stime = $stime;
 	}
 
@@ -47,8 +46,7 @@ class Event_Filter_ExecutionTime extends Ethna_Filter
 	 */
 	function postFilter()
 	{
-		$etime = explode(' ', microtime());
-		$etime = $etime[1] + $etime[0];
+		$etime = microtime(true);
 		$time   = round(($etime - $this->stime), 4);
 
 		print "\n<!-- page was processed in $time seconds -->\n";
