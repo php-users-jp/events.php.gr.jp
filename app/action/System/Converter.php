@@ -44,7 +44,7 @@ class Event_Form_SystemConverter extends Haste_ActionForm
  *  @access     public
  *  @package    Event
  */
-class Event_Action_SystemConverter extends Ethna_ActionClass
+class Event_Action_SystemConverter extends Ethna_AuthAdminActionClass
 {
     /**
      *  System_Converterアクションの前処理
