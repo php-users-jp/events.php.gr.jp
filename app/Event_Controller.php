@@ -14,7 +14,7 @@ define('EVENT_VERSION', '1.0.4');
 
 // include_pathの設定(アプリケーションディレクトリを追加)
 $include_paths = array(
-    'system' => ini_get('include_path'),
+    //'system' => ini_get('include_path'), //libとappしかみない
     'app' => BASE . "/app",
     'lib' => BASE . "/lib",
 );
