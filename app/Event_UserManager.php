@@ -59,6 +59,10 @@ class Event_UserManager extends Ethna_AppManager
      */
     function isAdmin($username)
     {
+        if ($this->config->get('typekey_admin') == $username) {
+            return true;
+        }
+
         $query = "SELECT * FROM system WHERE column = ?";
         $row = $this->adodb->getAll($query, array($username));
 
