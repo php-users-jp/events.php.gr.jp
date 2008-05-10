@@ -8,7 +8,6 @@
  *  @version    $Id: app.viewclass.php,v 1.1 2006/08/22 15:52:26 fujimoto Exp $
  */
 
-// {{{ Haste_ViewClass
 /**
  *  viewクラス
  *
@@ -67,7 +66,6 @@ class Haste_ViewClass extends Ethna_ViewClass
     }
     // }}}
 
-    // {{{ getFormInput
     /**
      *  指定されたフォーム項目に対応するフォームタグを取得する
      *
@@ -185,8 +183,11 @@ class Haste_ViewClass extends Ethna_ViewClass
         }
 
     }
-    // }}}
+
+    function _setDefault(&$render)
+    {
+        header('Content-Type: text/html; charset=UTF-8');
+    }
 
 }
-// }}}
 ?>
