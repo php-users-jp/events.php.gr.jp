@@ -167,7 +167,7 @@ class Event_Controller extends Ethna_Controller
          *
          *  'Event_Filter_ExecutionTime',
          */
-         'Event_Filter_Header',
+         'InstallCheck',
     );
 
     /**
