@@ -56,7 +56,7 @@ class Event_Form_AdminAdd extends Haste_ActionForm
  *  @access     public
  *  @package    Event
  */
-class Event_Action_AdminAdd extends Ethna_ActionClass
+class Event_Action_AdminAdd extends Ethna_AuthAdminActionClass
 {
     /**
      *  AdminAddアクションの前処理
