@@ -75,8 +75,8 @@ class Event_Action_EventJoin extends Ethna_AuthActionClass
 
         $this->db = $this->backend->getDB();
 
-        $event = $this->db->getEventFromId($this->event_id);
-        $attendee = $this->db->getEventAttendeeFromId($this->event_id);
+        $event = $this->db->getEventFromId($this->af->get('event_id'));
+        $attendee = $this->db->getEventAttendeeFromId($this->af->get('event_id'));
         foreach ($attendee as $row) {
             if ($row['canceled'] != 1) {
                 $attendee_count++;
