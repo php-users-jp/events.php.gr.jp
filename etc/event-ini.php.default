@@ -11,7 +11,13 @@ $config = array(
     'dsn' => 'sqlite://',
     'theme' => 'phpgrjp',
 
-    'typekey_token' => '',
+    'typekey_admin' => 'your name',
+
+    'auth' => array(
+        'type' => 'typekey',
+        'typekey_token' => 'your token',
+        'author' => 'any', //do not edit
+    ),
 
     'debug' => false,
     'log_facility'  => 'echo',

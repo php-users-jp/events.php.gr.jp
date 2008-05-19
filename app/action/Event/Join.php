@@ -69,10 +69,6 @@ class Event_Action_EventJoin extends Ethna_AuthActionClass
      */
     function prepare()
     {
-        if ($this->af->validate() > 0) {
-            return 'error';
-        }
-
         $this->db = $this->backend->getDB();
 
         $event = $this->db->getEventFromId($this->af->get('event_id'));
@@ -82,7 +78,12 @@ class Event_Action_EventJoin extends Ethna_AuthActionClass
                 $attendee_count++;
             }
         }
+
         if (($event['max_register'] - $attendee_count) <= 0) {
+            $this->ae->add('over_quota', '定員数をオーバーしています');
+        }
+
+        if ($this->af->validate() > 0) {
             return 'error';
         }
 

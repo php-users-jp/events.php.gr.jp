@@ -47,6 +47,17 @@ class Event_Form_Login extends Haste_ActionForm
 class Event_Action_Login extends Ethna_AuthActionClass
 {
     /**
+     * authenticate
+     *
+     * @access public
+     */
+    function authenticate()
+    {
+        //disable authenticate
+        return null;
+    }
+
+    /**
      *  Loginアクションの前処理
      *
      *  @access public
@@ -54,6 +65,17 @@ class Event_Action_Login extends Ethna_AuthActionClass
      */
     function prepare()
     {
+        $config = $this->config->get('auth');
+        $controller =& $this->backend->getController();
+        $plugin     =& $controller->getPlugin();
+        $this->auth =& $plugin->getPlugin('Auth', ucfirst($config['type']));
+
+        $this->af->setApp('login_url', $this->auth->getLoginUrl());
+
+        if (!isset($_GET['name'])) {
+            header('Location: ' . $this->auth->getLoginUrl());
+        }
+
         return null;
     }
 
@@ -65,7 +87,16 @@ class Event_Action_Login extends Ethna_AuthActionClass
      */
     function perform()
     {
-        Event_Util::redirect($this->config->get('base_url'), 2, 'ログインに成功しました。');
+        $result = $this->auth->login();
+        if (!Ethna::isError($result) && $result !== false) {
+            $this->user = $this->backend->getManager('User');
+            $this->session->set('name', $_GET['name']);
+            $this->session->set('nick', $_GET['nick']);
+            $this->session->set('is_admin', $this->user->isAdmin($_GET['name']));
+            $this->redirect();
+        }
+
+        return 'login';
     }
 }
 ?>

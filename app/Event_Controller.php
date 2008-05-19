@@ -14,7 +14,7 @@ define('EVENT_VERSION', '1.0.4');
 
 // include_pathの設定(アプリケーションディレクトリを追加)
 $include_paths = array(
-    //'system' => ini_get('include_path'), //libとappしかみない
+    'system' => ini_get('include_path'), //libとappしかみない
     'app' => BASE . "/app",
     'lib' => BASE . "/lib",
 );
@@ -156,6 +156,24 @@ class Event_Controller extends Ethna_Controller
     );
 
     /**
+     *  @var    array       検索対象となるプラグインのアプリケーションIDのリスト
+     */
+    var $plugin_search_appids = array(
+        /*
+         *  プラグイン検索時に検索対象となるアプリケーションIDのリストを記述します。
+         *
+         *  記述例：
+         *  Common_Plugin_Foo_Bar のような命名のプラグインがアプリケーションの
+         *  プラグインディレクトリに存在する場合、以下のように指定すると
+         *  Common_Plugin_Foo_Bar, EthnaWiki_Plugin_Foo_Bar, Ethna_Plugin_Foo_Bar
+         *  の順にプラグインが検索されます。 
+         *
+         *  'Common', 'EthnaWiki', 'Ethna',
+         */
+        'Event', 'Haste', 'Ethna',
+    );
+
+    /**
      *  @var    array       フィルタ設定
      */
     var $filter = array(
@@ -268,7 +286,6 @@ class Event_Controller extends Ethna_Controller
         $smarty->assign('BASE_URL', $Config->get('base_url') );
     }
     
-    //{{{ _getActionName_Form
     /**
      *  フォームにより要求されたアクション名を返す
      *
@@ -283,7 +300,6 @@ class Event_Controller extends Ethna_Controller
         
         return $arr[1];
     }
-    //}}}
 
     function getTemplateDir()
     {
@@ -295,6 +311,35 @@ class Event_Controller extends Ethna_Controller
         } else {
             return $template . '/event';
         }
+    }
+
+    /**
+     * _activateEthnaManager
+     *
+     */
+    function _activateEthnaManager()
+    {
+        if ($this->config->get('debug') == false) {
+            return;
+        }
+
+        parent::_activateEthnaManager();
+
+        // action設定
+        $this->action['__ethna_gettext__'] = array(
+            'form_name' =>  'Ethna_Form_Gettext',
+            'form_path' =>  sprintf('%s/class/Action/Ethna_Action_Gettext.php', ETHNA_BASE),
+            'class_name' => 'Ethna_Action_Gettext',
+            'class_path' => sprintf('%s/class/Action/Ethna_Action_Gettext.php', ETHNA_BASE),
+        );
+
+        // forward設定
+        $this->forward['__ethna_gettext__'] = array(
+            'forward_path'  => sprintf('%s/tpl/gettext.tpl', ETHNA_BASE),
+            //'view_name'     => 'Ethna_View_Gettext',
+            //'view_path'     => sprintf('%s/class/View/Ethna_View_Gettext.php', ETHNA_BASE),
+        );
+
     }
 }
 ?>
