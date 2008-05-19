@@ -70,7 +70,7 @@
     <td colspan="4">
     {if isset($smarty.session.name)}
       <p><strong>イベントに参加する</strong></p>
-      {if $app.is_over || ($app.attendee_nokori == 0)}
+      {if $app.is_over || ($app.attendee_nokori <= 0)}
       <p>このイベントの募集は終了しました。</p>
         {if $app.joined}
             {if $app.event.private_description}
