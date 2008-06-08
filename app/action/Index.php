@@ -81,6 +81,10 @@ class Event_Action_Index extends Ethna_ActionClass
         
         $recent_event = $this->db->getRecentEvent(5, false, $this->offset);
 
+
+        if (!$recent_event) {
+            return 'index';
+        }
         //strip html tag from description
         foreach ($recent_event as $key => $value) {
             $recent_event[$key]['description'] = strip_tags($value['description']);

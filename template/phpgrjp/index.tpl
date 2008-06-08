@@ -21,6 +21,8 @@
 <tr><th>募集人数</th><td>{$item.max_register}人</td></tr>
 </table>
 <p><a href="{$BASE_URL}/event_show/{$item.id}">このイベントに参加する/詳細を見る</a>
+{foreachelse}
+イベントはありません。
 {/foreach}
 </div>
 <p>
