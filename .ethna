@@ -1,0 +1,4 @@
+[project]
+ethna_version = 2.3.2
+controller_file = "app/Event_Controller.php"
+controller_class = "Event_Controller"
