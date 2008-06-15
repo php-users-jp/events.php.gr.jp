@@ -100,6 +100,12 @@ class Event_Form_EventPost extends Haste_ActionForm
             'form_type' => FORM_TYPE_TEXT,
             'type' => VAR_TYPE_STRING,
         ),
+        'accept_date' => array(
+            'name' => '募集開始日',
+            'required' => true,
+            'form_type' => FORM_TYPE_TEXT,
+            'type' => VAR_TYPE_STRING,
+        ),
         'submit' => array(
             'name' => 'submit',
             'required' => false,

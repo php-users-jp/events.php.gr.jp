@@ -14,8 +14,9 @@
 <h2>Event Entry::{$app.event.name}</h2>
 <dl>
 <dt>イベント内容</dt><dd>{$app_ne.event.description}</dd>
-<dt>イベント開始時間</dt><dd>{$app.event.start_date}</dd>
-<dt>イベント終了時間</dt><dd>{$app.event.end_date}</dd>
+<dt>イベント開催時間</dt><dd>{datespan start=$app.event.start_date end=$app.event.end_date}</dd>
+<!-- <dt>イベント終了時間</dt><dd>{$app.event.end_date}</dd> -->
+<dt>募集開始時間</dt><dd>{$app.event.accept_date}</dd>
 <dt>イベント申し込み締め切り時間</dt><dd>{$app.event.due_date}</dd>
 {if $app_ne.event.map}
 <dt>地図</dt>
@@ -77,22 +78,24 @@
             <p>{$app_ne.event.private_description}</p>
             {/if}
         {/if}
-    {elseif $app.joined}
+      {elseif strtotime($app.event.accept_date) > $smarty.now}
+        <p>このイベントは {$app.event.accept_date} から応募開始します。</p> 
+      {elseif $app.joined}
         {if $app_ne.event.private_description}
           <p>{$app_ne.event.private_description}</p>
         {else}
           <p>あなたはすでにイベントに参加しています。</p>
         {/if}
-    {else}
-    <div class="info">
-      <p>イベントに参加する場合は下のフォームにコメントを書いてjoinボタンを押してください。</p>
-    </div>
+      {else}
+        <div class="info">
+          <p>イベントに参加する場合は下のフォームにコメントを書いてjoinボタンを押してください。</p>
+        </div>
 
-    {form method="post" action="$BASE_URL/event_join"}
-    <input type="hidden" name="event_id" value="{$app.event.id}" />
-    {form_name name="join_comment" }:<br />{form_input name="join_comment" attr='size="100"'} {form_input name="join"}
-    {/form}
-    {/if}
+        {form method="post" action="$BASE_URL/event_join"}
+        <input type="hidden" name="event_id" value="{$app.event.id}" />
+        {form_name name="join_comment" }:<br />{form_input name="join_comment" attr='size="100"'} {form_input name="join"}
+        {/form}
+      {/if}
     {else}
       <div class="info">
         <p>イベントに参加したりコメントする場合は<a href="{$BASE_URL}/login">ログイン</a>してください。</p>

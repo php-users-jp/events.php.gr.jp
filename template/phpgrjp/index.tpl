@@ -15,9 +15,9 @@
 <h3>{$item.name}&nbsp;{$item.date}</h3>
 <p>{$item.description|replace:"\r\n":""|mb_truncate:128}</p>
 <table>
-<tr><th>イベント開始時間</th><td>{$item.start_date}</td></tr>
-<tr><th>イベント終了時間</th><td>{$item.end_date}</td></tr>
-<tr><th>イベント申し込み締め切り時間</th><td>{$item.due_date}</td></tr>
+<tr><th>募集開始</th><td>{$item.accept_date|date_format:"%Y-%m-%d %H:%M"}</td></tr>
+<tr><th>イベント開催時間</th><td>{datespan start=$item.start_date end=$item.end_date}</td></tr>
+<tr><th>イベント申し込み締め切り時間</th><td>{$item.due_date|date_format:"%Y-%m-%d %H:%M"}</td></tr>
 <tr><th>募集人数</th><td>{$item.max_register}人</td></tr>
 </table>
 <p><a href="{$BASE_URL}/event_show/{$item.id}">このイベントに参加する/詳細を見る</a>

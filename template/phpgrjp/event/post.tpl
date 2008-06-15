@@ -27,6 +27,11 @@
 {form_input name="end_date"}
 <input type="button" id="button_end_date" value="timestamp" />
 </dd>
+<dt>{form_name name="accept_date"}</dt>
+<dd>
+{form_input name="accept_date"}
+<input type="button" id="button_accept_date" value="timestamp" />
+</dd>
 <dt>{form_name name="due_date"}</dt>
 <dd>
 {form_input name="due_date"}
@@ -173,9 +178,9 @@ Widget.Dialog.prototype.timestamp = function(msg, options) {
         var option = document.createElement('option');
         option.value = zeropadding(minute, 2);
         option.innerHTML = zeropadding(minute, 2);
-        if (now_minute == minute) {
-          option.setAttribute('selected', 'selected');
-        }
+        //if (now_minute == minute) {
+        //  option.setAttribute('selected', 'selected');
+        //}
         dselect_minute.appendChild(option);
     }
     dselects.appendChild(dselect_minute);
@@ -191,9 +196,9 @@ Widget.Dialog.prototype.timestamp = function(msg, options) {
         var option = document.createElement('option');
         option.value = zeropadding(second, 2);
         option.innerHTML = zeropadding(second, 2);
-        if (now_second == second) {
-          option.setAttribute('selected', 'selected');
-        }
+        //if (now_second == second) {
+        //  option.setAttribute('selected', 'selected');
+        //
         dselect_second.appendChild(option);
     }
     dselects.appendChild(dselect_second);
@@ -281,6 +286,17 @@ Widget.Dialog.prototype.timestamp = function(msg, options) {
     Widget.Dialog.timestamp("TIMESTAMP",{
         onOk: function (val) {
             document.forms[0].due_date.value = val;
+            Widget.Dialog.close();
+        }
+    });
+  };
+  
+  //accept_date
+  var button_accept_date = document.getElementById("button_accept_date");
+  button_accept_date.onclick = function () {
+    Widget.Dialog.timestamp("TIMESTAMP",{
+        onOk: function (val) {
+            document.forms[0].accept_date.value = val;
             Widget.Dialog.close();
         }
     });

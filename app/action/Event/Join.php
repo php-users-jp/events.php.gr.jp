@@ -72,6 +72,11 @@ class Event_Action_EventJoin extends Ethna_AuthActionClass
         $this->db = $this->backend->getDB();
 
         $event = $this->db->getEventFromId($this->af->get('event_id'));
+
+        if (strtotime($event['accept_date']) > time()) {
+            $this->ae->add('accept_date_error', 'まだ募集開始していません。');
+        }
+
         $attendee = $this->db->getEventAttendeeFromId($this->af->get('event_id'));
         foreach ($attendee as $row) {
             if ($row['canceled'] != 1) {
