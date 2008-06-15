@@ -55,10 +55,19 @@ function update($filename, $update_sql)
     $latest_version = max(array_keys($update_sql));
 
     if ($version <= $latest_version) {
+
+        //$sqlite->query("BEGIN;");
         $sql = $update_sql[$version];
         foreach ($sql as $query) {
-            $sqlite->query($query);
+            print "Execute query:{$query}" . PHP_EOL;
+            $result = $sqlite->query($query);
+            if ($result === false) {
+                //print "CATCH ERROR:ROLLBACK" . PHP_EOL;
+                //$sqlite->query("ROLLBACK;");
+            }
         }
+        //$sqlite->query("COMMIT;");
+
     } else {
         print("database is latest\n");
     }

@@ -117,4 +117,65 @@ $sql['0.0.2'][] = <<<EOD
 UPDATE system SET value = "0.0.3" WHERE column = 'version';
 EOD;
 
+/**
+ * 0.0.3 to 0.0.4
+ *
+ * add column
+ */
+$sql['0.0.3'][] = <<<EOD
+CREATE TABLE event_tmp (
+    id INTEGER NOT NULL PRIMARY KEY,
+    author VARCHAR,
+    name VARCHAR(64),
+    max_register INTEGER,
+    description VARCHAR,
+    private_description VARCHAR,
+    map VARCHAR,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    due_date TIMESTAMP,
+    publish_date TIMESTAMP,
+    private INT DEFAULT '0'
+);  
+EOD;
+
+$sql['0.0.3'][] = <<<EOD
+INSERT INTO event_tmp SELECT * FROM event; 
+EOD;
+
+$sql['0.0.3'][] = <<<EOD
+DROP TABLE event; 
+EOD;
+
+$sql['0.0.3'][] = <<<EOD
+CREATE TABLE event (
+    id INTEGER NOT NULL PRIMARY KEY,
+    author VARCHAR,
+    name VARCHAR(64),
+    max_register INTEGER,
+    description VARCHAR,
+    private_description VARCHAR,
+    map VARCHAR,
+    start_date TIMESTAMP,
+    end_date TIMESTAMP,
+    due_date TIMESTAMP,
+    publish_date TIMESTAMP,
+    accept_date TIMESTAMP,
+    private INT DEFAULT '0'
+);
+EOD;
+
+$sql['0.0.3'][] = <<<EOD
+INSERT INTO event SELECT id, author, name, max_register, description, private_description, map, start_date, end_date, due_date, publish_date, '', private FROM event_tmp;
+EOD;
+
+$sql['0.0.3'][] = <<<EOD
+DROP TABLE event_tmp;
+EOD;
+
+//increment version
+$sql['0.0.3'][] = <<<EOD
+UPDATE system SET value = "0.0.4" WHERE column = 'version';
+EOD;
+
 ?>
