@@ -67,6 +67,7 @@ class Event_Action_TrackbackDelete extends Ethna_AuthActionClass
      */
     function prepare()
     {
+        $this->user =& $this->backend->getManager('user');
         if ($this->user->isAdmin($_SESSION['name'])) {
             return null;
         }
