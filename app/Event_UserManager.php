@@ -73,6 +73,24 @@ class Event_UserManager extends Ethna_AppManager
         }
 
     }
+    
+    /**
+     * 
+     *
+     */ 
+    function  isJoined($username, $event_id)
+    {
+        $query = "SELECT * FROM event_attendee WHERE account_name = ? AND event_id = ?";
+        $row = $this->adodb->getAll($query, array($username, $event_id));
+
+        if (count($row) == 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        
+    }
 
     /**
      * getAdminList

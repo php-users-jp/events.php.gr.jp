@@ -119,12 +119,33 @@ class Event_Action_EventShow extends Ethna_ActionClass
                 }
             }
 
+            // UserManager の取得。join状況の判定に用いる
+            $user = $this->backend->getManager('User');
+            $isjoined = ($this->session->isStart()) ? $user->isJoined($_SESSION['name'], $this->id) : false;
+
             if (is_string($event['map'])) {
-                $map = '<script type="text/javascript" src="http://slide.alpslab.jp/scrollmap.js"></script>';
-                $map.= "\n";
-                $map.= "<div class=\"alpslab-slide\">".$event['map'].'</div>';
+
+                if (preg_match('/\(\(\(.+\)\)\)/', $event['map'])
+                    && !$isjoined) {
+                    
+                    $map = "<strong>マップは申し込み完了後・ログイン時に表示されます。</strong>";
+
+                }
+                else {
+                    $event['map'] = preg_replace('/(\(\(\(|\)\)\))/', "", $event['map']);
+
+                    $map = '<script type="text/javascript" src="http://slide.alpslab.jp/scrollmap.js"></script>';
+                    $map.= "\n";
+                    $map.= "<div class=\"alpslab-slide\">".$event['map'].'</div>';
+                }
+
+
             } else {
                 $map = "";
+            }
+            
+            if (!$isjoined) {
+                $event['description'] = preg_replace('/\(\(\(.+\)\)\)/s', "", $event['description']);
             }
 
             $event['description'] = Parser::parseAnubis($event['description']);
