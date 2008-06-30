@@ -10,7 +10,7 @@
 /** アプリケーションベースディレクトリ */
 define('BASE', dirname(dirname(__FILE__)));
 
-define('EVENT_VERSION', '1.0.5');
+define('EVENT_VERSION', '1.0.8');
 
 // include_pathの設定(アプリケーションディレクトリを追加)
 $include_paths = array(
