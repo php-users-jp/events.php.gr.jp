@@ -125,14 +125,14 @@ class Event_Action_EventShow extends Ethna_ActionClass
 
             if (is_string($event['map'])) {
 
-                if (preg_match('/\(\(\(.+\)\)\)/', $event['map'])
+                if (preg_match('/\(\(\(.+?\)\)\)/', $event['map'])
                     && !$isjoined) {
                     
                     $map = "<strong>マップは申し込み完了後・ログイン時に表示されます。</strong>";
 
                 }
                 else {
-                    $event['map'] = preg_replace('/(\(\(\(|\)\)\))/', "", $event['map']);
+                    $event['map'] = str_replace(array("(((",")))"), array("",""), $event['map']);
 
                     $map = '<script type="text/javascript" src="http://slide.alpslab.jp/scrollmap.js"></script>';
                     $map.= "\n";
@@ -145,9 +145,10 @@ class Event_Action_EventShow extends Ethna_ActionClass
             }
             
             if (!$isjoined) {
-                $event['description'] = preg_replace('/\(\(\(.+\)\)\)/s', "", $event['description']);
+                $event['description'] = str_replace(array("(((",")))"), array("",""), preg_replace('/\(\(\(.+?\)\)\)/s', "", $event['description']));
             }
 
+            $event['description'] = str_replace(array("(((",")))"), array("",""), $event['description']);
             $event['description'] = Parser::parseAnubis($event['description']);
 
             if ($trackbacks != false) {
