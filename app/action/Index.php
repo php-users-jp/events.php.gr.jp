@@ -87,7 +87,7 @@ class Event_Action_Index extends Ethna_ActionClass
         }
         //strip html tag from description
         foreach ($recent_event as $key => $value) {
-            $recent_event[$key]['description'] = strip_tags($value['description']);
+            $recent_event[$key]['description'] = strip_tags(preg_replace("/\(\(\(.+\)\)\)/s", "", $value['description']));
         }
 
         $this->af->setApp('recent_news', $this->db->getRecentNews());
