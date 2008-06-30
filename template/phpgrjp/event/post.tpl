@@ -38,7 +38,12 @@
 <input type="button" id="button_due_date" value="timestamp" />
 </dd>
 <dt>{form_name name="max_register"}</dt><dd>{form_input name="max_register"}</dd>
-<dt>{form_name name="description"}</dt><dd>{form_input name="description" rows=9 cols=28}</dd>
+<dt>{form_name name="description"}</dt><dd>{form_input name="description" rows=9 cols=28}
+<br />
+本文中に <strong>(((   )))</strong> で囲う部分を設けることで、「ログイン中かつ参加済み」の人しか見ることのできない
+コメントを設けることができます。<br />
+先日からの、申し込みをせずに来てしまう人問題の対処として、申し込まないと会場が見れないようにしたらどうか、などの意見があり試験的に実装しています。
+</dd>
 <dt>{form_name name="private_description"}</dt><dd>{form_input name="private_description" rows=9 cols=28}</dd>
 <dt>{form_name name="map"}</dt><dd>{form_input name="map"}</dd>
 <dt>{form_name name="private"}</dt><dd>{form_input name="private" default=0}</dd>
@@ -51,7 +56,9 @@
 <h4>Mapについて</h4>
 <p>
 Mapとは地図を貼り付ける機能の事でフォームの中にALPS Labsで提供されているALPSLAB Slideのパラメータ(ex.35/9/23,136/58/34)を
-入力することで地図を表示させる事ができるようになります。
+入力することで地図を表示させる事ができるようになります。<br />
+地図も、 <strong>(((   )))</strong> で囲うと「ログイン中かつ参加済み」の人しか見れません。<br />
+ex.  (((35/9/23,136/58/34)))
 </p>
 <p>
 地図の座標は<a href="http://base.alpslab.jp/">ALPSLAB Base</a>から取得することができます。さらに具体的な説明は<a href="http://www.alpslab.jp/slide_howto.html">ALPSLAB Slide</a>を参照してください。
