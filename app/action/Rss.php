@@ -59,6 +59,8 @@ class Event_Action_Rss extends Ethna_ActionClass
 
         if (is_numeric($id)) {
             return $this->getEvent($id);
+        } elseif ($id == 'trackback') {
+            return $this->getTrackback();
         }
 
         return null;
@@ -147,5 +149,28 @@ class Event_Action_Rss extends Ethna_ActionClass
         return 'rss-event';
     }
 
+    /**
+     *
+     */
+    function getTrackback()
+    {
+        $this->db = $this->backend->getDB();
+        $recent = $this->db->getTrackbackList(20);
+
+        foreach ($recent as $key => $value) {
+            $recent[$key]['pubDate'] = date('r', strtotime($value['receive_time']));
+            $recent[$key]['title'] = $value['title'] . ' - ' . $value['blog_name'];
+            $recent[$key]['receive_time'] = date('[Y-m-d]', strtotime($value['receive_time']));
+            $recent[$key]['url'] = $value['url'];
+        }
+
+        $this->af->setApp('recent', $recent);
+        $this->af->setApp('title', $this->config->get('site_name'));
+
+        //header("Content-type: text/xml;charset=UTF-8");
+        header( "Last-Modified: " . gmdate( "D, d M Y H:i:s", strtotime($recent[0]['publish_date']) ) . " GMT" );
+
+        return 'rss-trackback'; 
+    }
 }
 ?>
