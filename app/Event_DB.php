@@ -235,5 +235,16 @@ class Event_DB extends Ethna_DB_ADOdb
 
         return $this->getAll($query, array($date, $limit));
     }
+
+    function getTrackbackList($limit = 20)
+    {
+        $limit = intval($limit);
+
+        $query = "SELECT trackback.id as id, event_id, url, title, excerpt, blog_name, receive_time, remote_addr, name";
+        $query.= " FROM trackback INNER JOIN event ON trackback.event_id=event.id";
+        $query.= " ORDER BY trackback.id DESC LIMIT ?";
+
+        return $this->getAll($query, array($limit));
+    }
 }
 ?>
