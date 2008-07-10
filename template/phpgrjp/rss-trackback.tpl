@@ -13,9 +13,7 @@
 <guid>{$BASE_URL}/event_show/{$item.event_id}</guid>
 <description>{$item.excerpt}</description>
 <category>TrackBack</category>
-<pubDate>{$item.receive_time}</pubDate>
-<ev:startdate>{$item.startdate}</ev:startdate>
-<ev:enddate>{$item.enddate}</ev:enddate>
+<pubDate>{$item.pubDate}</pubDate>
 </item>
 {/foreach}
 </channel>

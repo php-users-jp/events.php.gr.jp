@@ -160,7 +160,8 @@ class Event_Action_Rss extends Ethna_ActionClass
         foreach ($recent as $key => $value) {
             $recent[$key]['pubDate'] = date('r', strtotime($value['receive_time']));
             $recent[$key]['title'] = $value['title'] . ' - ' . $value['blog_name'];
-            $recent[$key]['receive_time'] = date('[Y-m-d]', strtotime($value['receive_time']));
+            $recent[$key]['pubDate'] = date('r', strtotime($value['receive_time']));
+            $recent[$key]['receive_time'] = date('Y-m-d H:i:s', strtotime($value['receive_time']));
             $recent[$key]['url'] = $value['url'];
         }
 
@@ -168,9 +169,9 @@ class Event_Action_Rss extends Ethna_ActionClass
         $this->af->setApp('title', $this->config->get('site_name'));
 
         header("Content-type: text/xml;charset=UTF-8");
-        header( "Last-Modified: " . gmdate( "D, d M Y H:i:s", strtotime($recent[0]['publish_date']) ) . " GMT" );
+        header( "Last-Modified: " . gmdate( "D, d M Y H:i:s", strtotime($recent[0]['receive_time']) ) . " GMT" );
 
-        return 'rss-trackback'; 
+        return 'rss-trackback';
     }
 }
 ?>
