@@ -167,7 +167,7 @@ class Event_Action_Rss extends Ethna_ActionClass
         $this->af->setApp('recent', $recent);
         $this->af->setApp('title', $this->config->get('site_name'));
 
-        //header("Content-type: text/xml;charset=UTF-8");
+        header("Content-type: text/xml;charset=UTF-8");
         header( "Last-Modified: " . gmdate( "D, d M Y H:i:s", strtotime($recent[0]['publish_date']) ) . " GMT" );
 
         return 'rss-trackback'; 
