@@ -186,7 +186,9 @@ class Haste_ViewClass extends Ethna_ViewClass
 
     function _setDefault(&$render)
     {
-        header('Content-Type: text/html; charset=UTF-8');
+        if (!headers_sent()) {
+            header('Content-Type: text/html; charset=UTF-8');
+        }
     }
 
 }
