@@ -34,7 +34,7 @@ echo mb_strcut(
 </tr>
 </table>
 
-<p><a href="{$BASE_URL}/event_show/{$item.id}">このイベントに参加する/詳細を見る</a>
+<p><?php echo $html->link('このイベントに参加する/詳細を見る', '/events/show/' . $event['Event']['id']); ?></a>
 
 <?php endforeach; ?>
 
