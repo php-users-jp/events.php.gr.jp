@@ -1,12 +1,12 @@
 <hr />
 <ul class="menu">
-{if $smarty.session.name && $smarty.session.is_admin}
-    <li><a href="{$BASE_URL}/event_post/{$app.event.id}">このイベントを編集する</a></li>
-{/if}
-{if $app.joined && !$app.canceled}
+<?php if ($session->read('role') == 'admin'): ?>
+  <li><?php echo $html->link('このイベントを編集する', '/events/post/' . $event_id); ?></li>
+<?php endif; ?>
+<?php if ($joined && !$canceled): ?>
 <li><a href="{$BASE_URL}/event_page/{$app.event.id}">Wikiページを編集する</a></li>
-{/if}
-<li><a href="{$BASE_URL}/rss/{$app.event.id}">RSS</a></li>
+<?php endif;?>
+<li><?php echo $html->link('このイベントのRSS', '/events/rss/' . $event_id); ?></li>
 </ul>
 
 <div>
@@ -65,18 +65,18 @@
     <td><?php echo $item['register_at']; ?></td>
     <td>
     <?php /* 自分のでまだキャンセルしてなかったらキャンセルリンクを出す */ ?>
-    {if ($item.account_name == $smarty.session.name) && ($item.canceled != 1)}
+    <?php if ($item['account_name'] == $session->read('username') && ($item['canceled'] != 1)): ?>
       <a href="{$BASE_URL}/eventcancel/{$item.id}">cancel</a>
-    {/if}
-    {if $smarty.session.is_admin && ($item.canceled == 1)}
+    <?php endif; ?>
+    <?php if (($session->read('role') == 'admin') && ($item['canceled'] == 1)): ?>
       &nbsp;<a href="{$BASE_URL}/eventcancelrevert/{$item.id}">キャンセル解除</a>
-    {/if}
+    <?php endif; ?>
     </td>
   </tr>
   <?php endforeach; ?>
   <tr>
     <td colspan="4">
-    {if isset($smarty.session.name)}
+    <?php if ($session->check('username')): ?>
       <p><strong>イベントに参加する</strong></p>
       {if $app.is_over || ($app.attendee_nokori <= 0)}
       <p>このイベントの募集は終了しました。</p>
@@ -103,11 +103,11 @@
         {form_name name="join_comment" }:<br />{form_input name="join_comment" attr='size="100"'} {form_input name="join"}
         {/form}
       {/if}
-    {else}
+    <?php else: ?>
       <div class="info">
         <p>イベントに参加したりコメントする場合は<a href="{$BASE_URL}/login">ログイン</a>してください。</p>
       </div>
-    {/if}
+    <?php endif; ?>
     </td>
   </tr>
 </table>
@@ -132,24 +132,22 @@
 
 </div>
 
-{if isset($smarty.session.name)}
+<?php if ($session->check('username')): ?>
   <div id="commentform">
-    {form method="post" action="$BASE_URL/event_show/`$app.event.id`"}
-    {if count($errors)}
-    <ul>
-    {foreach from=$errors item=error}
-      <li>{$error}</li>
-    {/foreach}
-    </ul>
-    {/if}
-    コメントする{form_input name="comment" attr='size="100"'} {form_input name="post"}
-    {/form}
+<?php
+echo $form->create(
+    'EventComment', array('type' => 'post', 'action' => 'show')
+);
+echo $form->hidden('EventComment.event_id', $event_id);
+echo $form->input('EventComment.comment', array('type' => 'text', 'size' => '45'));
+echo $form->end('コメントする');
+?>
   </div>
-{else}
+<?php else: ?>
   <div class="info">
     <p>イベントに参加したりコメントする場合は<?php echo $html->link('ログイン', '/users/login'); ?>してください。</p>
   </div>
-{/if}
+<?php endif; ?>
 
 <div id="trackback">
 <h3>Trackback</h3>
@@ -158,26 +156,28 @@
   xmlns:dc="http://purl.org/dc/elements/1.1/"
   xmlns:trackback="http://madskills.com/public/xml/rss/module/trackback/">
 <rdf:Description
-  rdf:about="{$BASE_URL}/event_show/{$app.event.id}"
-  trackback:ping="{$BASE_URL}/receiver/{$app.event.id}"
-  dc:title="{$row.title}"
-  dc:identifier="{$BASE_URL}/event_show/{$app.event.id}" />
+  rdf:about="<?php echo $html->base;?>/events/show/<?php echo $event_id;?>"
+  trackback:ping="<?php echo $html->base . '/trackbacks/receive/' . $event_id; ?>"
+  dc:title="<?php echo $Event['Event']['title']; ?>"
+  dc:identifier="<?php echo $html->base;?>/events/show/<?php echo $event_id;?>" />
 </rdf:RDF>
 -->
 <dl>
 <?php foreach ($data['Trackback'] as $trackback): ?>
 <dt>
 <?php echo $html->link(h($trackback['blog_name']), $trackback['url']); ?> - <?php echo $trackback['receive_time']; ?>
-{if $smarty.session.is_admin}
-&nbsp;<a href="{$BASE_URL}/trackbackdelete/{$trackback.id}">delete</a>
-{/if}
+<?php if ($session->read('role') == 'admin'): ?>
+&nbsp;<?php echo $html->link('delete', '/trackbacks/delete' . $trackback['id']); ?>
+<?php endif; ?>
 </dt>
 <dd><p><?php echo nl2br($trackback['excerpt']); ?></p></dd>
 <?php endforeach; ?>
 </dl>
 
 <p>
-TrackBackPingURL:<input onfocus="this.select()" readonly="readonly" value="{$BASE_URL}/receiver/{$app.event.id}" size="45" id="ping-uri" name="ping-uri" type="text" />
+TrackBackPingURL:<input onfocus="this.select()"
+   readonly="readonly"
+   value="<?php echo $html->base . '/trackbacks/receive/' . $event_id; ?>" size="45" id="ping-uri" name="ping-uri" type="text" />
 </p>
 
 <p class="notice">
