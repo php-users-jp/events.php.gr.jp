@@ -147,7 +147,7 @@
   </div>
 {else}
   <div class="info">
-    <p>イベントに参加したりコメントする場合は<?php echo $html->link('ログイン', 'users/login'); ?>してください。</p>
+    <p>イベントに参加したりコメントする場合は<?php echo $html->link('ログイン', '/users/login'); ?>してください。</p>
   </div>
 {/if}
 

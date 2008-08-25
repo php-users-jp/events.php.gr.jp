@@ -40,19 +40,25 @@
     <ul class="menu">
       <li><?php echo $html->link('Top', '/'); ?></li>
       <?php /* 最上位権限を持っていると表示される */ ?>
-      {if $session.is_admin}
+      <?php if ($session->read('role') == 'admin'): ?>
       <li><a href="{$BASE_URL}/news_admin">NewsAdmin</a></li>
       <li><a href="{$BASE_URL}/event_admin">EventAdmin</a></li>
       <li><a href="{$BASE_URL}/admin">Setting</a></li>
-      {/if}
+      <?php endif; ?>
       <?php /* ログインしたユーザだけ表示される */ ?>
-      {if isset($session.name)}
-      <li><a href="{$BASE_URL}/logout">Logout</a></li>
-      <li>USER:<em>{$session.name}</em></li>
-      <li>Role:<em>{if $session.is_admin}Admin{else}User{/if}</em></li>
-      {else}
-      <li><a href="{$BASE_URL}/login">Login</a></li>
-      {/if}
+      <?php if ($session->check('username')): ?>
+      <li><?php echo $html->link('Logout', '/users/userlogout');?></li>
+      <li>USER:<em><?php echo $session->read('username') ?></em></li>
+      <li>Role:<em>
+        <?php if ($session->read('role') == 'admin'): ?>
+        Admin
+        <?php else: ?>
+        Users
+        <?php endif; ?>
+</em></li>
+      <?php else: ?>
+      <li><?php echo $html->link('Login', '/users/login'); ?></li>
+      <?php endif; ?>
     </ul>
   </div>
 
