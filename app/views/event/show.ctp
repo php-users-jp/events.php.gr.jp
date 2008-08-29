@@ -4,7 +4,7 @@
   <li><?php echo $html->link('このイベントを編集する', '/events/post/' . $event_id); ?></li>
 <?php endif; ?>
 <?php if ($joined && !$canceled): ?>
-<li><a href="{$BASE_URL}/event_page/{$app.event.id}">Wikiページを編集する</a></li>
+<li><?php echo $html->link('Wikiページを編集する', '/event_pages/'.$event_id);?></li>
 <?php endif;?>
 <li><?php echo $html->link('このイベントのRSS', '/events/rss/' . $event_id); ?></li>
 </ul>
@@ -60,16 +60,16 @@
     <tr class="even">
     <?php endif; ?>
   <?php endif; ?>
-    <td><a href="http://profile.typekey.com/<?php echo $item['account_name']; ?>"><?php echo $item['account_nick']; ?></a></td>
-    <td><?php echo $item['comment']; ?></td>
-    <td><?php echo $item['register_at']; ?></td>
+    <td><a href="http://profile.typekey.com/<?php echo $item['User']['username']; ?>"><?php echo $item['User']['nickname']; ?></a></td>
+    <td><?php echo h($item['comment']); ?></td>
+    <td><?php echo $item['created']; ?></td>
     <td>
     <?php /* 自分のでまだキャンセルしてなかったらキャンセルリンクを出す */ ?>
-    <?php if ($item['account_name'] == $session->read('username') && ($item['canceled'] != 1)): ?>
-      <a href="{$BASE_URL}/eventcancel/{$item.id}">cancel</a>
+    <?php if ($item['User']['username'] == $session->read('username') && ($item['canceled'] != 1)): ?>
+      <?php echo $html->link('cancel', '/events/cancel/'.$item['id']); ?>
     <?php endif; ?>
     <?php if (($session->read('role') == 'admin') && ($item['canceled'] == 1)): ?>
-      &nbsp;<a href="{$BASE_URL}/eventcancelrevert/{$item.id}">キャンセル解除</a>
+      &nbsp;<?php echo $html->link('キャンセル解除', '/events/cancelrevert/'.$item['id']); ?>
     <?php endif; ?>
     </td>
   </tr>
@@ -78,34 +78,34 @@
     <td colspan="4">
     <?php if ($session->check('username')): ?>
       <p><strong>イベントに参加する</strong></p>
-      {if $app.is_over || ($app.attendee_nokori <= 0)}
+      <?php if ($is_over || ($attendee_nokori <= 0)): ?>
       <p>このイベントの募集は終了しました。</p>
-        {if $app.joined}
-            {if $app.event.private_description}
-            <p>{$app_ne.event.private_description}</p>
-            {/if}
-        {/if}
-      {elseif strtotime($app.event.accept_date) > $smarty.now}
-        <p>このイベントは {$app.event.accept_date} から応募開始します。</p> 
-      {elseif $app.joined}
-        {if $app_ne.event.private_description}
-          <p>{$app_ne.event.private_description}</p>
-        {else}
+        <?php if ($joined): ?>
+          <?php if ($data['Event']['private_description']): ?>
+            <p><?php echo $data['Event']['private_description']; ?></p>
+          <?php endif; ?>
+        <?php endif; ?>
+      <?php elseif (strtotime($data['Event']['accept_date']) > time()): ?>
+      <p>このイベントは <?php echo $data['Event']['accept_date']; ?> から応募開始します。</p> 
+      <?php elseif ($joined): ?>
+        <?php if ($data['Event']['private_description']): ?>
+          <p><?php echo $data['Event']['private_description']; ?></p>
+        <?php else: ?>
           <p>あなたはすでにイベントに参加しています。</p>
-        {/if}
-      {else}
+        <?php endif; ?>
+      <?php else: ?>
         <div class="info">
           <p>イベントに参加する場合は下のフォームにコメントを書いてjoinボタンを押してください。</p>
         </div>
 
-        {form method="post" action="$BASE_URL/event_join"}
-        <input type="hidden" name="event_id" value="{$app.event.id}" />
-        {form_name name="join_comment" }:<br />{form_input name="join_comment" attr='size="100"'} {form_input name="join"}
-        {/form}
-      {/if}
+        <?php $form->create('EventAttendee', array('type'  => 'post', 'action' => 'join')); ?>
+        <?php echo $form->hidden('EventAttendee.event_id', array('value' => $event_id)); ?>
+        <?php echo $form->input('EventAttendee.comment', array('type' => 'text', 'size' => '45')); ?>
+        <?php echo $form->end('参加する'); ?>
+      <?php endif; ?>
     <?php else: ?>
       <div class="info">
-        <p>イベントに参加したりコメントする場合は<a href="{$BASE_URL}/login">ログイン</a>してください。</p>
+      <p>イベントに参加したりコメントする場合は<?php echo $html->link('ログイン', '/users/login');?>してください。</p>
       </div>
     <?php endif; ?>
     </td>
@@ -119,13 +119,13 @@
 <?php foreach ($data['EventComment'] as $key => $comment): ?>
 <div class="section">
 <h4>
-<?php echo $key; ?> &nbsp; <?php echo $html->link(h($comment['nick']), "http://profile.typekey.com/{$comment['name']}"); ?>
+<?php echo $key; ?> &nbsp; <?php echo $html->link(h($comment['User']['nickname']), "http://profile.typekey.com/{$comment['User']['username']}"); ?>
 </h4>
   <p>
-<?php echo nl2br($comment['comment']); ?>
-{if $smarty.session.is_admin}
-  &nbsp;<a href="{$BASE_URL}/event_commentdelete/{$comment.id}">[delete]</a>
-{/if}
+<?php echo h($comment['comment']); ?>
+<?php if ($comment['User']['role']  == 'admin'): ?> 
+    &nbsp;<?php $html->link('[delete]', '/event_comment/delete/'.$comment['id']);?>
+<?php endif; ?>
   </p>
 </div>
 <?php endforeach; ?>
@@ -136,9 +136,9 @@
   <div id="commentform">
 <?php
 echo $form->create(
-    'EventComment', array('type' => 'post', 'action' => 'show')
+    'EventComment', array('type' => 'post', 'action' => 'join')
 );
-echo $form->hidden('EventComment.event_id', $event_id);
+echo $form->hidden('EventComment.event_id', array('value' => $event_id));
 echo $form->input('EventComment.comment', array('type' => 'text', 'size' => '45'));
 echo $form->end('コメントする');
 ?>
