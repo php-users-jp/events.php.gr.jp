@@ -98,7 +98,7 @@
           <p>イベントに参加する場合は下のフォームにコメントを書いてjoinボタンを押してください。</p>
         </div>
 
-        <?php $form->create('EventAttendee', array('type'  => 'post', 'action' => 'join')); ?>
+        <?php echo $form->create('EventAttendee', array('type'  => 'post', 'action' => 'join')); ?>
         <?php echo $form->hidden('EventAttendee.event_id', array('value' => $event_id)); ?>
         <?php echo $form->input('EventAttendee.comment', array('type' => 'text', 'size' => '45')); ?>
         <?php echo $form->end('参加する'); ?>
