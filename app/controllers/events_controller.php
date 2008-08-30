@@ -135,9 +135,11 @@ class EventsController extends AppController
 
         if ($this->data) {
             $this->Event->save($this->data);
+            $this->flash('イベント情報を登録しました','/events/control');
+            return;
         }
-
-        $this->redirect('/events/control');
+        //viewを流用
+		$this->render('edit');
     }
 
     /**
