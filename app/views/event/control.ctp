@@ -2,7 +2,7 @@
 <h2>イベント管理</h2>
 
 <p>
-<?php echo $html->link('新規イベント登録', '/events/edit'); ?>
+<?php echo $html->link('新規イベント登録', '/events/add'); ?>
 </p>
 
 <table>
