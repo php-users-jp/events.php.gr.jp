@@ -66,10 +66,10 @@
     <td>
     <?php /* 自分のでまだキャンセルしてなかったらキャンセルリンクを出す */ ?>
     <?php if ($item['User']['username'] == $session->read('username') && ($item['canceled'] != 1)): ?>
-      <?php echo $html->link('cancel', '/events/cancel/'.$item['id']); ?>
+      <?php echo $html->link('cancel', '/event_attendees/cancel/'.$item['id'], null, 'ドタキャン対策の為、キャンセルするとそのイベントには二度と参加できません。キャンセルしますか？'); ?>
     <?php endif; ?>
     <?php if (($session->read('role') == 'admin') && ($item['canceled'] == 1)): ?>
-      &nbsp;<?php echo $html->link('キャンセル解除', '/events/cancelrevert/'.$item['id']); ?>
+      &nbsp;<?php echo $html->link('キャンセル解除', '/event_attendees/cancelrevert/'.$item['id']); ?>
     <?php endif; ?>
     </td>
   </tr>
