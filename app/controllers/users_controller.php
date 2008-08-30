@@ -37,7 +37,7 @@ class UsersController extends AppController
 
     function login()
     {
-        $returnTo = 'http://'.$_SERVER['SERVER_NAME'].'/halt/cev/users/login';
+        $returnTo = 'http://'.$_SERVER['SERVER_NAME'].$this->here;
         $provider_list = array('http://profile.typekey.com/');
 
         if (!empty($this->data)) {
