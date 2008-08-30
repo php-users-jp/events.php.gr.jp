@@ -82,18 +82,19 @@ class EventsController extends AppController
         $re['EventPage']['content'] = $pukiwiki->toHtml($re['EventPage']['content']);
 
         $attendee_count = 0;
+        $joined = false;
         foreach ($re['EventAttendee'] as $row) {
             // 自分が参加していたらフラグをたてる
-            if ($this->Session->read('username') == $row['User']['username']) {
-                $this->set('joined', true);
+            if ($this->Session->read('id') == $row['User']['id']) {
+                $joined = true;
                 if ($row['canceled'] == 1) {
                     $this->set('canceled', true);
                 } else {
                     $this->set('canceled', false);
                 }
-            } else {
-                $this->set('joined', false);
             }
+
+            $this->set('joined', $joined);
 
             if ($row['canceled'] != 1) {
                 $attendee_count++;
