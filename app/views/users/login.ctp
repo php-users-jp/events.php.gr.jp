@@ -33,10 +33,9 @@ echo $form->end('Login');
 echo $form->create(
     'User', array('type' => 'post', 'action' => 'login')
 );
-echo $form->hidden(
-    'OpenidUrl.provider_url',
-    array('value' => 'http://www.hatena.ne.jp/')
-);
+echo 'はてなのユーザ名を入れてください';
+echo $form->hidden('OpenidUrl.provider_url', array('value' => 'http://www.hatena.ne.jp/'));
+echo $form->input('OpenidUrl.username', array('label' => false));
 echo $form->end('はてなでlogin');
 ?>
 
