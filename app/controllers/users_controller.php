@@ -165,6 +165,67 @@ class UsersController extends AppController
         $this->redirect('/events/index');
     }
 
+    /**
+     * control
+     *
+     */
+    function control()
+    {
+        // adminじゃなければさようなら
+        if ($this->Session->read('role') != 'admin') {
+            $this->redirect('/');
+        }
+
+        // @TODO システムバージョン等を表示する事
+        
+        $users = $this->User->find('all', array('conditions' => "User.role = 'admin'"));
+        $this->set('admins', $users);
+    }
+
+    /**
+     * upgrade
+     *
+     */
+    function upgrade()
+    {
+        // adminじゃなければさようなら
+        if ($this->Session->read('role') != 'admin') {
+            $this->redirect('/');
+        }
+
+        if ($this->data) {
+            $user = $this->User->findByUsername($this->data['User']['username']);
+            if ($user) {
+                $user['User']['role'] = 'admin';
+            }
+            $this->User->save($user);
+        }
+
+        $this->redirect('/users/control');
+    }
+
+    /**
+     * downgrade
+     *
+     */
+    function downgrade()
+    {
+        // adminじゃなければさようなら
+        if ($this->Session->read('role') != 'admin') {
+            $this->redirect('/');
+        }
+
+        if ($this->data) {
+            $user = $this->User->findByUsername($this->data['User']['username']);
+            if ($user) {
+                $user['User']['role'] = 'user';
+            }
+            $this->User->save($user);
+        }
+
+        $this->redirect('/users/control');
+    }
+
     private function setMessage($message) {
         $this->set('message', $message);
     }
