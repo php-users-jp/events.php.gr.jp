@@ -35,10 +35,14 @@ class UsersController extends AppController
         $this->set('auth', $user['User']['nickname']);
     }
 
-    function login()
+    protected function getRequest()
     {
         $returnTo = 'http://'.$_SERVER['SERVER_NAME'].$this->here;
-        $provider_list = array('http://profile.typekey.com/');
+        $provider_list = array(
+            'http://profile.typekey.com/',
+            'http://www.hatena.ne.jp/',
+            'http://mixi.jp/',
+        );
 
         if (!empty($this->data)) {
             try {
@@ -46,7 +50,9 @@ class UsersController extends AppController
                     throw new Exception('不正なプロバイダURLです');
                 }
                 $login_url = $this->data['OpenidUrl']['provider_url'];
-                $login_url .= $this->data['OpenidUrl']['username'] . '/';
+                if (!empty($this->data['OpenidUrl']['username'])) {
+                    $login_url .= $this->data['OpenidUrl']['username'] . '/';
+                }
                 $this->Openid->authenticate(
                     $login_url,
                     $returnTo,
@@ -65,42 +71,47 @@ class UsersController extends AppController
             } elseif ($response->status == Auth_OpenID_FAILURE) {
                 $this->setMessage('OpenID verification failed: '.$response->message);
             } elseif ($response->status == Auth_OpenID_SUCCESS) {
-
                 $this->setMessage('successfully authenticated!');
-                // start controllerの修正
-                //              echo 'successfully authenticated!';
-                //              exit;
+                return $response;
+            }
+        }
 
-                $username = end(explode('/', trim($response->identity_url, '/')));
-                $provider_url = dirname(trim($response->identity_url, '/')) . '/';
+        return false;
+    }
 
-                $user = $this->User->find('first',array(
-                    'conditions'    => array(
-                        'User.username' => $username,
-                        'User.provider_url' => $provider_url,
-                    ),
-                    'recursive' => -1
-                ));
+    function login()
+    {
+        $response = $this->getRequest();
+        if ($response) {
+            $username = end(explode('/', trim($response->identity_url, '/')));
+            $provider_url = dirname(trim($response->identity_url, '/')) . '/';
 
-                if (!empty($user)) {
-                    //登録されているOpenIDユーザなら
-                    $data = array(
-                        'User.username' => $user['User']['username'],
-                        'User.password' => $user['User']['password'],
-                        'User.provider_url' => $user['User']['provider_url']
-                    );
-                    foreach ($user['User'] as $key => $value) {
-                        $this->Session->write($key, $value);
-                    }
-                    $this->Session->write('identity_url', $response->identity_url);
-                    $this->__autologinForOpenid($data);
-                } else {
-                    //登録されているOpenIDユーザならニックネーム登録
-                    $this->Session->write('username', $username);
-                    $this->Session->write('provider_url', $provider_url);
-                    $this->Session->write('identity_url', $response->identity_url);
-                    $this->redirect('/users/openid_add');
+            $user = $this->User->find('first',array(
+                'conditions'    => array(
+                    'User.username' => $username,
+                    'User.provider_url' => $provider_url,
+                ),
+                'recursive' => -1
+            ));
+
+            if (!empty($user)) {
+                //登録されているOpenIDユーザなら
+                $data = array(
+                    'User.username' => $user['User']['username'],
+                    'User.password' => $user['User']['password'],
+                    'User.provider_url' => $user['User']['provider_url']
+                );
+                foreach ($user['User'] as $key => $value) {
+                    $this->Session->write($key, $value);
                 }
+                $this->Session->write('identity_url', $response->identity_url);
+                $this->__autologinForOpenid($data);
+            } else {
+                //登録されているOpenIDユーザならニックネーム登録
+                $this->Session->write('username', $username);
+                $this->Session->write('provider_url', $provider_url);
+                $this->Session->write('identity_url', $response->identity_url);
+                $this->redirect('/users/openid_add');
             }
         }
     }
@@ -224,6 +235,30 @@ class UsersController extends AppController
         }
 
         $this->redirect('/users/control');
+    }
+
+    /**
+     * config
+     *
+     */
+    function config()
+    {
+        if (!$this->isUser()) {
+            $this->redirect('/');
+        }
+
+        $response = $this->getRequest();
+        if ($response) {
+            $username = end(explode('/', trim($response->identity_url, '/')));
+            $provider_url = dirname(trim($response->identity_url, '/')) . '/';
+
+            $user = $this->User->findById($this->Session->read('id'));
+            $user['User']['username'] = $username;
+            $user['User']['provider_url'] = $provider_url;
+            $this->User->save($user);
+
+            $this->userlogout();
+        }
     }
 
     private function setMessage($message) {
