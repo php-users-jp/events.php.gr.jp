@@ -14,7 +14,7 @@ class TrackbacksController extends AppController
      */
     public function delete($id)
     {
-        if ($this->isAdmin()) {
+        if (!$this->isAdmin()) {
             $this->redirect('/');
         }
 
