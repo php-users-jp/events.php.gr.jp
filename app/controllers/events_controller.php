@@ -38,6 +38,9 @@ class EventsController extends AppController
      */
     function show($id)
     {
+        $id = (int)$id;
+        $this->set('event_id', $id);
+
         $has_many = array(
             'EventComment' => array(
                 'className' => 'EventComment',
@@ -59,9 +62,19 @@ class EventsController extends AppController
             )
         );
 
+        $has_one2 = array(
+            'User' => array(
+                'className' => 'User',
+                'foreignKey' => 'user_id',
+            )
+        );
+
         $this->Event->bindModel(array('hasMany' => $has_many, 'hasOne' => $has_one));
 
-        $re = $this->Event->findById($id);
+        $this->Event->EventComment->bindModel(array('belongsTo' => $has_one2));
+        $this->Event->EventAttendee->bindModel(array('belongsTo' => $has_one2));
+
+        $re = $this->Event->findById($id, null,null,2);
 
         // WikiPageのレンダリング
         require_once APP . 'Text/PukiWiki.php';
@@ -71,14 +84,16 @@ class EventsController extends AppController
         $attendee_count = 0;
         foreach ($re['EventAttendee'] as $row) {
             // 自分が参加していたらフラグをたてる
-            /*
-            if (isset($_SESSION['name']) && $row['account_name'] == $_SESSION['name']) {
-                $this->af->setApp('joined', true);
+            if ($this->Session->read('username') == $row['User']['username']) {
+                $this->set('joined', true);
                 if ($row['canceled'] == 1) {
-                    $this->af->setApp('canceled', true);
+                    $this->set('canceled', true);
+                } else {
+                    $this->set('canceled', false);
                 }
+            } else {
+                $this->set('joined', false);
             }
-             */
 
             if ($row['canceled'] != 1) {
                 $attendee_count++;
@@ -87,9 +102,35 @@ class EventsController extends AppController
 
         $this->set('attendee_count', $attendee_count);
         $this->set('attendee_nokori', $re['Event']['max_register'] - $attendee_count);
+        $this->set('is_over', $this->Event->isOver($id));
         $this->set('data', $re);
     }
-}
 
+    /**
+     * control
+     *
+     */
+    function control()
+    {
+        // adminじゃなければさようなら
+        if ($this->Session->read('role') != 'admin') {
+            $this->redirect('/');
+        }
+
+        $events = $this->Event->find('all', array('order' => 'Event.id DESC'));
+        $this->set('events', $events);
+    }
+
+    /**
+     * post
+     *
+     */
+    function post()
+    {
+        if ($this->data) {
+        }
+    }
+
+}
 
 ?>
