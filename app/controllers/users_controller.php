@@ -252,6 +252,19 @@ class UsersController extends AppController
             $username = end(explode('/', trim($response->identity_url, '/')));
             $provider_url = dirname(trim($response->identity_url, '/')) . '/';
 
+            $exists_user = $this->User->find('first',array(
+                'conditions'    => array(
+                    'User.username' => $username,
+                    'User.provider_url' => $provider_url,
+                ),
+                'recursive' => -1
+            ));
+
+            if ($exists_user) {
+                $this->setMessage('そのユーザはすでに存在する為、アカウント設定を変更する事はできません');
+                $this->redirect('/users/config');
+            }
+
             $user = $this->User->findById($this->Session->read('id'));
             $user['User']['username'] = $username;
             $user['User']['provider_url'] = $provider_url;
