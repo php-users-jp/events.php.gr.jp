@@ -123,8 +123,8 @@
 </h4>
   <p>
 <?php echo h($comment['comment']); ?>
-<?php if ($comment['User']['role']  == 'admin'): ?> 
-    &nbsp;<?php $html->link('[delete]', '/event_comment/delete/'.$comment['id']);?>
+<?php if ($comment['User']['username'] == $session->read('username') || $session->read('role') == 'admin'): ?> 
+    &nbsp;<?php echo $html->link('[delete]', '/event_comments/delete/'.$comment['id']);?>
 <?php endif; ?>
   </p>
 </div>
