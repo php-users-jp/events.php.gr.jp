@@ -4,7 +4,7 @@
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
-<title>{if $app.site_title}{$app.site_title} - {/if}{$site_name}</title>
+<title><?php e('events.php.gr.jp'); e(' - '.$title_for_layout) ?></title>
 <?php echo $html->css('phpgrjp'); ?>
 <link rel="alternate" type="application/rss+xml" title="RSS" href="{$BASE_URL}/rss" />
 </head>
