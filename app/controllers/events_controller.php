@@ -9,6 +9,7 @@ class EventsController extends AppController
 {
     var $name = 'Event';
     var $helpers = array('Rss', 'Datespan');
+    var $uses = array('Event', 'Trackback');
 
     /**
      * index
@@ -170,7 +171,86 @@ class EventsController extends AppController
             'title' => "events.php.gr.jp",
             'description' => 'Feed',
         ));
-        $this->index();
+
+        if ($id == 'trackback') {
+            $result = $this->Trackback->find('all', array(
+                'order' => 'Trackback.id DESC',
+                'limit' => '20',
+            ));
+
+            $this->set('events', $result);
+
+        } else if (is_numeric($id)) {
+
+            $has_many = array(
+                'EventComment' => array(
+                    'className' => 'EventComment',
+                    'foreignKey' => 'event_id'
+                ),
+                'EventAttendee' => array(
+                    'className' => 'EventAttendee',
+                    'foreignKey' => 'event_id'
+                ),
+            );
+
+            $has_one = array(
+                'User' => array(
+                    'className' => 'User',
+                    'foreignKey' => 'user_id',
+                )
+            );
+
+            $this->Event->bindModel(array('hasMany' => $has_many));
+            $this->Event->EventComment->bindModel(array('belongsTo' => $has_one));
+            $this->Event->EventAttendee->bindModel(array('belongsTo' => $has_one));
+
+            $event = $this->Event->findById($id, null, null, 2);
+            if (!$event) {
+                $this->index();
+                return null;
+            }
+
+            $result = array();
+
+            foreach ($event['EventComment'] as $event_comment) {
+                $item = array();
+                $item['Event']['title'] = 'comment';
+                $item['Event']['description'] = $event_comment['User']['nickname'] .':'.$event_comment['comment'];
+                $item['Event']['id'] = $event_comment['event_id'];
+                $item['Event']['publish_date'] = $event_comment['created'];
+                if (!$event_comment['created']) {
+                    $item['Event']['publish_date'] = date('Y-m-d H:i:s');
+                }
+                $key = strtotime($item['Event']['publish_date']) . '0';
+                $result[$key] = $item;
+            }
+
+            foreach ($event['EventAttendee'] as $event_attendee) {
+                $item = array();
+                $item['Event']['title'] = 'joined';
+                $item['Event']['description'] = $event_attendee['User']['nickname'] .':'.$event_attendee['comment'];
+                $item['Event']['id'] = $event_attendee['event_id'];
+                $item['Event']['publish_date'] = $event_attendee['created'];
+                if (!$event_attendee['created']) {
+                    $item['Event']['publish_date'] = date('Y-m-d H:i:s');
+                }
+                $key = strtotime($item['Event']['publish_date']) . '1';
+                $result[$key] = $item;
+            }
+
+            krsort($result);
+
+            $events = array();
+            foreach ($result as $value) {
+                $events[] = $value;
+            }
+
+            $this->set('events', $events);
+
+        } else {
+            $this->index();
+        }
+
     }
 
 }

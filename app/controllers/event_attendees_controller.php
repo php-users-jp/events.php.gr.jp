@@ -1,12 +1,16 @@
 <?php
 /**
- *
+ * event_attendees_controller.php
  *
  */
 class EventAttendeesController extends AppController {
 
     var $name = 'EventAttendees';
 
+    /**
+     * cancel
+     *
+     */
     function cancel($id)
     {
         $event_attendee = $this->EventAttendee->findById($id);
@@ -22,8 +26,17 @@ class EventAttendeesController extends AppController {
         $this->redirect('/events/show/' . $event_attendee['EventAttendee']['event_id']);
     }
 
+    /**
+     * cancelrevert
+     *
+     */
     function cancelrevert($id)
     {
+        // adminじゃなければさようなら
+        if ($this->Session->read('role') != 'admin') {
+            $this->redirect('/');
+        }
+
         $event_attendee = $this->EventAttendee->findById($id);
         if (!$event_attendee) {
             $this->redirect('/');
@@ -35,6 +48,26 @@ class EventAttendeesController extends AppController {
         }
 
         $this->redirect('/events/show/' . $event_attendee['EventAttendee']['event_id']);
+    }
+
+    /**
+     * join
+     *
+     * @TODO もうちょっと綺麗になおす
+     */
+    function join()
+    {
+        if (!$this->Session->check('id')) {
+            $this->redirect('/users/login');
+        }
+
+        if ($this->data) {
+            $this->data['EventAttendee']['user_id'] = $this->Session->read('id');
+            $this->data['EventAttendee']['canceled'] = 0;
+            $this->EventAttendee->save($this->data);
+        }
+
+        $this->redirect('/events/show/' . $this->data['EventAttendee']['event_id']);
     }
 
 }
