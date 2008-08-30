@@ -31,4 +31,16 @@ class AppController extends Controller
             return false;
         }
     }
+
+    /**
+     * isUser()
+     */
+    function isUser()
+    {
+        if ($this->Session->read('role') == 'admin' || $this->Session->read('role') == 'user') {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
