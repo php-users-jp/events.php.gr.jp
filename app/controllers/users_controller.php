@@ -89,6 +89,10 @@ class UsersController extends AppController
                         'User.password' => $user['User']['password'],
                         'User.provider_url' => $user['User']['provider_url']
                     );
+                    foreach ($user['User'] as $key => $value) {
+                        $this->Session->write($key, $value);
+                    }
+                    $this->Session->write('identity_url', $response->identity_url);
                     $this->__autologinForOpenid($data);
                 } else {
                     //登録されているOpenIDユーザならニックネーム登録
