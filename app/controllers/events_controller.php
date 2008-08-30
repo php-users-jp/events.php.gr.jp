@@ -62,7 +62,6 @@ class EventsController extends AppController
                 'foreignKey' => 'event_id',
             )
         );
-
         $has_one2 = array(
             'User' => array(
                 'className' => 'User',
@@ -84,24 +83,23 @@ class EventsController extends AppController
 
         $attendee_count = 0;
         $joined = false;
+        $canceled = false;
         foreach ($re['EventAttendee'] as $row) {
             // 自分が参加していたらフラグをたてる
             if ($this->Session->read('id') == $row['User']['id']) {
                 $joined = true;
                 if ($row['canceled'] == 1) {
-                    $this->set('canceled', true);
-                } else {
-                    $this->set('canceled', false);
+                    $canceled = true;
                 }
             }
-
-            $this->set('joined', $joined);
 
             if ($row['canceled'] != 1) {
                 $attendee_count++;
             }
         }
 
+        $this->set('joined', $joined);
+        $this->set('canceled', $canceled);
         $this->set('attendee_count', $attendee_count);
         $this->set('attendee_nokori', $re['Event']['max_register'] - $attendee_count);
         $this->set('is_over', $this->Event->isOver($id));

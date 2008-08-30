@@ -4,7 +4,7 @@
   <li><?php echo $html->link('このイベントを編集する', '/events/edit/' . $event_id); ?></li>
 <?php endif; ?>
 <?php if ($joined && !$canceled): ?>
-<li><?php echo $html->link('Wikiページを編集する', '/event_pages/'.$event_id);?></li>
+<li><?php echo $html->link('Wikiページを編集する', '/event_pages/edit/'.$event_id); ?></li>
 <?php endif;?>
 <li><?php echo $html->link('このイベントのRSS', '/events/rss/' . $event_id); ?></li>
 </ul>
@@ -167,7 +167,7 @@ echo $form->end('コメントする');
 <dt>
 <?php echo $html->link(h($trackback['blog_name']), $trackback['url']); ?> - <?php echo $trackback['receive_time']; ?>
 <?php if ($session->read('role') == 'admin'): ?>
-&nbsp;<?php echo $html->link('delete', '/trackbacks/delete' . $trackback['id']); ?>
+&nbsp;<?php echo $html->link('delete', '/trackbacks/delete/' . $trackback['id']); ?>
 <?php endif; ?>
 </dt>
 <dd><p><?php echo nl2br($trackback['excerpt']); ?></p></dd>
@@ -177,7 +177,7 @@ echo $form->end('コメントする');
 <p>
 TrackBackPingURL:<input onfocus="this.select()"
    readonly="readonly"
-   value="<?php echo $html->base . '/trackbacks/receive/' . $event_id; ?>" size="45" id="ping-uri" name="ping-uri" type="text" />
+   value="<?php echo 'http://' . $_SERVER['HTTP_HOST'] . $html->base . '/trackbacks/receive/' . $event_id; ?>" size="45" id="ping-uri" name="ping-uri" type="text" />
 </p>
 
 <p class="notice">
