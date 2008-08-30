@@ -41,9 +41,8 @@
       <li><?php echo $html->link('Top', '/'); ?></li>
       <?php /* 最上位権限を持っていると表示される */ ?>
       <?php if ($session->read('role') == 'admin'): ?>
-      <li><a href="{$BASE_URL}/news_admin">NewsAdmin</a></li>
-      <li><a href="{$BASE_URL}/event_admin">EventAdmin</a></li>
-      <li><a href="{$BASE_URL}/admin">Setting</a></li>
+      <li><?php echo $html->link('Event管理', '/events/control'); ?></li>
+      <li><?php echo $html->link('システム設定', '/users/control'); ?></li>
       <?php endif; ?>
       <?php /* ログインしたユーザだけ表示される */ ?>
       <?php if ($session->check('username')): ?>
