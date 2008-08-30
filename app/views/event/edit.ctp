@@ -1,6 +1,9 @@
 <div>
 <h2>Event Post</h2>
-<?php echo $form->create('Event', array('type' => 'post', 'action' => 'post')); ?>
+<?php echo $form->create('Event', array('type' => 'post', 'action' => 'add')); ?>
+<?php if (isset($event['Event']['id']) && is_numeric($event['Event']['id'])): ?>
+<?php echo $form->hidden('Event.id', array('type' => 'text')); ?>
+<?php endif; ?>
 <?php echo $form->input('Event.name', array('type' => 'text')); ?>
 <?php echo $form->input('Event.publish_date', array('type' => 'text')); ?>
 <input type="button" id="button_publish_date" value="timestamp" />

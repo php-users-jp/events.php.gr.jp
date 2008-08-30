@@ -122,12 +122,39 @@ class EventsController extends AppController
     }
 
     /**
-     * post
+     * add
      *
      */
-    function post()
+    function add()
     {
+        // adminじゃなければさようなら
+        if ($this->Session->read('role') != 'admin') {
+            $this->redirect('/');
+        }
+
         if ($this->data) {
+            $this->Event->save($this->data);
+        }
+
+        $this->redirect('/events/control');
+    }
+
+    /**
+     * edit
+     *
+     */
+    function edit($event_id)
+    {
+        // adminじゃなければさようなら
+        if ($this->Session->read('role') != 'admin') {
+            $this->redirect('/');
+        }
+
+        if ($this->data) {
+        } else {
+            $event = $this->Event->findById($event_id);
+            $this->data = $event;
+            $this->set('event', $event);
         }
     }
 

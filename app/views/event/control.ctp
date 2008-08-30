@@ -2,7 +2,7 @@
 <h2>イベント管理</h2>
 
 <p>
-<?php echo $html->link('新規イベント登録', '/events/post'); ?>
+<?php echo $html->link('新規イベント登録', '/events/edit'); ?>
 </p>
 
 <table>
@@ -19,7 +19,7 @@
   <td>
   <?php echo $html->link('編集', '/events/edit/'.$event['Event']['id']); ?>
   &nbsp;:&nbsp;
-  <?php echo $html->link('削除', '/events/delete/'.$event['Event']['id']); ?>
+  <?php echo $html->link('削除', '/events/delete/'.$event['Event']['id'], null, '削除しても良いですか？'); ?>
   </td>
   <td><?php echo $event['Event']['start_date']; ?></td>
   <td><?php echo $event['Event']['due_date']; ?></td>
