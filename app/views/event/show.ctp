@@ -1,7 +1,7 @@
 <hr />
 <ul class="menu">
 <?php if ($session->read('role') == 'admin'): ?>
-  <li><?php echo $html->link('このイベントを編集する', '/events/post/' . $event_id); ?></li>
+  <li><?php echo $html->link('このイベントを編集する', '/events/edit/' . $event_id); ?></li>
 <?php endif; ?>
 <?php if ($joined && !$canceled): ?>
 <li><?php echo $html->link('Wikiページを編集する', '/event_pages/'.$event_id);?></li>
@@ -124,7 +124,7 @@
   <p>
 <?php echo h($comment['comment']); ?>
 <?php if ($comment['User']['username'] == $session->read('username') || $session->read('role') == 'admin'): ?> 
-    &nbsp;<?php echo $html->link('[delete]', '/event_comments/delete/'.$comment['id']);?>
+    &nbsp;<?php echo $html->link('[delete]', '/event_comments/delete/'.$comment['id'], null, '削除しても良いですか？');?>
 <?php endif; ?>
   </p>
 </div>
