@@ -8,7 +8,7 @@
 class EventsController extends AppController
 {
     var $name = 'Event';
-    var $helpers = array('Datespan');
+    var $helpers = array('Rss', 'Datespan');
 
     /**
      * index
@@ -129,6 +129,20 @@ class EventsController extends AppController
     {
         if ($this->data) {
         }
+    }
+
+    /**
+     * rss
+     *
+     */
+    function rss($id)
+    {
+        $this->layout = 'rss';
+        $this->set('channel', array(
+            'title' => "events.php.gr.jp",
+            'description' => 'Feed',
+        ));
+        $this->index();
     }
 
 }
