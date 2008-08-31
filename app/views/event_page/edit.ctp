@@ -1,6 +1,6 @@
 <h2>Event Wiki Page</h2>
 <div>
-<?php echo $page['EventPage']['html']; ?>
+<?php ife('isset($page["EventPage"]["html"])',null); ?>
 </div>
 
 <div>
