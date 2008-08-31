@@ -24,7 +24,7 @@ class EventPagesController extends AppController
 
         if ($this->data) {
             // @TODO もっとうまいやりかたはないの？
-            if (isset($_POST['preview'])) {
+            if (isset($this->params['form']['preview'])) {
                 $page = $this->data;
                 $page['EventPage']['html'] = $pukiwiki->toHtml($page['EventPage']['content']);
                 $this->set('page', $page);
