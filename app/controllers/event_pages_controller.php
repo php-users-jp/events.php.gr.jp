@@ -18,12 +18,12 @@ class EventPagesController extends AppController
      */
     public function edit($id = false)
     {
-        // WikiPage¤Î¥ì¥ó¥À¥ê¥ó¥°
+        // WikiPageã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
         require_once APP . 'Text/PukiWiki.php';
         $pukiwiki = new Text_PukiWiki();
 
         if ($this->data) {
-            // @TODO ¤â¤Ã¤È¤¦¤Þ¤¤¤ä¤ê¤«¤¿¤Ï¤Ê¤¤¤Î¡©
+            // @TODO ã‚‚ã£ã¨ã†ã¾ã„ã‚„ã‚Šã‹ãŸã¯ãªã„ã®ï¼Ÿ
             if (isset($_POST['preview'])) {
                 $page = $this->data;
                 $page['EventPage']['html'] = $pukiwiki->toHtml($page['EventPage']['content']);
