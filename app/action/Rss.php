@@ -79,13 +79,14 @@ class Event_Action_Rss extends Ethna_ActionClass
         foreach ($recent as $key => $value) {
             $recent[$key]['pubDate'] = date('r', strtotime($value['publish_date']));
             $recent[$key]['name'] = date('[Y-m-d]', strtotime($value['start_date'])) . $value['name'];
+            $recent[$key]['description'] = str_replace(array("(((",")))"), array("",""), preg_replace('/\(\(\(.+?\)\)\)/s', "", $value['description']));
             $recent[$key]['startdate'] = date('c', strtotime($value['start_date']));
             $recent[$key]['enddate'] = date('c', strtotime($value['end_date']));
         }
 
         $this->af->setApp('recent', $recent);
         $this->af->setApp('title', $this->config->get('site_name'));
-        
+
         header("Content-type: text/xml;charset=UTF-8");
         header( "Last-Modified: " . gmdate( "D, d M Y H:i:s", strtotime($recent[0]['publish_date']) ) . " GMT" );
         return 'rss';
@@ -103,8 +104,7 @@ class Event_Action_Rss extends Ethna_ActionClass
         $attendee = $this->db->getEventAttendeeFromId($event_id);
         $comment = $this->db->getEventComments($event_id);
 
-        //var_dump($event, $attendee, $comment);
-        //var_dump($event);
+        $event['description'] = str_replace(array("(((",")))"), array("",""), preg_replace('/\(\(\(.+?\)\)\)/s', "", $event['description']));
 
         $mix = array();
 
@@ -137,7 +137,7 @@ class Event_Action_Rss extends Ethna_ActionClass
         }
 
         krsort($mix);
-        
+
         $this->af->setApp('event', $event);
         $this->af->setApp('detail', $mix);
 
