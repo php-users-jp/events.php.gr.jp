@@ -138,8 +138,9 @@ class EventsController extends AppController
             $this->flash('イベント情報を登録しました','/events/control');
             return;
         }
+
         //viewを流用
-		$this->render('edit');
+        $this->render('edit');
     }
 
     /**
@@ -183,29 +184,8 @@ class EventsController extends AppController
 
         } else if (is_numeric($id)) {
 
-            $has_many = array(
-                'EventComment' => array(
-                    'className' => 'EventComment',
-                    'foreignKey' => 'event_id'
-                ),
-                'EventAttendee' => array(
-                    'className' => 'EventAttendee',
-                    'foreignKey' => 'event_id'
-                ),
-            );
+            $event = $this->Event->findRssById($id);
 
-            $has_one = array(
-                'User' => array(
-                    'className' => 'User',
-                    'foreignKey' => 'user_id',
-                )
-            );
-
-            $this->Event->bindModel(array('hasMany' => $has_many));
-            $this->Event->EventComment->bindModel(array('belongsTo' => $has_one));
-            $this->Event->EventAttendee->bindModel(array('belongsTo' => $has_one));
-
-            $event = $this->Event->findById($id, null, null, 2);
             if (!$event) {
                 $this->index();
                 return null;

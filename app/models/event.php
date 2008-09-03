@@ -31,6 +31,39 @@ class Event extends AppModel
         }
     }
 
+    /**
+     * findRssById
+     *
+     */
+    function findRssById($event_id)
+    {
+        $has_many = array(
+            'EventComment' => array(
+                'className' => 'EventComment',
+                'foreignKey' => 'event_id'
+            ),
+            'EventAttendee' => array(
+                'className' => 'EventAttendee',
+                'foreignKey' => 'event_id'
+            ),
+        );
+
+        $has_one = array(
+            'User' => array(
+                'className' => 'User',
+                'foreignKey' => 'user_id',
+            )
+        );
+
+        $this->bindModel(array('hasMany' => $has_many));
+        $this->EventComment->bindModel(array('belongsTo' => $has_one));
+        $this->EventAttendee->bindModel(array('belongsTo' => $has_one));
+
+        $event = $this->findById($event_id, null, null, 2);
+
+        return $event;
+    }
+
 }
 
 ?>
