@@ -1,11 +1,11 @@
 <?php
 /**
- *
+ * doctest.php
  *
  */
 
 /**
- *
+ * DoctestShell
  *
  */
 class DoctestShell extends Shell {
@@ -13,6 +13,10 @@ class DoctestShell extends Shell {
     /**
      * model
      *
+     * <example>
+     * cd app
+     * ../cake/console/cake doctest model
+     * <example>
      */
     function model()
     {
