@@ -38,4 +38,8 @@ echo mb_strcut(
 
 <?php endforeach; ?>
 
+<div class="pager">
+  <?php echo $this->renderElement('paginator'); ?>
+</div>
+
 </div>

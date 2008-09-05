@@ -17,17 +17,16 @@ class EventsController extends AppController
      */
     function index()
     {
-        $result = $this->Event->find(
-            'all',
-            array(
-                'conditions' => array(
-                    'Event.private' => 0,
-                    'Event.publish_date <' => date('Y-m-d H:i:s')
-                ),
-                'limit' => 5,
-                'order' => array('Event.id' => 'desc')
-            )
-        );
+        $this->paginate = array('Event'  => array(
+            'conditions' => array(
+                'Event.private' => 0,
+                'Event.publish_date <' => date('Y-m-d H:i:s')
+            ),
+            'limit' => 5,
+            'order' => array('Event.id' => 'desc')
+        ));
+
+        $result = $this->paginate();
 
         $this->set('events', $result);
 
