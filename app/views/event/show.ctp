@@ -76,7 +76,7 @@
   <?php endforeach; ?>
   <tr>
     <td colspan="4">
-    <?php if ($session->check('username')): ?>
+    <?php if ($session->check('id')): ?>
       <p><strong>イベントに参加する</strong></p>
       <?php if ($is_over || ($attendee_nokori <= 0)): ?>
       <p>このイベントの募集は終了しました。</p>
@@ -132,7 +132,7 @@
 
 </div>
 
-<?php if ($session->check('username')): ?>
+<?php if ($session->check('id')): ?>
   <div id="commentform">
 <?php
 echo $form->create(
