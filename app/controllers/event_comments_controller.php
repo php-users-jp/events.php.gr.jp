@@ -17,7 +17,7 @@ class EventCommentsController extends AppController {
         if ($this->data) {
             $this->data['EventComment']['event_id'] = (int)$this->data['EventComment']['event_id'];
             $user_id = $this->Session->read('id');
-            if (is_array($user)) {
+            if (is_numeric($user_id)) {
                 $save_data = $this->data['EventComment'];
                 $save_data['user_id'] = $user_id;
                 $save_data['ip'] = $_SERVER['REMOTE_ADDR'];
