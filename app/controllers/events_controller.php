@@ -33,9 +33,7 @@ class EventsController extends AppController
         ));
 
         $result = $this->paginate();
-
         $this->set('events', $result);
-
     }
 
     /**
@@ -75,21 +73,18 @@ class EventsController extends AppController
             )
         );
 
-        $this->Event->bindModel(array('hasMany' => $has_many, 'hasOne' => $has_one));
+        $this->Event->bindModel(
+            array('hasMany' => $has_many, 'hasOne' => $has_one)
+        );
 
         $this->Event->EventComment->bindModel(array('belongsTo' => $has_one2));
         $this->Event->EventAttendee->bindModel(array('belongsTo' => $has_one2));
 
-        $re = $this->Event->findById($id, null,null,2);
+        $re = $this->Event->findById($id, null, null, 2);
         if (!$re) {
             // @TODO 404だしたい
             $this->redirect('/');
         }
-
-        // WikiPageのレンダリング
-        require_once APP . 'Text/PukiWiki.php';
-        $pukiwiki = new Text_PukiWiki();
-        $re['EventPage']['content'] = $pukiwiki->toHtml($re['EventPage']['content']);
 
         $attendee_count = 0;
         $joined = false;
@@ -175,7 +170,7 @@ class EventsController extends AppController
      * rss
      *
      */
-    function rss($id)
+    function rss($id = false)
     {
         $this->layout = 'rss';
         $this->set('channel', array(

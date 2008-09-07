@@ -60,8 +60,68 @@ class Event extends AppModel
         $this->EventAttendee->bindModel(array('belongsTo' => $has_one));
 
         $event = $this->findById($event_id, null, null, 2);
+        $event['Event']['description'] = $this->convertDescription($event['Event']['description'], false);
 
         return $event;
+    }
+
+    /**
+     * convertDescription
+     *
+     */
+    function convertDescription($description, $joined = null)
+    {
+        if ($joined == null) {
+        }
+
+        if (!$joined) {
+            $replaced = '';
+        } else {
+            $replaced = '\1';
+        }
+
+        $description = preg_replace("_\(\(\((.*?)\)\)\)_ims", $replaced, $description);
+        return $description;
+    }
+
+    /**
+     * afterFind
+     *
+     */
+    function afterFind($result)
+    {
+        foreach ($result as $key => $row) {
+            $result[$key]['Event']['description'] = $this->convertDescription($row['Event']['description'], $this->joined($row['Event']['id']));
+        }
+
+        return $result;
+    }
+
+    /**
+     * joined
+     *
+     */
+    function joined($event_id, $user_id = null)
+    {
+        if ($user_id == null) {
+            if (isset($_SESSION['id'])) {
+                $user_id = $_SESSION['id'];
+            } else {
+                return false;
+            }
+        }
+
+        $result = $this->EventAttendee->find(
+            'all',
+            array('Event.id' => $event_id)
+        );
+
+        foreach ($result as $row) {
+            // 自分が参加していたらフラグをたてる
+            if ($user_id == $row['EventAttendee']['user_id']) {
+                return true;
+            }
+        }
     }
 
 }
