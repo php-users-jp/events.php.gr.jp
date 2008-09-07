@@ -5,7 +5,7 @@
 <h2>Recent Event</h2>
 <?php foreach($events as $event): ?>
 
-<h3><?php echo $event['Event']['name']; ?></h3>
+<h3><?php echo $html->link($event['Event']['name'], '/events/show/' . $event['Event']['id']); ?></h3>
 <p>
 <?php
 echo mb_strcut(
