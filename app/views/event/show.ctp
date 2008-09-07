@@ -60,7 +60,7 @@
     <tr class="even">
     <?php endif; ?>
   <?php endif; ?>
-    <td><a href="http://profile.typekey.com/<?php echo $item['User']['username']; ?>"><?php echo $item['User']['nickname']; ?></a></td>
+    <td><?php echo $item['User']['nickname']; ?></td>
     <td><?php echo h($item['comment']); ?></td>
     <td><?php echo $item['created']; ?></td>
     <td>
@@ -119,7 +119,7 @@
 <?php foreach ($data['EventComment'] as $key => $comment): ?>
 <div class="section">
 <h4>
-<?php echo $key; ?> &nbsp; <?php echo $html->link(h($comment['User']['nickname']), "http://profile.typekey.com/{$comment['User']['username']}"); ?>
+<?php echo $key; ?> &nbsp; <?php echo h($comment['User']['nickname']); ?>
 </h4>
   <p>
 <?php echo h($comment['comment']); ?>
