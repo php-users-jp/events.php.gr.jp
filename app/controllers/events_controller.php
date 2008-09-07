@@ -1,10 +1,16 @@
 <?php
 /**
+ * events_controller.php
  *
  * vim: fenc=utf-8
  *
  */
 
+/**
+ * EventsController
+ *
+ *
+ */
 class EventsController extends AppController
 {
     var $name = 'Event';
@@ -75,6 +81,10 @@ class EventsController extends AppController
         $this->Event->EventAttendee->bindModel(array('belongsTo' => $has_one2));
 
         $re = $this->Event->findById($id, null,null,2);
+        if (!$re) {
+            // @TODO 404だしたい
+            $this->redirect('/');
+        }
 
         // WikiPageのレンダリング
         require_once APP . 'Text/PukiWiki.php';
