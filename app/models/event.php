@@ -103,6 +103,18 @@ class Event extends AppModel
      */
     function joined($event_id, $user_id = null)
     {
+        if (!isset($this->EventAttendee)) {
+            $has_many = array(
+                'EventAttendee' => array(
+                    'className' => 'EventAttendee',
+                    'foreignKey' => 'event_id'
+                )
+            );
+            $this->bindModel(
+                array('hasMany' => $has_many)
+            );
+        }
+
         if ($user_id == null) {
             if (isset($_SESSION['id'])) {
                 $user_id = $_SESSION['id'];
