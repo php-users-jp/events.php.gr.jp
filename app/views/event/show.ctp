@@ -136,7 +136,7 @@
   <div id="commentform">
 <?php
 echo $form->create(
-    'EventComment', array('type' => 'post', 'action' => 'join')
+    'EventComment', array('type' => 'post', 'action' => 'add')
 );
 echo $form->hidden('EventComment.event_id', array('value' => $event_id));
 echo $form->input('EventComment.comment', array('type' => 'text', 'size' => '45'));

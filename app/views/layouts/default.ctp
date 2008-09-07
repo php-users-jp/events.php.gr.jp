@@ -48,7 +48,7 @@
       <?php if ($session->check('id')): ?>
       <li><?php echo $html->link('Logout', '/users/userlogout');?></li>
       <li><?php echo $html->link('ユーザ設定', '/users/config');?></li>
-      <li>USER:<em><?php echo $session->read('id') ?></em></li>
+      <li>USER:<em><?php echo $session->read('nickname') ?></em></li>
       <li>Role:<em>
         <?php if ($session->read('role') == 'admin'): ?>
         Admin

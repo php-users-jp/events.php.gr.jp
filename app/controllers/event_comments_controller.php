@@ -9,10 +9,10 @@ class EventCommentsController extends AppController {
     var $uses = array('EventComment', 'User');
 
     /**
-     * join
+     * add
      *
      */
-    function join()
+    function add()
     {
         if ($this->data) {
             $this->data['EventComment']['event_id'] = (int)$this->data['EventComment']['event_id'];
@@ -28,7 +28,7 @@ class EventCommentsController extends AppController {
         }
 
         if ($this->data['EventComment']['event_id']) {
-            $this->redirect('/events/show/'.$this->data['EventComment']['event_id']);
+            $this->flash('コメントを登録しました','/events/show/' . $this->data['EventComment']['event_id']);
         } else {
             $this->redirect('/');
         }
