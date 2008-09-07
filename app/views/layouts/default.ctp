@@ -45,10 +45,10 @@
       <li><?php echo $html->link('システム設定', '/users/control'); ?></li>
       <?php endif; ?>
       <?php /* ログインしたユーザだけ表示される */ ?>
-      <?php if ($session->check('username')): ?>
+      <?php if ($session->check('id')): ?>
       <li><?php echo $html->link('Logout', '/users/userlogout');?></li>
       <li><?php echo $html->link('ユーザ設定', '/users/config');?></li>
-      <li>USER:<em><?php echo $session->read('username') ?></em></li>
+      <li>USER:<em><?php echo $session->read('id') ?></em></li>
       <li>Role:<em>
         <?php if ($session->read('role') == 'admin'): ?>
         Admin
