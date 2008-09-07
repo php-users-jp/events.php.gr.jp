@@ -14,6 +14,10 @@ class UsersController extends AppController
     var $helpers = array('Html', 'Form');
     var $components = array('Auth', 'Openid');
 
+    /**
+     * beforeFilter
+     *
+     */
     function beforeFilter()
     {
         //$this->Auth->userScope = array('User.flag' => 0);
@@ -29,12 +33,20 @@ class UsersController extends AppController
         );
     }
 
+    /**
+     * beforerender
+     *
+     */
     function beforerender()
     {
         $user = $this->Auth->user();
         $this->set('auth', $user['User']['nickname']);
     }
 
+    /**
+     * getRequest
+     *
+     */
     protected function getRequest()
     {
         $returnTo = 'http://'.$_SERVER['SERVER_NAME'].$this->here;
@@ -189,8 +201,21 @@ class UsersController extends AppController
 
         // @TODO システムバージョン等を表示する事
         
+        $users = $this->User->find('all',
+            array(
+                'conditions' => array('role'  => 'user'),
+                'order' => 'User.username'
+            )
+        );
+        $user_list = array();
+        foreach ($users as $user) {
+            $user_list[$user['User']['id']] = $user['User']['username'] . '@' . $user['User']['nickname'];
+        }
+        $this->set('user_list', $user_list);
+
         $users = $this->User->find('all', array('conditions' => "User.role = 'admin'"));
         $this->set('admins', $users);
+
     }
 
     /**
@@ -205,7 +230,7 @@ class UsersController extends AppController
         }
 
         if ($this->data) {
-            $user = $this->User->findByUsername($this->data['User']['username']);
+            $user = $this->User->findById($this->data['User']['id']);
             if ($user) {
                 $user['User']['role'] = 'admin';
             }

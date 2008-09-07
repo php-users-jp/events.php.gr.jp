@@ -22,10 +22,10 @@ implement yet
 
 <h3>管理者の追加</h3>
 <div class="info">
-  <p>追加するユーザのtypekeyアカウントを入力してsubmitを押してください</p>
+  <p>昇格したいユーザを選択し、「管理者に昇格」ボタンを押してください</p>
 </div>
 <p>
 <?php echo $form->create('User', array('type' => 'post', 'action' => 'upgrade')); ?>
-<?php echo $form->input('username', array('type' => 'text')); ?>
+<?php echo $form->select('id', $user_list); ?>
 <?php echo $form->end('管理者に昇格'); ?>
 </p>
