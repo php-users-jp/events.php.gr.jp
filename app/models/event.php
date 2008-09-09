@@ -49,6 +49,7 @@ class Event extends AppModel
 {
     var $name = 'Event';
     var $useTable = 'event';
+    var $af_through_flag = false;
 
     /**
      * isOver
@@ -148,6 +149,11 @@ class Event extends AppModel
      */
     function afterFind($result)
     {
+        if ($this->af_through_flag) {
+            $this->af_through_flag = false;
+            return $result;
+        }
+
         foreach ($result as $key => $row) {
             $result[$key]['Event']['description'] = $this->convertDescription($row['Event']['description'], $this->joined($row['Event']['id']));
         }
