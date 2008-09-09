@@ -4,6 +4,47 @@
  *
  */
 
+/**
+ * Event
+ *
+ * #test __setup
+ * <code>
+ * $this->obj = new Event();
+ * $this->db = $this->obj->getDataSource();
+ *
+ * $fixture = 'event_test';
+ * require_once(TESTS . 'fixtures/event_test_fixture.php');
+ * $fixtureClass = Inflector::camelize($fixture) . 'Fixture';
+ * $this->_fixtures[Inflector::camelize($fixture)] =& new $fixtureClass($this->db);
+ * $this->_fixtureClassMap[Inflector::camelize($fixture)] = $fixture;
+ *
+ * $sources = $this->db->listSources();
+ * foreach ($this->_fixtures as $fixture) {
+ *     if (in_array($fixture->table, $sources)) {
+ *         $fixture->drop($this->db);
+ *     }
+ *
+ *     $fixture->create($this->db);
+ * }
+ *
+ * // Create records
+ * if (isset($this->_fixtures) && isset($this->db)) {
+ *     foreach ($this->_fixtures as $fixture) {
+ *         $inserts = $fixture->insert($this->db);
+ *     }
+ * }
+ * </code>
+ *
+ * #test __teardown
+ * <code>
+ * if (isset($this->_fixtures) && isset($this->db)) {
+ *     foreach (array_reverse($this->_fixtures) as $fixture) {
+ *         $fixture->drop($this->db);
+ *     }
+ * }
+ * $this->obj = null;
+ * </code>
+ */
 class Event extends AppModel
 {
     var $name = 'Event';
@@ -14,7 +55,9 @@ class Event extends AppModel
      *
      * #test
      * <code>
-     * #false(#f(1));
+     * $base = $this->obj->query('SELECT id FROM event limit 1');
+     * #true(#f($base[0][0]['id']));
+     * #false(#f(-1));
      * </code>
      */
     function isOver($event_id, $timestamp = null)
