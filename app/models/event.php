@@ -12,6 +12,10 @@ class Event extends AppModel
     /**
      * isOver
      *
+     * #test
+     * <code>
+     * #false(#f(1));
+     * </code>
      */
     function isOver($event_id, $timestamp = null)
     {
@@ -22,7 +26,11 @@ class Event extends AppModel
         $query = "SELECT due_date FROM event WHERE id = ? LIMIT 1";
         $result = $this->query($query, array($event_id));
 
-        $duedate = $result[0][0]['due_date'];
+        if (isset($result[0][0]['due_date'])) {
+            $duedate = $result[0][0]['due_date'];
+        } else {
+            return false;
+        }
 
         if (strtotime($duedate) < $timestamp) {
             return true;
