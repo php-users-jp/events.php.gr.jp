@@ -4,6 +4,11 @@
  *
  */
 
+/**
+ * EventAttendee
+ *
+ *
+ */
 class EventAttendee extends AppModel
 {
     var $name = 'EventAttendee';

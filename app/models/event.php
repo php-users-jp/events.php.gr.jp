@@ -119,10 +119,17 @@ class Event extends AppModel
     /**
      * convertDescription
      *
+     * #test
+     * <code>
+     * #eq('', #f('(((aaa)))'));
+     * #eq('', #f('(((aaa)))', false));
+     * #eq('aaa', #f('(((aaa)))', true));
+     * </code>
      */
     function convertDescription($description, $joined = null)
     {
         if ($joined == null) {
+            $joined = false;
         }
 
         if (!$joined) {

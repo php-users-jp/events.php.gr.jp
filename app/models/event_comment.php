@@ -4,6 +4,11 @@
  *
  */
 
+/**
+ * EventComment
+ *
+ *
+ */
 class EventComment extends AppModel
 {
     var $name = 'EventComment';
