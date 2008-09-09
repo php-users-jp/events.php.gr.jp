@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Script-Type" content="text/javascript" />
 <title><?php e('events.php.gr.jp'); e(' - '.$title_for_layout) ?></title>
 <?php echo $html->css('phpgrjp'); ?>
-<link rel="alternate" type="application/rss+xml" title="RSS" href="{$BASE_URL}/rss" />
+<link rel="alternate" type="application/rss+xml" title="RSS" href="http://events.php.gr.jp/events/rss" />
 </head>
 <body>
 <div id="header">
