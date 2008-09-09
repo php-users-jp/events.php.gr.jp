@@ -211,7 +211,7 @@ input, textarea, select {
     margin: 5px auto;
     padding: 4px;
     background-color: #DAE3F5;
-    background-image: url("images/input_bg.png");
+    background-image: url("./phpgrjp/images/input_bg.png");
     background-repeat: no-repeat;
     background-position: left top;
 }
