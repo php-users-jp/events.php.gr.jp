@@ -10,7 +10,7 @@ if (isset($message)) {
 }
 ?>
 
-<h3>TypeKeyにきりかえる<h3>
+<h3>TypeKeyにきりかえる</h3>
 <?php 
 echo $form->create(
     'User', array('type' => 'post', 'action' => 'config')
@@ -24,7 +24,7 @@ echo $form->input('OpenidUrl.username', array('label' => false));
 echo $form->end('Login');
 ?>
 
-<h3>はてなにきりかえる<h3>
+<h3>はてなにきりかえる</h3>
 <?php
 echo $form->create(
     'User', array('type' => 'post', 'action' => 'config')
@@ -35,7 +35,7 @@ echo $form->input('OpenidUrl.username', array('label' => false));
 echo $form->end('はてなでlogin');
 ?>
 
-<h3>mixiにきりかえる<h3>
+<h3>mixiにきりかえる</h3>
 <?php
 echo $form->create(
     'User', array('type' => 'post', 'action' => 'config')
