@@ -263,6 +263,7 @@ class Auth_Yadis_Yadis {
 
     function curlPresent()
     {
+        return false;
         return function_exists('curl_init');
     }
 

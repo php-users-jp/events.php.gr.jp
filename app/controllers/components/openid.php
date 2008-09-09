@@ -80,7 +80,7 @@ class OpenidComponent extends Object {
 	}
 	
 	private function getConsumer() {
-		$storePath = TMP.'openid3';
+		$storePath = TMP.'openid';
 
 		if (!file_exists($storePath) && !mkdir($storePath)) {
 		    throw new Exception('Could not create the FileStore directory '.$storePath.'. Please check the effective permissions.');
