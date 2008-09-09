@@ -189,7 +189,7 @@ class Event extends AppModel
 
         $result = $this->EventAttendee->find(
             'all',
-            array('Event.id' => $event_id)
+            array('EventAttendee.event_id' => $event_id)
         );
 
         foreach ($result as $row) {
