@@ -21,7 +21,10 @@ class DoctestShell extends Shell {
     function model()
     {
         require_once CONFIGS . 'database.php';
+        require_once CAKE_TESTS_LIB . 'cake_test_fixture.php';
+
         App::Import('Core', array('Model', 'AppModel'));
+
         $this->doctest('models');
     }
 
