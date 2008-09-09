@@ -160,6 +160,7 @@ class EventsController extends AppController
 
         if ($this->data) {
         } else {
+            $this->Event->af_through_flag = true;
             $event = $this->Event->findById($event_id);
             $this->data = $event;
             $this->set('event', $event);
