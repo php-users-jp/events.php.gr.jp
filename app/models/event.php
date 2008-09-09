@@ -198,6 +198,8 @@ class Event extends AppModel
                 return true;
             }
         }
+
+        return false;
     }
 
 }
