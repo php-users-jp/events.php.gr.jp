@@ -8,6 +8,7 @@ class EventPage extends AppModel
 {
     var $name = 'EventPage';
     var $useTable = 'event_page';
+    var $af_through_flag = false;
 
     /**
      * afterFind
@@ -15,6 +16,11 @@ class EventPage extends AppModel
      */
     function afterFind($result, $primary = null)
     {
+        if ($this->af_through_flag) {
+            $this->af_through_flag = false;
+            return $result;
+        }
+
         // WikiPageのレンダリング
         require_once APP . 'Text/PukiWiki.php';
         $pukiwiki = new Text_PukiWiki();

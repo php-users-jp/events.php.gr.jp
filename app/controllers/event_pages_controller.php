@@ -34,6 +34,7 @@ class EventPagesController extends AppController
                 $this->redirect('/events/show/' . $this->data['EventPage']['event_id']);
             }
         } else {
+            $this->EventPage->af_through_flag = true;
             $page = $this->EventPage->findByEventId($id, null, 'EventPage.timestamp DESC');
             if ($page) {
                 $page['EventPage']['html'] = $pukiwiki->toHtml($page['EventPage']['content']);
