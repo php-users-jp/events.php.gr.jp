@@ -12,7 +12,7 @@
 <div>
 <h2>Event Entry::<?php echo $data['Event']['name']; ?></h2>
 <dl>
-<dt>イベント内容</dt><dd><?php echo $data['Event']['description']; ?></dd>
+<dt>イベント内容</dt><dd><?php echo nl2br($data['Event']['description']); ?></dd>
 <dt>イベント開催時間</dt><dd><?php echo $datespan->display($data['Event']['start_date'], $data['Event']['end_date']);?></dd>
 <!-- <dt>イベント終了時間</dt><dd>{$app.event.end_date}</dd> -->
 <dt>募集開始時間</dt><dd><?php echo $data['Event']['accept_date']; ?></dd>
