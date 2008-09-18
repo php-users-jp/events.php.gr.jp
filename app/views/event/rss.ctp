@@ -11,7 +11,7 @@ function transformRSS($data) {
         );
     } else {
         $result =  array(
-            'title' => $data['Event']['title'],
+            'title' => $data['Event']['name'],
             'link' => '/events/show/' . $data['Event']['id'],
             'guid' => '/events/show/' . $data['Event']['id'],
             'description' => $data['Event']['description'],
