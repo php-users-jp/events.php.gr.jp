@@ -14,7 +14,7 @@
 class EventsController extends AppController
 {
     var $name = 'Event';
-    var $helpers = array('Rss', 'Datespan');
+    var $helpers = array('Rss', 'Datespan', 'Javascript');
     var $uses = array('Event', 'Trackback');
 
     /**
