@@ -49,7 +49,7 @@ class UsersController extends AppController
      */
     protected function getRequest()
     {
-        $returnTo = 'http://'.$_SERVER['SERVER_NAME'].$this->here;
+        $returnTo = 'http://'.$_SERVER['HTTP_HOST'] . $this->here;
         $provider_list = array(
             'http://profile.typekey.com/',
             'http://www.hatena.ne.jp/',
@@ -68,7 +68,7 @@ class UsersController extends AppController
                 $this->Openid->authenticate(
                     $login_url,
                     $returnTo,
-                    'http://'.$_SERVER['SERVER_NAME']
+                    'http://'.$_SERVER['HTTP_HOST']
                 );
             } catch (InvalidArgumentException $e) {
                 $this->setMessage('Invalid OpenID');
