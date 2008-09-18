@@ -4,34 +4,50 @@
 <?php if (isset($event['Event']['id']) && is_numeric($event['Event']['id'])): ?>
 <?php echo $form->hidden('Event.id', array('type' => 'text')); ?>
 <?php endif; ?>
-<?php echo $form->input('Event.name', array('type' => 'text')); ?>
-<?php echo $form->input('Event.publish_date', array('type' => 'text')); ?>
+<?php echo $form->input('Event.name', array('label' => 'イベント名 : ', 'type' => 'text', 'size' => 60)); ?>
+<?php echo $form->input('Event.publish_date', array('label' => '公開日時 : ', 'type' => 'text', 'size' => 30)); ?>
 <input type="button" id="button_publish_date" value="timestamp" />
-<?php echo $form->input('Event.start_date', array('type' => 'text')); ?>
+<?php echo $form->input('Event.start_date', array('label' => '開始日時 : ', 'type' => 'text', 'size' => 30)); ?>
 <input type="button" id="button_start_date" value="timestamp" />
-<?php echo $form->input('Event.end_date', array('type' => 'text')); ?>
+<?php echo $form->input('Event.end_date', array('label' => '終了日時 : ', 'type' => 'text', 'size' => 30)); ?>
 <input type="button" id="button_end_date" value="timestamp" />
-<?php echo $form->input('Event.accept_date', array('type' => 'text')); ?>
+<?php echo $form->input('Event.accept_date', array('label' => '募集開始日時 : ', 'type' => 'text', 'size' => 30)); ?>
 <input type="button" id="button_accept_date" value="timestamp" />
-<?php echo $form->input('Event.due_date', array('type' => 'text')); ?>
+<?php echo $form->input('Event.due_date', array('label' => '申し込み締め切り : ', 'type' => 'text', 'size' => 30)); ?>
 <input type="button" id="button_due_date" value="timestamp" />
-<?php echo $form->input('Event.max_register', array('type' => 'text')); ?>
-<?php echo $form->textarea('Event.description', array('cols' => '28', 'rows' => '9')); ?>
-<br />
+<?php echo $form->input('Event.max_register', array('label' => '募集人数 : ', 'type' => 'text')); ?>
+
+<div>
+イベントの内容：<br />
+<?php echo $form->textarea('Event.description', array('label' => 'イベントの内容 : ', 'cols' => '50', 'rows' => '9')); ?>
+</div>
+
+<p>
 本文中に <strong>(((   )))</strong> で囲う部分を設けることで、「ログイン中かつ参加済み」の人しか見ることのできない
 コメントを設けることができます。<br />
 先日からの、申し込みをせずに来てしまう人問題の対処として、申し込まないと会場が見れないようにしたらどうか、などの意見があり試験的に実装しています。<br />
 また、参加者にしか見せたくない、幹事の連絡先の伝達などにもご活用ください。
-<?php echo $form->textarea('Event.private_description', array('cols' => '28', 'rows' => '9')); ?>
-<?php echo $form->textarea('Event.map', array('cols' => '28', 'rows' => '9')); ?>
-<?php echo $form->input('Event.private', array('cols' => '28', 'rows' => '9')); ?>
+</p>
+
+<div>
+申し込み完了時に表示する内容：<br />
+<?php echo $form->textarea('Event.private_description', array('cols' => '50', 'rows' => '5')); ?>
+</div>
+
+<div>
+マップ：<br />
+<?php echo $form->textarea('Event.map', array('cols' => '50', 'rows' => '5')); ?>
+</div>
+
+<?php echo $form->input('Event.private', array('type' => 'text', 'label' => '非公開設定？ : ')); ?>
+
 <?php echo $form->end('投稿'); ?>
 </div>
 
 <div class="info">
-<h4>Mapについて</h4>
+<h4>マップについて</h4>
 <p>
-Mapとは地図を貼り付ける機能の事でフォームの中にALPS Labsで提供されているALPSLAB Slideのパラメータ(ex.35/9/23,136/58/34)を
+マップとは地図を貼り付ける機能の事でフォームの中にALPS Labsで提供されているALPSLAB Slideのパラメータ(ex.35/9/23,136/58/34)を
 入力することで地図を表示させる事ができるようになります。<br />
 地図も、 <strong>(((   )))</strong> で囲うと「ログイン中かつ参加済み」の人しか見れません。<br />
 ex.  (((35/9/23,136/58/34)))
@@ -40,9 +56,8 @@ ex.  (((35/9/23,136/58/34)))
 地図の座標は<a href="http://base.alpslab.jp/">ALPSLAB Base</a>から取得することができます。さらに具体的な説明は<a href="http://www.alpslab.jp/slide_howto.html">ALPSLAB Slide</a>を参照してください。
 </p>
 </div>
-<script type="text/javascript" src="{$BASE_URL}/../js/lib/JSAN.js"></script>
+<?php echo $javascript->link('JSAN'); ?>
 <script type="text/javascript">
-{literal}
 JSAN.use('Widget.Dialog');
 Widget.Dialog.prototype.timestamp = function(msg, options) {
     var opt = this._options;
@@ -235,7 +250,7 @@ Widget.Dialog.prototype.timestamp = function(msg, options) {
   button_publish_date.onclick = function () {
     Widget.Dialog.timestamp("TIMESTAMP",{
         onOk: function (val) {
-            document.forms[0].publish_date.value = val;
+            document.getElementById('EventPublishDate').value = val;
             Widget.Dialog.close();
         }
     });
@@ -246,7 +261,7 @@ Widget.Dialog.prototype.timestamp = function(msg, options) {
   button_start_date.onclick = function () {
     Widget.Dialog.timestamp("TIMESTAMP",{
         onOk: function (val) {
-            document.forms[0].start_date.value = val;
+            document.getElementById('EventStartDate').value = val;
             Widget.Dialog.close();
         }
     });
@@ -257,7 +272,7 @@ Widget.Dialog.prototype.timestamp = function(msg, options) {
   button_end_date.onclick = function () {
     Widget.Dialog.timestamp("TIMESTAMP",{
         onOk: function (val) {
-            document.forms[0].end_date.value = val;
+            document.getElementById('EventEndDate').value = val;
             Widget.Dialog.close();
         }
     });
@@ -268,7 +283,7 @@ Widget.Dialog.prototype.timestamp = function(msg, options) {
   button_due_date.onclick = function () {
     Widget.Dialog.timestamp("TIMESTAMP",{
         onOk: function (val) {
-            document.forms[0].due_date.value = val;
+            document.getElementById('EventDueDate').value = val;
             Widget.Dialog.close();
         }
     });
@@ -279,10 +294,9 @@ Widget.Dialog.prototype.timestamp = function(msg, options) {
   button_accept_date.onclick = function () {
     Widget.Dialog.timestamp("TIMESTAMP",{
         onOk: function (val) {
-            document.forms[0].accept_date.value = val;
+            document.getElementById('EventAcceptDate').value = val;
             Widget.Dialog.close();
         }
     });
   };
-{/literal}
 </script>
