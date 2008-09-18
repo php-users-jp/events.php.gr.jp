@@ -81,22 +81,14 @@
 class DATABASE_CONFIG {
 
 	var $default = array(
-		'driver' => 'mysql',
-		'persistent' => false,
-		'host' => 'localhost',
-		'login' => 'user',
-		'password' => 'password',
-		'database' => 'database_name',
+		'driver' => 'sqlite',
+		'database' => '../dbs/event.db',
 		'prefix' => '',
 	);
 
 	var $test = array(
-		'driver' => 'mysql',
-		'persistent' => false,
-		'host' => 'localhost',
-		'login' => 'user',
-		'password' => 'password',
-		'database' => 'test_database_name',
+		'driver' => 'sqlite',
+		'database' => '../dbs/event.db',
 		'prefix' => '',
 	);
 }
