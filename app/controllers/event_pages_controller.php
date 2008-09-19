@@ -22,6 +22,10 @@ class EventPagesController extends AppController
         require_once APP . 'Text/PukiWiki.php';
         $pukiwiki = new Text_PukiWiki();
 
+        if ($id == false) {
+            $this->flash('指定のWikiページは存在しません', '/');
+        }
+
         if ($this->data) {
             // @TODO もっとうまいやりかたはないの？
             if (isset($this->params['form']['preview'])) {
@@ -30,8 +34,9 @@ class EventPagesController extends AppController
                 $this->set('page', $page);
             } else {
                 $this->data['EventPage']['timestamp'] = time();
+                $this->data['EventPage']['user_id'] = $this->Session->read('id');
                 $this->EventPage->save($this->data);
-                $this->redirect('/events/show/' . $this->data['EventPage']['event_id']);
+                $this->flash('Wikiページの更新が完了しました', '/events/show/' . $this->data['EventPage']['event_id']);
             }
         } else {
             $this->EventPage->af_through_flag = true;
