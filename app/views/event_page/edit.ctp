@@ -4,8 +4,8 @@
 </div>
 
 <div>
-<?php echo $form->create('EventPage', array('type' => 'post', 'action' => 'edit')); ?>
-<?php echo $form->hidden('EventPage.event_id', $event_id); ?>
+<?php echo $form->create('EventPage', array('type' => 'post', 'action' => 'edit/' . $event_id)); ?>
+<?php echo $form->hidden('EventPage.event_id', array('value' => $event_id)); ?>
 <?php echo $form->textarea('EventPage.content', array('cols' => '50', 'rows' => '9')); ?>
 <?php echo $form->submit('preview', array('name' => 'preview')); ?>
 <?php echo $form->end('submit'); ?>
