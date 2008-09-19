@@ -1,5 +1,4 @@
 <IfModule mod_rewrite.c>
-#<IfModule rewrite_module>
     RewriteEngine On
     RewriteRule ^event\.php/event_show/([0-9]+)$ /events/show/$1 [R=301,L]
     RewriteRule ^event\.php/rss$ /events/rss [R=301,L]
