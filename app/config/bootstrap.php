@@ -26,6 +26,7 @@
  * @lastmodified	$Date: 2008-01-01 22:33:52 -0800 (Tue, 01 Jan 2008) $
  * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
 /**
  *
  * This file is loaded automatically by the app/webroot/index.php file after the core bootstrap.php is loaded
@@ -33,6 +34,8 @@
  * You can also use this to include or require any files in your application.
  *
  */
+Configure::write('Event.version', '2.0.1');
+
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
  * This is related to Ticket #470 (https://trac.cakephp.org/ticket/470)
