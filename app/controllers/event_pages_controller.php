@@ -1,6 +1,6 @@
 <?php
 /**
- *
+ * 
  *
  */
 
@@ -21,7 +21,8 @@ class EventPagesController extends AppController
         // WikiPageのレンダリング
         require_once APP . 'Text/PukiWiki.php';
         $pukiwiki = new Text_PukiWiki();
-
+        $preview = '';
+        
         if ($id == false) {
             $this->flash('指定のWikiページは存在しません', '/');
         }
@@ -30,7 +31,7 @@ class EventPagesController extends AppController
             // @TODO もっとうまいやりかたはないの？
             if (isset($this->params['form']['preview'])) {
                 $page = $this->data;
-                $page['EventPage']['html'] = $pukiwiki->toHtml($page['EventPage']['content']);
+                $preview = $pukiwiki->toHtml($page['EventPage']['content']);
                 $this->set('page', $page);
             } else {
                 $this->data['EventPage']['timestamp'] = time();
@@ -42,23 +43,14 @@ class EventPagesController extends AppController
             $this->EventPage->af_through_flag = true;
             $page = $this->EventPage->findByEventId($id, null, 'EventPage.timestamp DESC');
             if ($page) {
-                $page['EventPage']['html'] = $pukiwiki->toHtml($page['EventPage']['content']);
-
                 $this->data = $page;
                 $this->set('page', $page);
             }
         }
 
+        $this->set('preview',$preview);
         $this->set('event_id', $id);
         $this->set('pukiwiki', $pukiwiki);
-    }
-
-    /**
-     * preview
-     *
-     */
-    public function preview($id)
-    {
     }
 }
 
