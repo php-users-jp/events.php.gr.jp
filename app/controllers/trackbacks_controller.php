@@ -41,6 +41,7 @@ class TrackbacksController extends AppController
             echo $trackback->getResponseSuccess();
             
             $row = array(
+                'id'           => NULL,
                 'event_id'   => $event_id,
                 'url'          => $trackback->get('url'),
                 'title'        => $trackback->get('title'),
@@ -109,7 +110,7 @@ class TrackbacksController extends AppController
      */
     protected function storeTrackback($row)
     {
-        // @TODO $B%V%m%C%/$7$?%H%i%C%/%P%C%/$r(Blog$B%G%#%l%/%H%j$K$*$/(B
+        // @TODO ƒuƒƒbƒN‚µ‚½ƒgƒ‰ƒbƒNƒoƒbƒN‚ğlogƒfƒBƒŒƒNƒgƒŠ‚É‚¨‚­
     }
 
     /**
