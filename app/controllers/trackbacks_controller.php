@@ -127,9 +127,9 @@ class TrackbacksController extends AppController
         if ($php_version{0} == "5") {
             $header = get_headers($url);
             if (is_array($header) && (strpos($header[0], '404') === false)) {
-                return false;
-            } else {
                 return file_get_contents($url);
+            } else {
+                return false;
             }
         } else {
             return file_get_contents($url);
