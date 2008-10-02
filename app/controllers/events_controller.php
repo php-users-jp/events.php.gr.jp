@@ -112,8 +112,13 @@ class EventsController extends AppController
         $cond = array(
         	'id' => $user_id_list
         );
-        $user = Set::combine($this->User->find('all',array('conditions' =>$cond)),'{n}.User.id','{n}.User.nickname');
-
+        
+        //参加者が居る場合はユーザーリストを作る
+        $user = array();
+        if ( count($user_id_list) > 0) {
+        	$user = Set::combine($this->User->find('all',array('conditions' =>$cond)),'{n}.User.id','{n}.User.nickname');
+        }
+        
         $this->set('user',$user);
         $this->set('joined', $joined);
         $this->set('canceled', $canceled);
