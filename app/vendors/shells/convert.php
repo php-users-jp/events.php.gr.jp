@@ -1,7 +1,10 @@
 <?php
 class ConvertShell extends Shell {
 	
-	
+	/*
+	 * appディレクトリ内で下記のコマンドを実行でスキーマ変更を実施
+	 * php ../cake/console/cake.php --working `pwd` convert update202to203
+	 */
 	function update202to203(){
 
 		require_once CONFIGS . 'database.php';
