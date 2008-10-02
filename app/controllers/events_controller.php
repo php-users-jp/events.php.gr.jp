@@ -15,7 +15,7 @@ class EventsController extends AppController
 {
     var $name = 'Event';
     var $helpers = array('Rss', 'Datespan', 'Javascript');
-    var $uses = array('Event', 'Trackback');
+    var $uses = array('Event', 'Trackback','User');
 
     /**
      * index
@@ -78,8 +78,8 @@ class EventsController extends AppController
         );
 
         $this->Event->EventComment->bindModel(array('belongsTo' => $has_one2));
-        $this->Event->EventAttendee->bindModel(array('belongsTo' => $has_one2));
-
+        //$this->Event->EventAttendee->bindModel(array('belongsTo' => $has_one2))
+        
         $re = $this->Event->findById($id, null, null, 2);
         if (!$re) {
             // @TODO 404だしたい
@@ -87,11 +87,14 @@ class EventsController extends AppController
         }
 
         $attendee_count = 0;
+        $party_count = 0;
         $joined = false;
         $canceled = false;
+        $user_id_list = array();
         foreach ($re['EventAttendee'] as $row) {
+        	$user_id_list[] = $row['user_id'];
             // 自分が参加していたらフラグをたてる
-            if ($this->Session->read('id') == $row['User']['id']) {
+            if ($this->Session->read('id') == $row['user_id']) {
                 $joined = true;
                 if ($row['canceled'] == 1) {
                     $canceled = true;
@@ -101,11 +104,21 @@ class EventsController extends AppController
             if ($row['canceled'] != 1) {
                 $attendee_count++;
             }
+            if ($row['canceled'] != 1 && $row['party'] == 1) {
+                $party_count++;
+            }            
         }
 
+        $cond = array(
+        	'id' => $user_id_list
+        );
+        $user = Set::combine($this->User->find('all',array('conditions' =>$cond)),'{n}.User.id','{n}.User.nickname');
+
+        $this->set('user',$user);
         $this->set('joined', $joined);
         $this->set('canceled', $canceled);
         $this->set('attendee_count', $attendee_count);
+        $this->set('party_count', $party_count);
         $this->set('attendee_nokori', $re['Event']['max_register'] - $attendee_count);
         $this->set('is_over', $this->Event->isOver($id));
         $this->set('data', $re);

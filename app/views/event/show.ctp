@@ -43,12 +43,13 @@
 <ul>
 <li>募集人数:<?php echo $data['Event']['max_register']; ?></li>
 <li>現在の参加人数:<?php echo $attendee_count; ?></li>
+<li>懇親会参加人数:<?php echo $party_count; ?></li>
 <li>残り:<?php echo $attendee_nokori; ?></li>
 </ul>
 
 <div align="center">
 <table>
-  <tr><th>name</th><th>comment</th><th>timestamp</th><th>action</th></tr>
+  <tr><th>name</th><th>comment</th><th>party</th><th>timestamp</th><th>action</th></tr>
   <?php foreach ($data['EventAttendee'] as $key => $item): ?>
 
   <?php if ($item['canceled'] == 1): ?>
@@ -60,22 +61,30 @@
     <tr class="even">
     <?php endif; ?>
   <?php endif; ?>
-    <td><?php echo $item['User']['nickname']; ?></td>
+    <td><?php echo $user[$item['user_id']]; ?></td>
     <td><?php echo h($item['comment']); ?></td>
+    <td style="text-align:center"><?php if ($item['party']) echo '○'; ?></td>
     <td><?php echo $item['created']; ?></td>
-    <td>
+    <td style="text-align:center">
     <?php /* 自分のでまだキャンセルしてなかったらキャンセルリンクを出す */ ?>
-    <?php if ($item['User']['id'] == $session->read('id') && ($item['canceled'] != 1)): ?>
-      <?php echo $html->link('cancel', '/event_attendees/cancel/'.$item['id'], null, 'ドタキャン対策の為、キャンセルするとそのイベントには二度と参加できません。キャンセルしますか？'); ?>
+    <?php if ($item['user_id'] == $session->read('id') && ($item['canceled'] != 1)): ?>
+      <?php echo $html->link('キャンセル', '/event_attendees/cancel/'.$item['id'], null, 'ドタキャン対策の為、キャンセルするとそのイベントには二度と参加できません。キャンセルしますか？'); ?>
     <?php endif; ?>
     <?php if (($session->read('role') == 'admin') && ($item['canceled'] == 1)): ?>
       &nbsp;<?php echo $html->link('キャンセル解除', '/event_attendees/cancelrevert/'.$item['id']); ?>
+    <?php endif; ?>
+    <?php if ($item['user_id'] == $session->read('id')): ?>
+    <?php if (($item['canceled'] != 1) && ($item['party'] == "0")): ?>
+      <?php echo $html->link('懇親会に追加参加', '/event_attendees/party/'.$item['id'], null); ?>
+    <?php else: ?>
+      <?php echo $html->link('懇親会のみ辞退', '/event_attendees/party_cancel/'.$item['id'], null); ?>    
+    <?php endif; ?>
     <?php endif; ?>
     </td>
   </tr>
   <?php endforeach; ?>
   <tr>
-    <td colspan="4">
+    <td colspan="5">
     <?php if ($session->check('id')): ?>
       <p><strong>イベントに参加する</strong></p>
       <?php if ($is_over || ($attendee_nokori <= 0)): ?>
@@ -101,6 +110,7 @@
         <?php echo $form->create('EventAttendee', array('type'  => 'post', 'action' => 'join')); ?>
         <?php echo $form->hidden('EventAttendee.event_id', array('value' => $event_id)); ?>
         <?php echo $form->input('EventAttendee.comment', array('type' => 'text', 'size' => '45')); ?>
+        <?php echo $form->checkbox('EventAttendee.party', array('value' => '1')); ?>懇親会に参加する        
         <?php echo $form->end('参加する'); ?>
       <?php endif; ?>
     <?php else: ?>
