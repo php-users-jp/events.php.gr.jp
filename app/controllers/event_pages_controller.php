@@ -34,14 +34,13 @@ class EventPagesController extends AppController
                 $preview = $pukiwiki->toHtml($page['EventPage']['content']);
                 $this->set('page', $page);
             } else {
-                $this->data['EventPage']['timestamp'] = time();
                 $this->data['EventPage']['user_id'] = $this->Session->read('id');
                 $this->EventPage->save($this->data);
                 $this->flash('Wikiページの更新が完了しました', '/events/show/' . $this->data['EventPage']['event_id']);
             }
         } else {
             $this->EventPage->af_through_flag = true;
-            $page = $this->EventPage->findByEventId($id, null, 'EventPage.timestamp DESC');
+            $page = $this->EventPage->findByEventId($id, null, 'EventPage.created DESC');
             if ($page) {
                 $this->data = $page;
                 $this->set('page', $page);

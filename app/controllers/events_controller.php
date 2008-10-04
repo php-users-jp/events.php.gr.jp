@@ -62,7 +62,7 @@ class EventsController extends AppController
         $has_one = array(
             'EventPage' => array(
                 'className' => 'EventPage',
-                'order' => 'EventPage.timestamp DESC',
+                'order' => 'EventPage.created DESC',
                 'foreignKey' => 'event_id',
             )
         );
