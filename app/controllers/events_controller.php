@@ -119,6 +119,7 @@ class EventsController extends AppController
         	$user = Set::combine($this->User->find('all',array('conditions' =>$cond)),'{n}.User.id','{n}.User.nickname');
         }
         
+        $this->pageTitle = $re['Event']['name'];
         $this->set('user',$user);
         $this->set('joined', $joined);
         $this->set('canceled', $canceled);
