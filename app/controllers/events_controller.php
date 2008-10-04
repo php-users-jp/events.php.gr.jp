@@ -255,6 +255,21 @@ class EventsController extends AppController
             $this->index();
         }
 
+   }
+
+    /**
+     * delete
+     *
+     */
+    public function delete($id)
+    {
+        if (!$this->isAdmin()) {
+            $this->redirect('/');
+        }
+
+        $this->Event->del($id);
+
+        $this->redirect('/events/control');
     }
 
 }
