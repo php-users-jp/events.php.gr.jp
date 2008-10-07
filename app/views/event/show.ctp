@@ -67,7 +67,7 @@
     <td><?php echo $item['created']; ?></td>
     <td style="text-align:center">
     <?php /* 自分のでまだキャンセルしてなかったらキャンセルリンクを出す */ ?>
-    <?php if ($item['user_id'] == $session->read('id') && ($item['canceled'] != 1)): ?>
+    <?php if (($item['user_id'] == $session->read('id') || $session->read('role') == 'admin') && ($item['canceled'] != 1)): ?>
       <?php echo $html->link('キャンセル', '/event_attendees/cancel/'.$item['id'], null, 'ドタキャン対策の為、キャンセルするとそのイベントには二度と参加できません。キャンセルしますか？'); ?>
     <?php endif; ?>
     <?php if (($session->read('role') == 'admin') && ($item['canceled'] == 1)): ?>
