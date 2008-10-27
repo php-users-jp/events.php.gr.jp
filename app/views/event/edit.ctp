@@ -39,7 +39,7 @@
 <?php echo $form->textarea('Event.map', array('cols' => '50', 'rows' => '5')); ?>
 </div>
 
-<?php echo $form->input('Event.private', array('type' => 'select', 'label' => '非公開設定？ : ', 'options'=>array(array('0'=>'公開'), array('1'=>'非公開')))); ?>
+<?php echo $form->input('Event.private', array('type' => 'select', 'label' => '非公開設定？ : ', 'options'=>array(array('0'=>'公開', '1'=>'非公開')))); ?>
 
 <?php echo $form->end('投稿'); ?>
 </div>
