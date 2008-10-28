@@ -1,5 +1,13 @@
 <?php
+/**
+ * ConvertShell
+ *
+ */
 class ConvertShell extends Shell {
+
+    var $support_update_version = array(
+        '2.0.3' => 'update202to203',
+    );
     
     /*
      * appディレクトリ内で下記のコマンドを実行でスキーマ変更を実施
@@ -119,6 +127,68 @@ class ConvertShell extends Shell {
 
         $this->out( "done!!");
         
+    }
+
+    function version()
+    {
+        $version = $this->getVersion();
+
+        if ($version === false) {
+            $this->out("error: can't find version number");
+        } else {
+            $this->out($version);
+        }
+    }
+
+    private function getVersion()
+    {
+        require_once CONFIGS . 'database.php';
+        require_once CAKE.'libs/model/model.php';
+        require_once CAKE.'libs/model/app_model.php';
+        require_once APP.'models/system.php';
+        
+        $system = new System();
+
+        $re = $system->findByVColumn('version');
+
+        if ($re === false) {
+            return false;
+        } else {
+            return $re['System']['v_value'];
+        }
+    }
+
+    function update()
+    {
+        $version = $this->getVersion();
+
+        $max_version = max(array_keys($this->support_update_version));
+
+        if ($this->cast2Int($version) < $this->cast2Int($max_version)) {
+            $this->out('更新があります');
+        } else {
+            $this->out('すでに最新版です');
+        }
+    }
+
+    private function cast2Int($version_number)
+    {
+        $number = 0;
+        $base_number = array(
+            10000,
+            100,
+            1,
+        );
+
+        $parts = explode('.', $version_number);
+
+        foreach($parts as $key => $value) {
+            $value = (int)$value; 
+            $value*= $base_number[$key];
+            $number += $value;
+        }
+
+        return $number;
     }
     
 }
