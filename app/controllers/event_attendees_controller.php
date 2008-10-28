@@ -99,5 +99,48 @@ class EventAttendeesController extends AppController {
 
         $this->redirect('/events/show/' . $event_attendee['EventAttendee']['event_id']);
     }
+
+    /**
+     * 管理者による強制追加アクション
+     *
+     * @param コメントID $comment_id
+     */
+    function extra_join($id){
+
+    	if ($this->Session->read('role') != 'admin') {
+    		$this->redirect('/events/show/');
+    		return;
+    	}
+    	
+    	App::import('model','EventComment');
+    	$event_comment = new EventComment();
+    	$comment = $event_comment->findById($id);
+    	
+    	if (empty($comment)) {
+    		$this->redirect('/events/');
+    		return;    		
+    	}
+    	
+	
+    	$cond = array(
+    	    'event_id' =>$comment['EventComment']['event_id'],
+    	    'user_id' => $comment['EventComment']['user_id']
+    	  );
+    	$data = array(
+    	  'EventAttendee' => $cond
+    	);
+
+    	$row = $this->EventAttendee->find('all',array( 'conditions' =>$cond));
+
+    	if ( !empty($row)) {
+     		$this->redirect('/events/show/'. $comment['EventComment']['event_id']);
+    		return;    		   		
+    	}
+    	
+     	$this->EventAttendee->create();
+    	$this->EventAttendee->save($data);
+        $this->flash('参加者に追加しました。','/events/show/' . $comment['EventComment']['event_id']);    	
+
+    }
 }
 ?>

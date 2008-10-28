@@ -136,6 +136,9 @@
 <?php if ($comment['User']['id'] == $session->read('id') || $session->read('role') == 'admin'): ?> 
     &nbsp;<?php echo $html->link('[delete]', '/event_comments/delete/'.$comment['id'], null, '削除しても良いですか？');?>
 <?php endif; ?>
+<?php if ( !array_key_exists($comment['User']['id'],$user) && $session->read('role') == 'admin'): ?>
+    &nbsp;<?php echo $html->link('[extra_join]', '/event_attendees/extra_join/'.$comment['id'], null, '参加者に加えますか？');?>
+<?php endif; ?>
   </p>
 </div>
 <?php endforeach; ?>
