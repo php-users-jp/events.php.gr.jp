@@ -47,34 +47,34 @@
 
 				<p>イベントへ参加登録するには、まずはOpenIDを使ってログインする必要があります。ページ上部の[Login]ボタンを押すと、「OpenIDによるログイン」画面が表示されます。</p>
 				
-				<div><img src="/img/proposal/fig01.png"></div>
+                <div><?php echo $html->image('proposal/fig01.png'); ?></div>
 
 				<p>以下に、各OpenIDのログイン方法を簡単に解説します。</p>
 
 				<h5>TypeKeyのアカウントでログインする</h5>
 				<p>1.「TypeKeyでログイン」にある入力欄にユーザ名を入力し、[Login]ボタンを押す</p>
-				<div><img src="/img/proposal/fig02.png"></div>
+                <div><?php echo $html->image('proposal/fig02.png'); ?></div>
 				<p>2. TypeKeyのログイン画面が表示されるので、ユーザ名・パスワードを入力し、[Sign In]ボタンを押す</p>
-				<div><img src="/img/proposal/fig03.png"></div>
+                <div><?php echo $html->image('proposal/fig03.png'); ?></div>
 
 				<h5>はてなのアカウントでログインする</h5>
 				<p>1.「はてなでログイン」にある入力欄にユーザ名を入力し、[はてなでlogin]ボタンを押す</p>
-				<div><img src="/img/proposal/fig04.png"></div>
+                <div><?php echo $html->image('proposal/fig04.png'); ?></div>
 				<p>2．「OpenIDでのログイン確認」画面が表示されるので、[今回のみ許可]ボタンを押す。</p>
 				<P>(今後この行程を省略する場合には、[常に許可]を押してください。)</p>
-				<div><img src="/img/proposal/fig05.png"></div>
+                <div><?php echo $html->image('proposal/fig05.png'); ?></div>
 
 				<h5>mixiのアカウントでログインする</h5>
 				<p>1.「mixiでログイン」にある[mixiでlogin]ボタンを押す</p>
-				<div><img src="/img/proposal/fig06.png"></div>
+                <div><?php echo $html->image('proposal/fig06.png'); ?></div>
 				<p>2．mixiのログイン画面が表示されるので、e-mail・パスワードを入力し、[ログイン]ボタンを押す</p>
-				<div><img src="/img/proposal/fig07.png"></div>
+                <div><?php echo $html->image('proposal/fig07.png'); ?></div>
 				<p>3．「mixi OpenID利用同意」画面が表示されるので、[今回は同意する]ボタンを押す。</p>
-				<div><img src="/img/proposal/fig08.png"></div>
+                <div><?php echo $html->image('proposal/fig08.png'); ?></div>
 
 			<h4>2.ニックネームの登録</h4>
 				<p>初めてevents.php.gr.jpにログインすると、ニックネームを登録する画面が表示されますので、希望するニックネームを入力し、[Submit]ボタンを押してください。</p>
-				<div><img src="/img/proposal/fig09.png"></div>
+                <div><?php echo $html->image('proposal/fig09.png'); ?></div>
 				<p>ここで登録されたニックネームは、イベントの参加者一覧やコメント一覧で使用されます。</p>
 
 			<h4>3.イベントの参加登録</h4>
