@@ -183,7 +183,7 @@ echo $form->end('コメントする');
 &nbsp;<?php echo $html->link('delete', '/trackbacks/delete/' . $trackback['id']); ?>
 <?php endif; ?>
 </dt>
-<dd><p><?php echo nl2br($trackback['excerpt']); ?></p></dd>
+<dd><p><?php echo nl2br(strip_tags($trackback['excerpt'])); ?></p></dd>
 <?php endforeach; ?>
 </dl>
 
