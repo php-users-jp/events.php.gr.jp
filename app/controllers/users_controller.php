@@ -209,7 +209,10 @@ class UsersController extends AppController
         );
         $user_list = array();
         foreach ($users as $user) {
-            $user_list[$user['User']['id']] = $user['User']['username'] . '@' . $user['User']['nickname'];
+            $user_list[$user['User']['id']] = $user['User']['nickname']
+                . ' [' . $user['User']['username']
+                . '@' . $user['User']['provider_url']
+                . ']';
         }
         $this->set('user_list', $user_list);
 

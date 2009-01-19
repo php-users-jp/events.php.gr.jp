@@ -9,8 +9,8 @@ implement yet
   <tr><th>name</th><th>edited_at</th><th>action</th></tr>
   <?php foreach ($admins as $admin) : ?>
   <tr>
-  <td><?php echo $admin['User']['username'];?></td>
-  <td><?php echo $admin['User']['modified'];?></td>
+  <td><?php echo h($admin['User']['nickname']);?> [<?php echo h($admin['User']['username']);?>@<?php echo h($admin['User']['provider_url']);?>]</td>
+  <td><?php echo h($admin['User']['modified']);?></td>
   <td>
 <?php echo $form->create('User', array('type' => 'post', 'action' => 'downgrade')); ?>
 <?php echo $form->hidden('username', array('type' => 'text', 'value' => $admin['User']['username'])); ?>
