@@ -61,7 +61,7 @@
     <tr class="even">
     <?php endif; ?>
   <?php endif; ?>
-    <td><?php echo $user[$item['user_id']]; ?></td>
+    <td><?php echo h($user[$item['user_id']]); ?></td>
     <td><?php echo h($item['comment']); ?></td>
     <td style="text-align:center"><?php if ($item['party']) echo '○'; ?></td>
     <td><?php echo $item['created']; ?></td>
@@ -77,7 +77,7 @@
     <?php if (($item['canceled'] != 1) && ($item['party'] == "0")): ?>
       <?php echo $html->link('懇親会に追加参加', '/event_attendees/party/'.$item['id'], null); ?>
     <?php else: ?>
-      <?php echo $html->link('懇親会のみ辞退', '/event_attendees/party_cancel/'.$item['id'], null); ?>    
+      <?php echo $html->link('懇親会のみ辞退', '/event_attendees/party_cancel/'.$item['id'], null); ?>
     <?php endif; ?>
     <?php endif; ?>
     </td>
@@ -95,7 +95,7 @@
           <?php endif; ?>
         <?php endif; ?>
       <?php elseif (strtotime($data['Event']['accept_date']) > time()): ?>
-      <p>このイベントは <?php echo $data['Event']['accept_date']; ?> から応募開始します。</p> 
+      <p>このイベントは <?php echo $data['Event']['accept_date']; ?> から応募開始します。</p>
       <?php elseif ($joined): ?>
         <?php if ($data['Event']['private_description']): ?>
           <p><?php echo $data['Event']['private_description']; ?></p>
@@ -110,7 +110,7 @@
         <?php echo $form->create('EventAttendee', array('type'  => 'post', 'action' => 'join')); ?>
         <?php echo $form->hidden('EventAttendee.event_id', array('value' => $event_id)); ?>
         <?php echo $form->input('EventAttendee.comment', array('type' => 'text', 'size' => '45')); ?>
-        <?php echo $form->checkbox('EventAttendee.party', array('value' => '1')); ?>懇親会に参加する        
+        <?php echo $form->checkbox('EventAttendee.party', array('value' => '1')); ?>懇親会に参加する
         <?php echo $form->end('参加する'); ?>
       <?php endif; ?>
     <?php else: ?>
@@ -133,7 +133,7 @@
 </h4>
   <p>
 <?php echo h($comment['comment']); ?>
-<?php if ($comment['User']['id'] == $session->read('id') || $session->read('role') == 'admin'): ?> 
+<?php if ($comment['User']['id'] == $session->read('id') || $session->read('role') == 'admin'): ?>
     &nbsp;<?php echo $html->link('[delete]', '/event_comments/delete/'.$comment['id'], null, '削除しても良いですか？');?>
 <?php endif; ?>
 <?php if ( !array_key_exists($comment['User']['id'],$user) && $session->read('role') == 'admin'): ?>
