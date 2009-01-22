@@ -204,7 +204,7 @@ class UsersController extends AppController
         $users = $this->User->find('all',
             array(
                 'conditions' => array('role'  => 'user'),
-                'order' => 'User.username'
+                'order' => 'User.nickname'
             )
         );
         $user_list = array();
@@ -216,7 +216,12 @@ class UsersController extends AppController
         }
         $this->set('user_list', $user_list);
 
-        $users = $this->User->find('all', array('conditions' => "User.role = 'admin'"));
+        $users = $this->User->find('all',
+            array(
+                'conditions' => "User.role = 'admin'",
+                'order' => 'User.nickname'
+            )
+        );
         $this->set('admins', $users);
 
     }
