@@ -13,7 +13,7 @@
   
     <h3>イベントの申請方法</h3>
         <p>イベントの申請は、日本 PHP ユーザ会のメーリングリスト <a href="http://ml.php.gr.jp/mailman/listinfo/phpug-admin">phpug-admin</a> にて受け付けております。</p>
-        <p>開催申請の際には以下のフォーマットに従い必要条項を記入の上、件名を<strong>「イベント開催申請: (ご自分のお名前)」</strong>として<a href="http://ml.php.gr.jp/mailman/listinfo/phpug-admin">phpug-admin</a> のMLまでお送りください。</p>
+        <p>開催申請の際には以下のフォーマットに従い必要条項を記入の上、件名を<strong>「イベント開催申請: (ご自分のお名前)」</strong>として<a href="http://ml.php.gr.jp/mailman/listinfo/phpug-admin">phpug-admin</a> のMLまでお送りください。(※phpug-adminに投稿するには、MLを購読している必要があります。)</p>
         <p>申請された内容に関して、日本 PHP ユーザ会にて特に問題がないと判断した場合には、申請内容に従ってイベントページが作成されます。</p>
         <pre class="template">
 ---------------
