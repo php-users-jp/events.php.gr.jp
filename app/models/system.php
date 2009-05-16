@@ -10,8 +10,23 @@
  */
 class System extends AppModel
 {
-    var $name = 'System';
-    var $useTable = 'system';
+  public $name = 'System';
+  public $useTable = 'system';
+
+  /**
+   * DBのバージョンを返す
+   *
+   */
+  public function getVersion()
+  {
+    $re = $this->findByVColumn('version');
+
+    if ($re === false) {
+      return false;
+    } else {
+      return $re['System']['v_value'];
+    }
+  }
 }
 
 ?>

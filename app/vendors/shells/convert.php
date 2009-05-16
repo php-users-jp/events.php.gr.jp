@@ -2,9 +2,11 @@
 /**
  * ConvertShell
  *
+ * 1バージョンずつ更新していく感じで
  */
-class ConvertShell extends Shell {
-
+class ConvertShell extends Shell
+{
+    public $uses = array('System');
     var $support_update_version = array(
         '2.0.3' => 'update202to203',
     );
@@ -131,7 +133,7 @@ class ConvertShell extends Shell {
 
     function version()
     {
-        $version = $this->getVersion();
+        $version = $this->System->getVersion();
 
         if ($version === false) {
             $this->out("error: can't find version number");
@@ -140,27 +142,9 @@ class ConvertShell extends Shell {
         }
     }
 
-    private function getVersion()
-    {
-        require_once CONFIGS . 'database.php';
-        require_once CAKE.'libs/model/model.php';
-        require_once CAKE.'libs/model/app_model.php';
-        require_once APP.'models/system.php';
-        
-        $system = new System();
-
-        $re = $system->findByVColumn('version');
-
-        if ($re === false) {
-            return false;
-        } else {
-            return $re['System']['v_value'];
-        }
-    }
-
     function update()
     {
-        $version = $this->getVersion();
+        $version = $this->System->getVersion();
 
         $max_version = max(array_keys($this->support_update_version));
 
