@@ -57,7 +57,7 @@
         <?php endif; ?>
 </em></li>
       <?php else: ?>
-      <li><?php echo $html->link('Login', '/users/login'); ?></li>
+      <li><?php echo $html->link('Login', '/login'); ?></li>
       <?php endif; ?>
       <li><?php echo $html->link('RSS', '/events/rss'); ?></li>
     </ul>
