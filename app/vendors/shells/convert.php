@@ -8,23 +8,87 @@ class ConvertShell extends Shell
 {
     public $uses = array('System');
     var $support_update_version = array(
+        '2.1.0' => 'update203to210',
         '2.0.3' => 'update202to203',
     );
     
+    /**
+     * update203to210
+     *
+     */
+    public function update203to210()
+    {
+        $sql_list = array(
+'BEGIN TRANSACTION',
+
+'CREATE TABLE openids (
+ id INTEGER NOT NULL PRIMARY KEY,
+ user_id INTEGER NOT NULL,
+ username VARCHAR,
+ password VARCHAR,
+ provider_url VACHAR,
+ created TIMESTAMP,
+ modified TIMESTAMP
+);',
+
+'INSERT INTO openids SELECT
+ NULL,
+ id,
+ username,
+ password,
+ provider_url,
+ created,
+ modified
+ FROM user',
+
+'CREATE TEMPORARY TABLE user_tmp (
+ id INTEGER NOT NULL PRIMARY KEY,
+ nickname VARCHAR,
+ role VARCHAR,
+ created TIMESTAMP,
+ modified TIMESTAMP
+);',
+
+'INSERT INTO user_tmp SELECT id,nickname,role,created,modified FROM user',
+
+'DROP TABLE user',
+
+'CREATE TABLE user (
+ id INTEGER NOT NULL PRIMARY KEY,
+ nickname VARCHAR,
+ role VARCHAR,
+ created TIMESTAMP,
+ modified TIMESTAMP
+);',
+
+'INSERT INTO user SELECT * FROM user_tmp',
+
+'DROP TABLE user_tmp',
+
+"UPDATE system SET v_value = '2.1.0' WHERE v_column = 'version'",
+
+'COMMIT',
+        );
+
+        foreach ($sql_list as $sql) {
+            $this->out($sql);
+            $ret = $this->System->query($sql);
+            if ($ret === false) {
+                $this->System->query("ROLLBACK");
+                $this->out("ROLLBACK!");
+                return -1;
+            }
+        }
+
+        $this->out( "done!!");
+  }
+
     /*
      * appディレクトリ内で下記のコマンドを実行でスキーマ変更を実施
      * php ../cake/console/cake.php --working `pwd` convert update202to203
      */
-    function update202to203(){
-
-        require_once CONFIGS . 'database.php';
-        require_once CAKE.'libs/model/model.php';
-        require_once CAKE.'libs/model/app_model.php';
-        require_once APP.'models/event_attendee.php';
-        
-        
-        $event_attendee = new EventAttendee();
-        
+    public function update202to203()
+    {
         $sql_list = array(
             'BEGIN TRANSACTION',
         
@@ -119,9 +183,9 @@ class ConvertShell extends Shell
         
         foreach ($sql_list as $sql) {
             $this->out($sql);
-            $ret = $event_attendee->query($sql);
+            $ret = $this->System->query($sql);
             if ($ret === false) {
-                $event_attendee->query("ROLLBACK");
+                $this->System->query("ROLLBACK");
                 $this->out("ROLLBACK!");
                 return -1;
             }
@@ -131,7 +195,7 @@ class ConvertShell extends Shell
         
     }
 
-    function version()
+    public function version()
     {
         $version = $this->System->getVersion();
 
@@ -142,7 +206,7 @@ class ConvertShell extends Shell
         }
     }
 
-    function update()
+    public function update()
     {
         $version = $this->System->getVersion();
 
