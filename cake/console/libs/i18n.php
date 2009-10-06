@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: i18n.php 7945 2008-12-19 02:16:01Z gwoo $ */
+/* SVN FILE: $Id: i18n.php 7118 2008-06-04 20:49:29Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -7,28 +7,30 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *							  1785 E. Sahara Avenue, Suite 490-204
+ *							  Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.console.libs
- * @since         CakePHP(tm) v 1.2.0.5669
- * @version       $Revision: 7945 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2008-12-18 18:16:01 -0800 (Thu, 18 Dec 2008) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright	   Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package		 cake
+ * @subpackage	  cake.cake.console.libs
+ * @since		   CakePHP(tm) v 1.2.0.5669
+ * @version		 $Revision: 7118 $
+ * @modifiedby	  $LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
+ * @license		 http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Shell for I18N management.
  *
- * @package       cake
- * @subpackage    cake.cake.console.libs
+ * @package		cake
+ * @subpackage	cake.cake.console.libs
  */
 class I18nShell extends Shell {
 /**
@@ -45,6 +47,7 @@ class I18nShell extends Shell {
  * @access public
  */
 	var $tasks = array('DbConfig', 'Extract');
+
 /**
  * Override startup of the Shell
  *
@@ -77,7 +80,7 @@ class I18nShell extends Shell {
 		$this->out(__('[Q]uit', true));
 
 		$choice = strtoupper($this->in(__('What would you like to do?', true), array('E', 'I', 'H', 'Q')));
-		switch ($choice) {
+		switch($choice) {
 			case 'E':
 				$this->Extract->execute();
 			break;
@@ -126,4 +129,5 @@ class I18nShell extends Shell {
 		$this->Extract->help();
 	}
 }
+
 ?>

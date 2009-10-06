@@ -1,43 +1,45 @@
 <?php
-/* SVN FILE: $Id: media.php 8120 2009-03-19 20:25:10Z gwoo $ */
+/* SVN FILE: $Id: media.php 7118 2008-06-04 20:49:29Z gwoo $ */
 /**
- * Methods to display or download any type of file
+ * Short description for file.
+ *
+ * Long description for file
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.view
- * @since         CakePHP(tm) v 1.2.0.5714
- * @version       $Revision: 8120 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-03-19 13:25:10 -0700 (Thu, 19 Mar 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.view
+ * @since			CakePHP(tm) v 1.2.0.5714
+ * @version			$Revision: 7118 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 class MediaView extends View {
 /**
  * Holds known mime type mappings
  *
  * @var array
- * @access public
  */
 	var $mimeType = array('ai' => 'application/postscript', 'bcpio' => 'application/x-bcpio', 'bin' => 'application/octet-stream',
 								'ccad' => 'application/clariscad', 'cdf' => 'application/x-netcdf', 'class' => 'application/octet-stream',
 								'cpio' => 'application/x-cpio', 'cpt' => 'application/mac-compactpro', 'csh' => 'application/x-csh',
-								'csv' => 'application/csv', 'dcr' => 'application/x-director', 'dir' => 'application/x-director',
-								'dms' => 'application/octet-stream', 'doc' => 'application/msword', 'drw' => 'application/drafting',
-								'dvi' => 'application/x-dvi', 'dwg' => 'application/acad', 'dxf' => 'application/dxf', 'dxr' => 'application/x-director',
+								'dcr' => 'application/x-director', 'dir' => 'application/x-director', 'dms' => 'application/octet-stream',
+								'doc' => 'application/msword', 'drw' => 'application/drafting', 'dvi' => 'application/x-dvi',
+								'dwg' => 'application/acad', 'dxf' => 'application/dxf', 'dxr' => 'application/x-director',
 								'eps' => 'application/postscript', 'exe' => 'application/octet-stream', 'ez' => 'application/andrew-inset',
-								'flv' => 'video/x-flv', 'gtar' => 'application/x-gtar', 'gz' => 'application/x-gzip',
-								'bz2' => 'application/x-bzip', '7z' => 'application/x-7z-compressed', 'hdf' => 'application/x-hdf',
+								'flv' => 'video/x-flv', 'gtar' => 'application/x-gtar', 'gz' => 'application/x-gzip', 'hdf' => 'application/x-hdf',
 								'hqx' => 'application/mac-binhex40', 'ips' => 'application/x-ipscript', 'ipx' => 'application/x-ipix',
 								'js' => 'application/x-javascript', 'latex' => 'application/x-latex', 'lha' => 'application/octet-stream',
 								'lsp' => 'application/x-lisp', 'lzh' => 'application/octet-stream', 'man' => 'application/x-troff-man',
@@ -52,8 +54,7 @@ class MediaView extends View {
 								'smi' => 'application/smil', 'smil' => 'application/smil', 'sol' => 'application/solids',
 								'spl' => 'application/x-futuresplash', 'src' => 'application/x-wais-source', 'step' => 'application/STEP',
 								'stl' => 'application/SLA', 'stp' => 'application/STEP', 'sv4cpio' => 'application/x-sv4cpio',
-								'sv4crc' => 'application/x-sv4crc', 'svg' => 'image/svg+xml', 'svgz' => 'image/svg+xml',
-								'swf' => 'application/x-shockwave-flash', 't' => 'application/x-troff',
+								'sv4crc' => 'application/x-sv4crc', 'swf' => 'application/x-shockwave-flash', 't' => 'application/x-troff',
 								'tar' => 'application/x-tar', 'tcl' => 'application/x-tcl', 'tex' => 'application/x-tex',
 								'texi' => 'application/x-texinfo', 'texinfo' => 'application/x-texinfo', 'tr' => 'application/x-troff',
 								'tsp' => 'application/dsptype', 'unv' => 'application/i-deas', 'ustar' => 'application/x-ustar',
@@ -79,13 +80,7 @@ class MediaView extends View {
 								'iges' => 'model/iges', 'igs' => 'model/iges', 'mesh' => 'model/mesh', 'msh' => 'model/mesh',
 								'silo' => 'model/mesh', 'vrml' => 'model/vrml', 'wrl' => 'model/vrml',
 								'mime' => 'www/mime', 'pdb' => 'chemical/x-pdb', 'xyz' => 'chemical/x-pdb');
-/**
- * Holds headers sent to browser before rendering media
- *
- * @var array
- * @access protected
- */
-	var $_headers = array();
+
 /**
  * Constructor
  *
@@ -94,40 +89,33 @@ class MediaView extends View {
 	function __construct(&$controller) {
 		parent::__construct($controller);
 	}
+
 /**
- * Display or download the given file
+ * Enter description here...
  *
  * @return unknown
  */
 	function render() {
-		$name = $download = $extension = $id = $modified = $path = $size = $cache = $mimeType = null;
+		$name = null;
+		$download = null;
+		$extension = null;
+		$id = null;
+		$modified = null;
+		$path = null;
+		$size = null;
 		extract($this->viewVars, EXTR_OVERWRITE);
 
 		if ($size) {
-			$id = $id . '_' . $size;
+			$id = $id . "_$size";
 		}
-
-		if (is_dir($path)) {
-			$path = $path . $id;
-		} else {
-			$path = APP . $path . $id;
-		}
-
-		if (!file_exists($path)) {
-			header('Content-Type: text/html');
-			$this->cakeError('error404');
-		}
+		$path = APP . $path . $id;
 
 		if (is_null($name)) {
 			$name = $id;
 		}
 
-		if (is_array($mimeType)) {
-			$this->mimeType = array_merge($this->mimeType, $mimeType);
-		}
-
-		if (isset($extension) && isset($this->mimeType[$extension]) && connection_status() == 0) {
-			$chunkSize = 8192;
+		if (file_exists($path) && isset($extension) && array_key_exists($extension, $this->mimeType) && connection_status() == 0) {
+			$chunkSize = 1 * (1024 * 8);
 			$buffer = '';
 			$fileSize = @filesize($path);
 			$handle = fopen($path, 'rb');
@@ -135,75 +123,53 @@ class MediaView extends View {
 			if ($handle === false) {
 				return false;
 			}
-			if (!empty($modified)) {
+			if (isset($modified) && !empty($modified)) {
 				$modified = gmdate('D, d M Y H:i:s', strtotime($modified, time())) . ' GMT';
 			} else {
-				$modified = gmdate('D, d M Y H:i:s') . ' GMT';
+				$modified = gmdate('D, d M Y H:i:s').' GMT';
 			}
 
+			header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+			header("Last-Modified: $modified");
+
 			if ($download) {
-				$contentTypes = array('application/octet-stream');
+				$contentType = 'application/octet-stream';
 				$agent = env('HTTP_USER_AGENT');
 
-				if (preg_match('%Opera(/| )([0-9].[0-9]{1,2})%', $agent)) {
-					$contentTypes[0] = 'application/octetstream';
-				} else if (preg_match('/MSIE ([0-9].[0-9]{1,2})/', $agent)) {
-					$contentTypes[0] = 'application/force-download';
-					array_push($contentTypes, array(
-						'application/octet-stream',
-						'application/download'
-					));
+				if (preg_match('%Opera(/| )([0-9].[0-9]{1,2})%', $agent) || preg_match('/MSIE ([0-9].[0-9]{1,2})/', $agent)) {
+					$contentType = 'application/octetstream';
 				}
-				foreach($contentTypes as $contentType) {
-					$this->_header('Content-Type: ' . $contentType);
-				}
-				$this->_header(array(
-					'Content-Disposition: attachment; filename="' . $name . '.' . $extension . '";',
-					'Expires: 0',
-					'Accept-Ranges: bytes',
-					'Cache-Control: private' => false,
-					'Pragma: private'));
+
+				header('Content-Type: ' . $contentType);
+				header("Content-Disposition: attachment; filename=\"" . $name . '.' . $extension . "\";");
+				header("Expires: 0");
+				header('Accept-Ranges: bytes');
+				header("Cache-Control: private", false);
+				header("Pragma: private");
 
 				$httpRange = env('HTTP_RANGE');
+
 				if (isset($httpRange)) {
-					list($toss, $range) = explode('=', $httpRange);
+					list ($toss, $range) = explode("=", $httpRange);
+					str_replace($range, "-", $range);
 
 					$size = $fileSize - 1;
 					$length = $fileSize - $range;
 
-					$this->_header(array(
-						'HTTP/1.1 206 Partial Content',
-						'Content-Length: ' . $length,
-						'Content-Range: bytes ' . $range . $size . '/' . $fileSize));
-
+					header("HTTP/1.1 206 Partial Content");
+					header("Content-Length: $length");
+					header("Content-Range: bytes $range$size/$fileSize");
 					fseek($handle, $range);
 				} else {
-					$this->_header('Content-Length: ' . $fileSize);
+					header("Content-Length: " . $fileSize);
 				}
 			} else {
-				$this->_header('Date: ' . gmdate('D, d M Y H:i:s', time()) . ' GMT');
-				if ($cache) {
-					if (!is_numeric($cache)) {
-						$cache = strtotime($cache) - time();
-					}
-					$this->_header(array(
-						'Cache-Control: max-age=' . $cache,
-						'Expires: ' . gmdate('D, d M Y H:i:s', time() + $cache) . ' GMT',
-						'Pragma: cache'));
-				} else {
-					$this->_header(array(
-						'Cache-Control: must-revalidate, post-check=0, pre-check=0',
-						'Pragma: no-cache'));
-				}
-				$this->_header(array(
-					'Last-Modified: ' . $modified,
-					'Content-Type: ' . $this->mimeType[$extension],
-					'Content-Length: ' . $fileSize));
+				header("Content-Type: " . $this->mimeType[$extension]);
+				header("Content-Length: " . $fileSize);
 			}
-			$this->_output();
 			@ob_end_clean();
 
-			while (!feof($handle) && connection_status() == 0 && !connection_aborted()) {
+			while (!feof($handle) && connection_status() == 0) {
 				set_time_limit(0);
 				$buffer = fread($handle, $chunkSize);
 				echo $buffer;
@@ -211,39 +177,9 @@ class MediaView extends View {
 				@ob_flush();
 			}
 			fclose($handle);
-			exit(0);
+			return((connection_status() == 0) && !connection_aborted());
 		}
 		return false;
-	}
-/**
- * Method to set headers
- * @param mixed $header
- * @param boolean $boolean
- * @access protected
- */
-	function _header($header, $boolean = true) {
-		if (is_array($header)) {
-			foreach ($header as $string => $boolean) {
-				if (is_numeric($string)) {
-					$this->_headers[] = array($boolean => true);
-				} else {
-					$this->_headers[] = array($string => $boolean);
-				}
-			}
-			return;
-		}
-		$this->_headers[] = array($header => $boolean);
-		return;
-	}
-/**
- * Method to output headers
- * @access protected
- */
-	function _output() {
-		foreach ($this->_headers as $key => $value) {
-			$header = key($value);
-			header($header, $value[$header]);
-		}
 	}
 }
 ?>

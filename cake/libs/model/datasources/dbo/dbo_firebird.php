@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: dbo_firebird.php 7945 2008-12-19 02:16:01Z gwoo $ */
+/* SVN FILE: $Id: dbo_firebird.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Firebird/Interbase layer for DBO
  *
@@ -7,30 +7,32 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.model.dbo
- * @since         CakePHP(tm) v 1.2.0.5152
- * @version       $Revision: 7945 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2008-12-18 18:16:01 -0800 (Thu, 18 Dec 2008) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.model.dbo
+ * @since			CakePHP(tm) v 1.2.0.5152
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Short description for class.
  *
  * Long description for class
  *
- * @package       cake
- * @subpackage    cake.cake.libs.model.dbo
+ * @package		cake
+ * @subpackage	cake.cake.libs.model.dbo
  */
 class DboFirebird extends DboSource {
 /**
@@ -108,16 +110,6 @@ class DboFirebird extends DboSource {
 		'boolean'	=> array('name' => 'smallint')
 	);
 /**
- * Firebird Transaction commands.
- *
- * @var array
- **/
-	var $_commands = array(
-		'begin'	   => 'SET TRANSACTION',
-		'commit'   => 'COMMIT',
-		'rollback' => 'ROLLBACK'
-	);
-/**
  * Connects to the database using options in the given configuration array.
  *
  * @return boolean True if the database could be connected, else false
@@ -147,6 +139,9 @@ class DboFirebird extends DboSource {
  * @access protected
  */
 	function _execute($sql) {
+		if (strpos(strtolower($sql),"update") > 0) {
+			break;
+		}
 		return @ibase_query($this->connection,	$sql);
 	}
 /**

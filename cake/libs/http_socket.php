@@ -1,35 +1,38 @@
 <?php
-/* SVN FILE: $Id: http_socket.php 8166 2009-05-04 21:17:19Z gwoo $ */
+/* SVN FILE: $Id: http_socket.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * HTTP Socket connection class.
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs
- * @since         CakePHP(tm) v 1.2.0
- * @version       $Revision: 8166 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-05-04 14:17:19 -0700 (Mon, 04 May 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs
+ * @since			CakePHP(tm) v 1.2.0
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Core', array('Socket', 'Set', 'Router'));
+
 /**
  * Cake network socket connection class.
  *
  * Core base class for HTTP network communication.
  *
- * @package       cake
- * @subpackage    cake.cake.libs
+ * @package		cake
+ * @subpackage	cake.cake.libs
  */
 class HttpSocket extends CakeSocket {
 /**
@@ -39,6 +42,7 @@ class HttpSocket extends CakeSocket {
  * @access public
  */
 	var $description = 'HTTP-based DataSource Interface';
+
 /**
  * When one activates the $quirksMode by setting it to true, all checks meant to enforce RFC 2616 (HTTP/1.1 specs)
  * will be disabled and additional measures to deal with non-standard responses will be enabled.
@@ -47,6 +51,7 @@ class HttpSocket extends CakeSocket {
  * @access public
  */
 	var $quirksMode = false;
+
 /**
  * The default values to use for a request
  *
@@ -66,7 +71,7 @@ class HttpSocket extends CakeSocket {
 			'fragment' => null
 		),
 		'auth' => array(
-			'method' => 'Basic',
+			'method' => 'basic',
 			'user' => null,
 			'pass' => null
 		),
@@ -100,8 +105,9 @@ class HttpSocket extends CakeSocket {
 		),
 		'header' => array(),
 		'body' => '',
-		'cookies' => array()
+		'cookies' => array(),
 	);
+
 /**
  * Default configuration settings for the HttpSocket
  *
@@ -121,13 +127,14 @@ class HttpSocket extends CakeSocket {
 				'port' => 80
 			),
 			'auth' => array(
-				'method' => 'Basic',
+				'method' => 'basic',
 				'user' => null,
 				'pass' => null
 			),
-			'cookies' => array()
+			'cookies' => array(),
 		)
 	);
+
 /**
  * String that represents a line break.
  *
@@ -153,6 +160,7 @@ class HttpSocket extends CakeSocket {
 		}
 		parent::__construct($this->config);
 	}
+
 /**
  * Issue the specified request.
  *
@@ -259,6 +267,7 @@ class HttpSocket extends CakeSocket {
 
 		return $this->response['body'];
 	}
+
 /**
  * Issues a GET request to the specified URI, query, and request.
  *
@@ -296,6 +305,7 @@ class HttpSocket extends CakeSocket {
 		$request = Set::merge(array('method' => 'POST', 'uri' => $uri, 'body' => $data), $request);
 		return $this->request($request);
 	}
+
 /**
  * Issues a PUT request to the specified URI, query, and request.
  *
@@ -309,6 +319,7 @@ class HttpSocket extends CakeSocket {
 		$request = Set::merge(array('method' => 'PUT', 'uri' => $uri, 'body' => $data), $request);
 		return $this->request($request);
 	}
+
 /**
  * Issues a DELETE request to the specified URI, query, and request.
  *
@@ -357,6 +368,7 @@ class HttpSocket extends CakeSocket {
 		}
 		return $this->buildUri($url);
 	}
+
 /**
  * Parses the given message and breaks it down in parts.
  *
@@ -736,6 +748,7 @@ class HttpSocket extends CakeSocket {
 		}
 		return $request['method'].' '.$request['uri'].' '.$versionToken.$this->lineBreak;
 	}
+
 /**
  * Serializes an array for transport.
  *
@@ -846,7 +859,7 @@ class HttpSocket extends CakeSocket {
 		$cookies = array();
 		foreach ((array)$header['Set-Cookie'] as $cookie) {
 			$parts = preg_split('/(?<![^;]");[ \t]*/', $cookie);
-			list($name, $value) = explode('=', array_shift($parts), 2);
+			list($name, $value) = explode('=', array_shift($parts));
 			$cookies[$name] = compact('value');
 			foreach ($parts as $part) {
 				if (strpos($part, '=') !== false) {
@@ -924,6 +937,7 @@ class HttpSocket extends CakeSocket {
 		$token = preg_replace($regex, '"\\1"', $token);
 		return $token;
 	}
+
 /**
  * Gets escape chars according to RFC 2616 (HTTP 1.1 specs).
  *
@@ -975,4 +989,5 @@ class HttpSocket extends CakeSocket {
 		return true;
 	}
 }
+
 ?>

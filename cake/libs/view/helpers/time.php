@@ -1,41 +1,45 @@
 <?php
-/* SVN FILE: $Id: time.php 8120 2009-03-19 20:25:10Z gwoo $ */
+/* SVN FILE: $Id: time.php 7296 2008-06-27 09:09:03Z gwoo $ */
+
 /**
  * Time Helper class file.
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
- * @since         CakePHP(tm) v 0.10.0.1076
- * @version       $Revision: 8120 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-03-19 13:25:10 -0700 (Thu, 19 Mar 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.view.helpers
+ * @since			CakePHP(tm) v 0.10.0.1076
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
 /**
  * Time Helper class for easy use of time data.
  *
  * Manipulation of time data.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
+ * @package		cake
+ * @subpackage	cake.cake.libs.view.helpers
  */
 class TimeHelper extends AppHelper {
 /**
  * Converts given time (in server's time zone) to user's local time, given his/her offset from GMT.
  *
- * @param string $serverTime UNIX timestamp
- * @param int $userOffset User's offset from GMT (in hours)
+ * @param string $server_time UNIX timestamp
+ * @param int $user_offset User's offset from GMT (in hours)
  * @return string UNIX timestamp
  */
 	function convert($serverTime, $userOffset) {
@@ -50,19 +54,19 @@ class TimeHelper extends AppHelper {
  * @return int Offset
  */
 	function serverOffset() {
-		return date('Z', time());
+		$timezoneServer = new DateTimeZone(date_default_timezone_get());
+		$timeServer = new DateTime('now', $timezoneServer); 	
+		$offset = $timezoneServer->getOffset($timeServer);
+		return $offset;
 	}
 /**
  * Returns a UNIX timestamp, given either a UNIX timestamp or a valid strtotime() date string.
  *
  * @param string $dateString Datetime string
  * @param int $userOffset User's offset from GMT (in hours)
- * @return string Parsed timestamp
+ * @return string Formatted date string
  */
 	function fromString($dateString, $userOffset = null) {
-		if (empty($dateString)) {
-			return false;
-		}
 		if (is_integer($dateString) || is_numeric($dateString)) {
 			$date = intval($dateString);
 		} else {
@@ -108,9 +112,9 @@ class TimeHelper extends AppHelper {
 		$y = $this->isThisYear($date) ? '' : ' Y';
 
 		if ($this->isToday($date)) {
-			$ret = sprintf(__('Today, %s',true), date("H:i", $date));
+			$ret = "Today, " . date("H:i", $date);
 		} elseif ($this->wasYesterday($date)) {
-			$ret = sprintf(__('Yesterday, %s',true), date("H:i", $date));
+			$ret = "Yesterday, " . date("H:i", $date);
 		} else {
 			$ret = date("M jS{$y}, H:i", $date);
 		}
@@ -284,13 +288,12 @@ class TimeHelper extends AppHelper {
 /**
  * Returns either a relative date or a formatted date depending
  * on the difference between the current time and given datetime.
- * $datetime should be in a <i>strtotime</i> - parsable format, like MySQL's datetime datatype.
+ * $datetime should be in a <i>strtotime</i>-parsable format, like MySQL's datetime datatype.
  *
  * Options:
- *
- * - 'format' => a fall back format if the relative time is longer than the duration specified by end
- * - 'end' => The end of relative time telling
- * - 'userOffset' => Users offset from GMT (in hours)
+ *  'format' => a fall back format if the relative time is longer than the duration specified by end
+ *  'end' =>  The end of relative time telling
+ *  'userOffset' => Users offset from GMT (in hours)
  *
  * Relative dates look something like this:
  *	3 weeks, 4 days ago
@@ -310,15 +313,12 @@ class TimeHelper extends AppHelper {
 		if (is_array($options) && isset($options['userOffset'])) {
 			$userOffset = $options['userOffset'];
 		}
-		$now = time();
-		if (!is_null($userOffset)) {
-			$now = 	$this->convert(time(), $userOffset);
-		}
-		$inSeconds = $this->fromString($dateTime, $userOffset);
-		$backwards = ($inSeconds > $now);
+		$in_seconds = $this->fromString($dateTime, $userOffset);
+		$backwards = ($in_seconds > time());
 
 		$format = 'j/n/y';
 		$end = '+1 month';
+		$now = 	time();
 
 		if (is_array($options)) {
 			if (isset($options['format'])) {
@@ -334,22 +334,22 @@ class TimeHelper extends AppHelper {
 		}
 
 		if ($backwards) {
-			$futureTime = $inSeconds;
-			$pastTime = $now;
+			$future_time = $in_seconds;
+			$past_time = $now;
 		} else {
-			$futureTime = $now;
-			$pastTime = $inSeconds;
+			$future_time = $now;
+			$past_time = $in_seconds;
 		}
-		$diff = $futureTime - $pastTime;
+		$diff = $future_time - $past_time;
 
 		// If more than a week, then take into account the length of months
 		if ($diff >= 604800) {
 			$current = array();
 			$date = array();
+			
+			list($future['H'], $future['i'], $future['s'], $future['d'], $future['m'], $future['Y']) = explode('/', date('H/i/s/d/m/Y', $future_time));
 
-			list($future['H'], $future['i'], $future['s'], $future['d'], $future['m'], $future['Y']) = explode('/', date('H/i/s/d/m/Y', $futureTime));
-
-			list($past['H'], $past['i'], $past['s'], $past['d'], $past['m'], $past['Y']) = explode('/', date('H/i/s/d/m/Y', $pastTime));
+			list($past['H'], $past['i'], $past['s'], $past['d'], $past['m'], $past['Y']) = explode('/', date('H/i/s/d/m/Y', $past_time));
 			$years = $months = $weeks = $days = $hours = $minutes = $seconds = 0;
 
 			if ($future['Y'] == $past['Y'] && $future['m'] == $past['m']) {
@@ -361,12 +361,12 @@ class TimeHelper extends AppHelper {
 				} else {
 					$years = $future['Y'] - $past['Y'];
 					$months = $future['m'] + ((12 * $years) - $past['m']);
-
+					
 					if ($months >= 12) {
 						$years = floor($months / 12);
 						$months = $months - ($years * 12);
 					}
-
+					
 					if ($future['m'] < $past['m'] && $future['Y'] - $past['Y'] == 1) {
 						$years --;
 					}
@@ -376,13 +376,13 @@ class TimeHelper extends AppHelper {
 			if ($future['d'] >= $past['d']) {
 				$days = $future['d'] - $past['d'];
 			} else {
-				$daysInPastMonth = date('t', $pastTime);
-				$daysInFutureMonth = date('t', mktime(0, 0, 0, $future['m'] - 1, 1, $future['Y']));
+				$days_in_past_month = date('t', $past_time);
+				$days_in_future_month = date('t', mktime(0, 0, 0, $future['m'] - 1, 1, $future['Y']));
 
 				if (!$backwards) {
-					$days = ($daysInPastMonth - $past['d']) + $future['d'];
+					$days = ($days_in_past_month - $past['d']) + $future['d'];
 				} else {
-					$days = ($daysInFutureMonth - $past['d']) + $future['d'];
+					$days = ($days_in_future_month - $past['d']) + $future['d'];
 				}
 
 				if ($future['m'] != $past['m']) {
@@ -390,7 +390,7 @@ class TimeHelper extends AppHelper {
 				}
 			}
 
-			if ($months == 0 && $years >= 1 && $diff < ($years * 31536000)) {
+			if ($months == 0 && $years >= 1 && $diff < ($years * 31536000)){
 				$months = 11;
 				$years --;
 			}
@@ -417,55 +417,55 @@ class TimeHelper extends AppHelper {
 			$diff = $diff - ($minutes * 60);
 			$seconds = $diff;
 		}
-		$relativeDate = '';
-		$diff = $futureTime - $pastTime;
+		$relative_date = '';
+		$diff = $future_time - $past_time;
 
 		if ($diff > abs($now - $this->fromString($end))) {
-			$relativeDate = sprintf(__('on %s',true), date($format, $inSeconds));
+			$relative_date = 'on ' . date($format, $in_seconds);
 		} else {
 			if ($years > 0) {
 				// years and months and days
-				$relativeDate .= ($relativeDate ? ', ' : '') . $years . ' ' . __n('year', 'years', $years, true);
-				$relativeDate .= $months > 0 ? ($relativeDate ? ', ' : '') . $months . ' ' . __n('month', 'months', $months, true) : '';
-				$relativeDate .= $weeks > 0 ? ($relativeDate ? ', ' : '') . $weeks . ' ' . __n('week', 'weeks', $weeks, true) : '';
-				$relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . $days . ' ' . __n('day', 'days', $days, true) : '';
+				$relative_date .= ($relative_date ? ', ' : '') . $years . ' year' . ($years > 1 ? 's' : '');
+				$relative_date .= $months > 0 ? ($relative_date ? ', ' : '') . $months . ' month' . ($months > 1 ? 's' : '') : '';
+				$relative_date .= $weeks > 0 ? ($relative_date ? ', ' : '') . $weeks . ' week' . ($weeks > 1 ? 's' : '') : '';	
+				$relative_date .= $days > 0 ? ($relative_date ? ', ' : '') . $days . ' day' . ($days > 1 ? 's' : '') : '';
 			} elseif (abs($months) > 0) {
 				// months, weeks and days
-				$relativeDate .= ($relativeDate ? ', ' : '') . $months . ' ' . __n('month', 'months', $months, true);
-				$relativeDate .= $weeks > 0 ? ($relativeDate ? ', ' : '') . $weeks . ' ' . __n('week', 'weeks', $weeks, true) : '';
-				$relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . $days . ' ' . __n('day', 'days', $days, true) : '';
+				$relative_date .= ($relative_date ? ', ' : '') . $months . ' month' . ($months > 1 ? 's' : '');
+				$relative_date .= $weeks > 0 ? ($relative_date ? ', ' : '') . $weeks . ' week' . ($weeks > 1 ? 's' : '') : '';
+				$relative_date .= $days > 0 ? ($relative_date ? ', ' : '') . $days . ' day' . ($days > 1 ? 's' : '') : '';
 			} elseif (abs($weeks) > 0) {
 				// weeks and days
-				$relativeDate .= ($relativeDate ? ', ' : '') . $weeks . ' ' . __n('week', 'weeks', $weeks, true);
-				$relativeDate .= $days > 0 ? ($relativeDate ? ', ' : '') . $days . ' ' . __n('day', 'days', $days, true) : '';
+				$relative_date .= ($relative_date ? ', ' : '') . $weeks . ' week' . ($weeks > 1 ? 's' : '');
+				$relative_date .= $days > 0 ? ($relative_date ? ', ' : '') . $days . ' day' . ($days > 1 ? 's' : '') : '';
 			} elseif (abs($days) > 0) {
 				// days and hours
-				$relativeDate .= ($relativeDate ? ', ' : '') . $days . ' ' . __n('day', 'days', $days, true);
-				$relativeDate .= $hours > 0 ? ($relativeDate ? ', ' : '') . $hours . ' ' . __n('hour', 'hours', $hours, true) : '';
+				$relative_date .= ($relative_date ? ', ' : '') . $days . ' day' . ($days > 1 ? 's' : '');
+				$relative_date .= $hours > 0 ? ($relative_date ? ', ' : '') . $hours . ' hour' . ($hours > 1 ? 's' : '') : '';
 			} elseif (abs($hours) > 0) {
 				// hours and minutes
-				$relativeDate .= ($relativeDate ? ', ' : '') . $hours . ' ' . __n('hour', 'hours', $hours, true);
-				$relativeDate .= $minutes > 0 ? ($relativeDate ? ', ' : '') . $minutes . ' ' . __n('minute', 'minutes', $minutes, true) : '';
+				$relative_date .= ($relative_date ? ', ' : '') . $hours . ' hour' . ($hours > 1 ? 's' : '');
+				$relative_date .= $minutes > 0 ? ($relative_date ? ', ' : '') . $minutes . ' minute' . ($minutes > 1 ? 's' : '') : '';
 			} elseif (abs($minutes) > 0) {
 				// minutes only
-				$relativeDate .= ($relativeDate ? ', ' : '') . $minutes . ' ' . __n('minute', 'minutes', $minutes, true);
+				$relative_date .= ($relative_date ? ', ' : '') . $minutes . ' minute' . ($minutes > 1 ? 's' : '');
 			} else {
 				// seconds only
-				$relativeDate .= ($relativeDate ? ', ' : '') . $seconds . ' ' . __n('second', 'seconds', $seconds, true);
+				$relative_date .= ($relative_date ? ', ' : '') . $seconds . ' second' . ($seconds != 1 ? 's' : '');
 			}
 
 			if (!$backwards) {
-				$relativeDate = sprintf(__('%s ago', true), $relativeDate);
+				$relative_date .= ' ago';
 			}
 		}
-		return $this->output($relativeDate);
+		return $this->output($relative_date);
 	}
 /**
  * Alias for timeAgoInWords
  *
  * @param mixed $dateTime Datetime string (strtotime-compatible) or Unix timestamp
  * @param mixed $options Default format string, if timestamp is used in $dateTime, or an array of options to be passed
- *   on to timeAgoInWords().
+ *						 on to timeAgoInWords().
  * @return string Relative time string.
  * @see		TimeHelper::timeAgoInWords
  */
@@ -476,14 +476,14 @@ class TimeHelper extends AppHelper {
  * Returns true if specified datetime was within the interval specified, else false.
  *
  * @param mixed $timeInterval the numeric value with space then time type. Example of valid types: 6 hours, 2 days, 1 minute.
- * @param mixed $dateString the datestring or unix timestamp to compare
  * @param int $userOffset User's offset from GMT (in hours)
+ * @param mixed $dateString the datestring or unix timestamp to compare
  * @return bool
  */
 	function wasWithinLast($timeInterval, $dateString, $userOffset = null) {
 		$tmp = r(' ', '', $timeInterval);
 		if (is_numeric($tmp)) {
-			$timeInterval = $tmp . ' ' . __('days', true);
+			$timeInterval = $tmp.' days';
 		}
 
 		$date = $this->fromString($dateString, $userOffset);
@@ -521,7 +521,6 @@ class TimeHelper extends AppHelper {
 /**
  * Returns a UNIX timestamp, given either a UNIX timestamp or a valid strtotime() date string.
  *
- * @param string $format date format string. defaults to 'd-m-Y'
  * @param string $dateString Datetime string
  * @param boolean $invalid flag to ignore results of fromString == false
  * @param int $userOffset User's offset from GMT (in hours)
@@ -531,8 +530,9 @@ class TimeHelper extends AppHelper {
 		$date = $this->fromString($date, $userOffset);
 		if ($date === false && $invalid !== false) {
 			return $invalid;
-		}
+		} 
 		return date($format, $date);
 	}
 }
+
 ?>

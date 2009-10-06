@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: error.php 8004 2009-01-16 20:15:21Z gwoo $ */
+/* SVN FILE: $Id: error.php 7118 2008-06-04 20:49:29Z gwoo $ */
 /**
  * ErrorHandler for Console Shells
  *
@@ -7,28 +7,30 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.console
- * @since         CakePHP(tm) v 1.2.0.5074
- * @version       $Revision: 8004 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-01-16 12:15:21 -0800 (Fri, 16 Jan 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.console
+ * @since			CakePHP(tm) v 1.2.0.5074
+ * @version			$Revision: 7118 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Error Handler for Cake console.
  *
- * @package       cake
- * @subpackage    cake.cake.console
+ * @package		cake
+ * @subpackage	cake.cake.console
  */
 class ErrorHandler extends Object {
 /**
@@ -136,6 +138,7 @@ class ErrorHandler extends Object {
  * @access public
  */
 	function missingDatabase($params = array()) {
+		extract($params, EXTR_OVERWRITE);
 		$this->stderr(__("Missing Database", true));
 		$this->_stop();
 	}

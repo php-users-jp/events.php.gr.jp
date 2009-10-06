@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: project.php 7945 2008-12-19 02:16:01Z gwoo $ */
+/* SVN FILE: $Id: project.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * The Project Task handles creating the base application
  *
@@ -7,22 +7,24 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.scripts.bake
- * @since         CakePHP(tm) v 1.2
- * @version       $Revision: 7945 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2008-12-18 18:16:01 -0800 (Thu, 18 Dec 2008) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.scripts.bake
+ * @since			CakePHP(tm) v 1.2
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 if (!class_exists('File')) {
 	uses('file');
@@ -30,8 +32,8 @@ if (!class_exists('File')) {
 /**
  * Task class for creating new project apps and plugins
  *
- * @package       cake
- * @subpackage    cake.cake.console.libs.tasks
+ * @package		cake
+ * @subpackage	cake.cake.console.libs.tasks
  */
 class ProjectTask extends Shell {
 /**
@@ -75,7 +77,7 @@ class ProjectTask extends Shell {
 			}
 		}
 
-		if ($this->bake($project)) {
+		if($this->bake($project)) {
 			$path = Folder::slashTerm($project);
 			if ($this->createHome($path)) {
 				$this->out(__('Welcome page created', true));
@@ -102,9 +104,6 @@ class ProjectTask extends Shell {
 				$this->err(sprintf(__('Could not set permissions on %s', true), $path . DS .'tmp'));
 				$this->out(sprintf(__('chmod -R 0777 %s', true), $path . DS .'tmp'));
 			}
-
-			$this->params['working'] = $path;
-			$this->params['app'] = basename($path);
 			return true;
 		}
 	}
@@ -120,7 +119,7 @@ class ProjectTask extends Shell {
  * @access private
  */
 	function bake($path, $skel = null, $skip = array('empty')) {
-		if (!$skel) {
+		if(!$skel) {
 			$skel = $this->params['skel'];
 		}
 
@@ -202,10 +201,12 @@ class ProjectTask extends Shell {
 			$result = str_replace($match[0], "\t" . 'Configure::write(\'Security.salt\', \''.$string.'\');', $contents);
 			if ($File->write($result)) {
 				return true;
+			} else {
+				return false;
 			}
+		} else {
 			return false;
 		}
-		return false;
 	}
 /**
  * Generates and writes CAKE_CORE_INCLUDE_PATH

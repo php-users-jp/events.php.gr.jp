@@ -21,7 +21,7 @@ class UsersController extends AppController
     function beforeFilter()
     {
         //$this->Auth->userScope = array('User.flag' => 0);
-        $this->Auth->loginAction = '/users/login';
+        $this->Auth->loginAction = '/users/userlogin';
         $this->Auth->logoutAction = '/users/userlogout';
         $this->Auth->allow(
             'add',
@@ -52,16 +52,14 @@ class UsersController extends AppController
         $returnTo = 'http://'.$_SERVER['HTTP_HOST'] . $this->here;
         $provider_list = array(
             'http://profile.typekey.com/',
-            'http://profile.typepad.com/',
             'http://www.hatena.ne.jp/',
-            'https://www.typepad.com/secure/services/openid/profilesserver/',
             'http://mixi.jp/',
         );
 
-        if ($this->data) {
+        if (!empty($this->data)) {
             try {
                 if (!in_array($this->data['OpenidUrl']['provider_url'], $provider_list)) {
-                    //throw new Exception('不正なプロバイダURLです');
+                    throw new Exception('不正なプロバイダURLです');
                 }
                 $login_url = $this->data['OpenidUrl']['provider_url'];
                 if (!empty($this->data['OpenidUrl']['username'])) {
@@ -93,27 +91,27 @@ class UsersController extends AppController
         return false;
     }
 
-    /**
-     * login
-     *
-     */
-    public function login()
+    function login()
     {
         $response = $this->getRequest();
-
-        // OpenID認証が通った場合
         if ($response) {
             $username = end(explode('/', trim($response->identity_url, '/')));
             $provider_url = dirname(trim($response->identity_url, '/')) . '/';
 
-            $user = $this->User->findFromRequest($username, $provider_url);
+            $user = $this->User->find('first',array(
+                'conditions'    => array(
+                    'User.username' => $username,
+                    'User.provider_url' => $provider_url,
+                ),
+                'recursive' => -1
+            ));
 
-            if ($user) {
-                //既存のuserなら
+            if (!empty($user)) {
+                //登録されているOpenIDユーザなら
                 $data = array(
-                    'User.username' => $user['Openid']['username'],
-                    'User.password' => $user['Openid']['password'],
-                    'User.provider_url' => $user['Openid']['provider_url']
+                    'User.username' => $user['User']['username'],
+                    'User.password' => $user['User']['password'],
+                    'User.provider_url' => $user['User']['provider_url']
                 );
                 foreach ($user['User'] as $key => $value) {
                     $this->Session->write($key, $value);
@@ -121,7 +119,7 @@ class UsersController extends AppController
                 $this->Session->write('identity_url', $response->identity_url);
                 $this->__autologinForOpenid($data);
             } else {
-                //既存のuserでなければ
+                //登録されているOpenIDユーザならニックネーム登録
                 $this->Session->write('username', $username);
                 $this->Session->write('provider_url', $provider_url);
                 $this->Session->write('identity_url', $response->identity_url);
@@ -171,11 +169,11 @@ class UsersController extends AppController
         }
     }
 
-    /**
-     * userlogout
-     *
-     * @todo logoutにrename
-     */
+    function userlogin()
+    {
+
+    }    
+
     function userlogout()
     {
         $this->Session->setFlash('ログアウトしました');
@@ -184,7 +182,7 @@ class UsersController extends AppController
         $this->redirect('/events/index');
     }
 
-    protected function __autologinForOpenid($user){
+    function __autologinForOpenid($user){
         //$this->Auth->userScope = array('User.flag' => 1);
         $this->Auth->login($user);
         $this->redirect('/events/index');
@@ -278,6 +276,10 @@ class UsersController extends AppController
      */
     function config()
     {
+        if (!$this->isUser()) {
+            $this->redirect('/');
+        }
+
         $response = $this->getRequest();
         if ($response) {
             $username = end(explode('/', trim($response->identity_url, '/')));

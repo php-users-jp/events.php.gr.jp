@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: acl.php 7945 2008-12-19 02:16:01Z gwoo $ */
+/* SVN FILE: $Id: acl.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Access Control List factory class.
  *
@@ -7,30 +7,32 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.controller.components
- * @since         CakePHP(tm) v 0.10.0.1076
- * @version       $Revision: 7945 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2008-12-18 18:16:01 -0800 (Thu, 18 Dec 2008) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.controller.components
+ * @since			CakePHP(tm) v 0.10.0.1076
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Access Control List factory class.
  *
  * Looks for ACL implementation class in core config, and returns an instance of that class.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.controller.components
+ * @package		cake
+ * @subpackage	cake.cake.libs.controller.components
  */
 class AclComponent extends Object {
 /**
@@ -148,13 +150,55 @@ class AclComponent extends Object {
 	function revoke($aro, $aco, $action = "*") {
 		return $this->_Instance->revoke($aro, $aco, $action);
 	}
+/**
+ * Sets the current ARO instance to object from getAro
+ *
+ * @param string $id ID of ARO
+ * @return boolean Success
+ * @access public
+ */
+	function setAro($id) {
+		return $this->Aro = $this->_Instance->getAro($id);
+	}
+/**
+* Sets the current ACO instance to object from getAco
+ *
+ * @param string $id ID of ACO
+ * @return boolean Success
+ * @access public
+ */
+	function setAco($id) {
+		return $this->Aco = $this->_Instance->getAco($id);
+	}
+/**
+ * Pass-thru function for ACL getAro instance
+ * that gets an ARO object from the given id or alias
+ *
+ * @param string $id ARO id
+ * @return object ARO
+ * @access public
+ */
+	function getAro($id) {
+		return $this->_Instance->getAro($id);
+	}
+/**
+ * Pass-thru function for ACL getAco instance.
+ * that gets an ACO object from the given id or alias
+ *
+ * @param string $id ACO id
+ * @return object ACO
+ * @access public
+ */
+	function getAco($id) {
+		return $this->_Instance->getAco($id);
+	}
 }
 /**
  * Access Control List abstract class. Not to be instantiated.
  * Subclasses of this class are used by AclComponent to perform ACL checks in Cake.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.controller.components
+ * @package 	cake
+ * @subpackage	cake.cake.libs.controller.components
  * @abstract
  */
 class AclBase extends Object {
@@ -190,8 +234,8 @@ class AclBase extends Object {
 /**
  * In this file you can extend the AclBase.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.model
+ * @package		cake
+ * @subpackage	cake.cake.libs.model
  */
 class DbAcl extends AclBase {
 /**
@@ -210,7 +254,6 @@ class DbAcl extends AclBase {
  * Enter description here...
  *
  * @param object $component
- * @return void
  * @access public
  */
 	function initialize(&$component) {
@@ -233,20 +276,20 @@ class DbAcl extends AclBase {
 
 		$permKeys = $this->_getAcoKeys($this->Aro->Permission->schema());
 		$aroPath = $this->Aro->node($aro);
-		$acoPath = $this->Aco->node($aco);
+		$acoPath = new Set($this->Aco->node($aco));
 
-		if (empty($aroPath) || empty($acoPath)) {
+		if (empty($aroPath) ||  empty($acoPath)) {
 			trigger_error("DbAcl::check() - Failed ARO/ACO node lookup in permissions check.  Node references:\nAro: " . print_r($aro, true) . "\nAco: " . print_r($aco, true), E_USER_WARNING);
 			return false;
 		}
-
-		if ($acoPath == null || $acoPath == array()) {
+		if ($acoPath->get() == null || $acoPath->get() == array()) {
 			trigger_error("DbAcl::check() - Failed ACO node lookup in permissions check.  Node references:\nAro: " . print_r($aro, true) . "\nAco: " . print_r($aco, true), E_USER_WARNING);
 			return false;
 		}
 
 		$aroNode = $aroPath[0];
-		$acoNode = $acoPath[0];
+		$acoNode = $acoPath->get();
+		$acoNode = $acoNode[0];
 
 		if ($action != '*' && !in_array('_' . $action, $permKeys)) {
 			trigger_error(sprintf(__("ACO permissions key %s does not exist in DbAcl::check()", true), $action), E_USER_NOTICE);
@@ -254,10 +297,9 @@ class DbAcl extends AclBase {
 		}
 
 		$inherited = array();
-		$acoIDs = Set::extract($acoPath, '{n}.' . $this->Aco->alias . '.id');
+		$acoIDs = $acoPath->extract('{n}.' . $this->Aco->alias . '.id');
 
-		$count = count($aroPath);
-		for ($i = 0 ; $i < $count; $i++) {
+		for ($i = 0 ; $i < count($aroPath); $i++) {
 			$permAlias = $this->Aro->Permission->alias;
 
 			$perms = $this->Aro->Permission->find('all', array(
@@ -290,7 +332,7 @@ class DbAcl extends AclBase {
 							return true;
 						}
 					} else {
-						switch ($perm['_' . $action]) {
+						switch($perm['_' . $action]) {
 							case -1:
 								return false;
 							case 0:
@@ -454,8 +496,8 @@ class DbAcl extends AclBase {
 /**
  * In this file you can extend the AclBase.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.model.iniacl
+ * @package		cake
+ * @subpackage	cake.cake.libs.model.iniacl
  */
 class IniAcl extends AclBase {
 /**

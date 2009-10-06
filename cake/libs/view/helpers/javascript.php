@@ -1,35 +1,40 @@
 <?php
-/* SVN FILE: $Id: javascript.php 8166 2009-05-04 21:17:19Z gwoo $ */
+/* SVN FILE: $Id: javascript.php 7296 2008-06-27 09:09:03Z gwoo $ */
+
 /**
  * Javascript Helper class file.
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
- * @since         CakePHP(tm) v 0.10.0.1076
- * @version       $Revision: 8166 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-05-04 14:17:19 -0700 (Mon, 04 May 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.view.helpers
+ * @since			CakePHP(tm) v 0.10.0.1076
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
+
 /**
  * Javascript Helper class for easy use of JavaScript.
  *
  * JavascriptHelper encloses all methods needed while working with JavaScript.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
+ * @package		cake
+ * @subpackage	cake.cake.libs.view.helpers
  */
+
 class JavascriptHelper extends AppHelper {
 /**
  * Determines whether native JSON extension is used for encoding.  Set by object constructor.
@@ -82,8 +87,8 @@ class JavascriptHelper extends AppHelper {
  */
 	var $_cachedEvents = array();
 /**
- * Indicates whether generated events should be cached for later output (can be written at the
- * end of the page, in the <head />, or to an external file).
+ * Indicates whether generated events should be cached for later output (can be written at the end of the page,
+ * in the <head />, or to an external file).
  *
  * @var boolean
  * @access protected
@@ -110,13 +115,12 @@ class JavascriptHelper extends AppHelper {
  */
 	var $_cacheAll = false;
 /**
- * Contains event rules attached with CSS selectors.  Used with the event:Selectors JavaScript
- * library.
+ * Contains event rules attached with CSS selectors.  Used with the event:Selectors JavaScript library.
  *
  * @var array
  * @access protected
  * @see JavascriptHelper::event()
- * @link          http://alternateidea.com/event-selectors/
+ * @link http://alternateidea.com/event-selectors/
  */
 	var $_rules = array();
 /**
@@ -152,24 +156,15 @@ class JavascriptHelper extends AppHelper {
 /**
  * Returns a JavaScript script tag.
  *
- * Options:
- *
- *  - allowCache: boolean, designates whether this block is cacheable using the
- * current cache settings.
- *  - safe: boolean, whether this block should be wrapped in CDATA tags.  Defaults
- * to helper's object configuration.
- *  - inline: whether the block should be printed inline, or written
- * to cached for later output (i.e. $scripts_for_layout).
- *
  * @param string $script The JavaScript to be wrapped in SCRIPT tags.
- * @param array $options Set of options:
- * @return string The full SCRIPT element, with the JavaScript inside it, or null,
- *   if 'inline' is set to false.
+ * @param array $options Set of options: allowCache, safe
+ * @param boolean $safe DEPRECATED. Use $options['safe'] instead
+ * @return string The full SCRIPT element, with the JavaScript inside it.
  */
-	function codeBlock($script = null, $options = array()) {
+	function codeBlock($script = null, $options = array(), $safe = true) {
 		if (!empty($options) && !is_array($options)) {
 			$options = array('allowCache' => $options);
-		} elseif (empty($options)) {
+		} else if (empty($options)) {
 			$options = array();
 		}
 		$defaultOptions = array('allowCache' => true, 'safe' => true, 'inline' => true);
@@ -202,8 +197,7 @@ class JavascriptHelper extends AppHelper {
 				if ($block) {
 					return sprintf($this->tags['javascriptblock'], $script);
 				} else {
-					$safe = ($safe ? "\n" . '//<![CDATA[' . "\n" : '');
-					return $this->tags['javascriptstart'] . $safe;
+					return sprintf($this->tags['javascriptstart']).ife($safe, "\n" . '//<![CDATA[' . "\n", '');
 				}
 			} elseif ($block) {
 				$view =& ClassRegistry::getObject('view');
@@ -223,7 +217,7 @@ class JavascriptHelper extends AppHelper {
 		echo $this->__scriptBuffer;
 		$this->__scriptBuffer = null;
 		$options = $this->_blockOptions;
-		$safe = ((isset($options['safe']) && $options['safe']) || $this->safe);
+		$safe = ($options['safe'] || $this->safe);
 		$this->_blockOptions = array();
 		$this->inBlock = false;
 
@@ -243,9 +237,9 @@ class JavascriptHelper extends AppHelper {
  * the path will be relative to the base path of your application.  Otherwise, the path will
  * be relative to your JavaScript path, usually webroot/js.
  *
- * @param mixed $url String URL to JavaScript file, or an array of URLs.
- * @param boolean $inline If true, the <script /> tag will be printed inline,
- *   otherwise it will be printed in the <head />, using $scripts_for_layout
+ * @param  mixed  $url String URL to JavaScript file, or an array of URLs.
+ * @param  boolean $inline If true, the <script /> tag will be printed inline,
+ *                         otherwise it will be printed in the <head />, using $scripts_for_layout
  * @see JS_URL
  * @return string
  */
@@ -262,24 +256,18 @@ class JavascriptHelper extends AppHelper {
 		}
 
 		if (strpos($url, '://') === false) {
-			if ($url[0] !== '/') {
+			if ($url{0} !== '/') {
 				$url = JS_URL . $url;
 			}
 			if (strpos($url, '?') === false) {
 				if (strpos($url, '.js') === false) {
 					$url .= '.js';
 				}
+				if ((Configure::read('Asset.timestamp') === true && Configure::read() > 0) || Configure::read('Asset.timestamp') === 'force') {
+					$url .= '?' . @filemtime(WWW_ROOT . str_replace('/', DS, $url));
+				}
 			}
-
 			$url = $this->webroot($url);
-			$timestampEnabled = (
-				(Configure::read('Asset.timestamp') === true && Configure::read() > 0) ||
-				Configure::read('Asset.timestamp') === 'force'
-			);
-
-			if (strpos($url, '?') === false && $timestampEnabled) {
-				$url .= '?' . @filemtime(WWW_ROOT . str_replace('/', DS, $url));
-			}
 
 			if (Configure::read('Asset.filter.js')) {
 				$url = str_replace(JS_URL, 'cjs/', $url);
@@ -319,7 +307,7 @@ class JavascriptHelper extends AppHelper {
  * @return string Escaped string.
  */
 	function escapeString($string) {
-		$escape = array('\n' => '\\\n', "\r\n" => '\n', "\r" => '\n', "\n" => '\n', '"' => '\"', "'" => "\\'");
+		$escape = array("\r\n" => '\n', "\r" => '\n', "\n" => '\n', '"' => '\"', "'" => "\\'");
 		return str_replace(array_keys($escape), array_values($escape), $string);
 	}
 /**
@@ -346,18 +334,11 @@ class JavascriptHelper extends AppHelper {
 		} else {
 			$options['useCapture'] = 'false';
 		}
-		$isObject = (
-			strpos($object, 'window') !== false || strpos($object, 'document') !== false ||
-			strpos($object, '$(') !== false || strpos($object, '"') !== false ||
-			strpos($object, '\'') !== false
-		);
 
-		if ($isObject) {
-			$b = "Event.observe({$object}, '{$event}', function(event) { {$observer} }, ";
-			$b .= "{$options['useCapture']});";
+		if (strpos($object, 'window') !== false || strpos($object, 'document') !== false || strpos($object, '$(') !== false || strpos($object, '"') !== false || strpos($object, '\'') !== false) {
+			$b = "Event.observe({$object}, '{$event}', function(event) { {$observer} }, {$options['useCapture']});";
 		} elseif ($object[0] == '\'') {
-			$b = "Event.observe(" . substr($object, 1) . ", '{$event}', function(event) { ";
-			$b .= "{$observer} }, {$options['useCapture']});";
+			$b = "Event.observe(" . substr($object, 1) . ", '{$event}', function(event) { {$observer} }, {$options['useCapture']});";
 		} else {
 			$chars = array('#', ' ', ', ', '.', ':');
 			$found = false;
@@ -370,8 +351,7 @@ class JavascriptHelper extends AppHelper {
 			if ($found) {
 				$this->_rules[$object] = $event;
 			} else {
-				$b = "Event.observe(\$('{$object}'), '{$event}', function(event) { ";
-				$b .= "{$observer} }, {$options['useCapture']});";
+				$b = "Event.observe(\$('{$object}'), '{$event}', function(event) { {$observer} }, {$options['useCapture']});";
 			}
 		}
 
@@ -436,30 +416,26 @@ class JavascriptHelper extends AppHelper {
 		$out = '';
 		$rules = array();
 
-		if (!$this->_cacheEvents) {
-			return;
-		}
-		$data = $this->getCache();
+		if ($this->_cacheEvents) {
+			$data = $this->getCache();
 
-		if (empty($data)) {
-			return;
-		}
-
-		if ($this->_cacheToFile) {
-			$filename = md5($data);
-			if (!file_exists(JS . $filename . '.js')) {
-				cache(str_replace(WWW_ROOT, '', JS) . $filename . '.js', $data, '+999 days', 'public');
+			if (!empty($data)) {
+				if ($this->_cacheToFile) {
+					$filename = md5($data);
+					if (!file_exists(JS . $filename . '.js')) {
+						cache(str_replace(WWW_ROOT, '', JS) . $filename . '.js', $data, '+999 days', 'public');
+					}
+					$out = $this->link($filename);
+				} else {
+					$out = $this->codeBlock("\n" . $data . "\n", $options);
+				}
+				if ($inline) {
+					return $out;
+				} else {
+					$view =& ClassRegistry::getObject('view');
+					$view->addScript($out);
+				}
 			}
-			$out = $this->link($filename);
-		} else {
-			$out = $this->codeBlock("\n" . $data . "\n", $options);
-		}
-
-		if ($inline) {
-			return $out;
-		} else {
-			$view =& ClassRegistry::getObject('view');
-			$view->addScript($out);
 		}
 	}
 /**
@@ -509,10 +485,7 @@ class JavascriptHelper extends AppHelper {
 			$options = array();
 		}
 
-		$defaultOptions = array(
-			'block' => false, 'prefix' => '', 'postfix' => '',
-			'stringKeys' => array(), 'quoteKeys' => true, 'q' => '"'
-		);
+		$defaultOptions = array('block' => false, 'prefix' => '', 'postfix' => '', 'stringKeys' => array(), 'quoteKeys' => true, 'q' => '"');
 		$options = array_merge($defaultOptions, $options, array_filter(compact(array_keys($defaultOptions))));
 
 		if (is_object($data)) {
@@ -525,13 +498,6 @@ class JavascriptHelper extends AppHelper {
 		if ($this->useNative) {
 			$rt = json_encode($data);
 		} else {
-			if (is_null($data)) {
-				return 'null';
-			}
-			if (is_bool($data)) {
-				return $data ? 'true' : 'false';
-			}
-
 			if (is_array($data)) {
 				$keys = array_keys($data);
 			}
@@ -542,14 +508,9 @@ class JavascriptHelper extends AppHelper {
 
 			foreach ($data as $key => $val) {
 				if (is_array($val) || is_object($val)) {
-					$val = $this->object($val, array_merge($options, array('block' => false)));
+					$val = $this->object($val, am($options, array('block' => false)));
 				} else {
-					$quoteStrings = (
-						!count($options['stringKeys']) ||
-						($options['quoteKeys'] && in_array($key, $options['stringKeys'], true)) ||
-						(!$options['quoteKeys'] && !in_array($key, $options['stringKeys'], true))
-					);
-					$val = $this->value($val, $quoteStrings);
+					$val = $this->value($val, (!count($options['stringKeys']) || ($options['quoteKeys'] && in_array($key, $options['stringKeys'], true)) || (!$options['quoteKeys'] && !in_array($key, $options['stringKeys'], true))));
 				}
 				if (!$numeric) {
 					$val = $options['q'] . $this->value($key, false) . $options['q'] . ':' . $val;

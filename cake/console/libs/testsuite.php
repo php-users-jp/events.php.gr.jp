@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: testsuite.php 8166 2009-05-04 21:17:19Z gwoo $ */
+/* SVN FILE: $Id: testsuite.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Test Suite Shell
  *
@@ -8,21 +8,23 @@
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.cake.console.libs
- * @since         CakePHP(tm) v 1.2.0.4433
- * @version       $Revision: 8166 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-05-04 14:17:19 -0700 (Mon, 04 May 2009) $
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package			cake
+ * @subpackage		cake.cake.console.libs
+ * @since			CakePHP(tm) v 1.2.0.4433
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 class TestSuiteShell extends Shell {
 /**
@@ -156,30 +158,30 @@ class TestSuiteShell extends Shell {
 	function help() {
 		$this->out('Usage: ');
 		$this->out("\tcake testsuite category test_type file");
-		$this->out("\t\t- category - \"app\", \"core\" or name of a plugin");
-		$this->out("\t\t- test_type - \"case\", \"group\" or \"all\"");
-		$this->out("\t\t- test_file - file name with folder prefix and without the (test|group).php suffix");
+		$this->out("\t\t - category - \"app\", \"core\" or name of a plugin");
+		$this->out("\t\t - test_type - \"case\", \"group\" or \"all\"");
+		$this->out("\t\t - test_file - file name with folder prefix and without the (test|group).php suffix");
 		$this->out('');
 		$this->out('Examples: ');
-		$this->out("\t\tcake testsuite app all");
-		$this->out("\t\tcake testsuite core all");
+		$this->out("\t\t cake testsuite app all");
+		$this->out("\t\t cake testsuite core all");
 		$this->out('');
-		$this->out("\t\tcake testsuite app case behaviors/debuggable");
-		$this->out("\t\tcake testsuite app case models/my_model");
-		$this->out("\t\tcake testsuite app case controllers/my_controller");
+		$this->out("\t\t cake testsuite app case behaviors/debuggable");
+		$this->out("\t\t cake testsuite app case models/my_model");
+		$this->out("\t\t cake testsuite app case controllers/my_controller");
 		$this->out('');
-		$this->out("\t\tcake testsuite core case file");
-		$this->out("\t\tcake testsuite core case router");
-		$this->out("\t\tcake testsuite core case set");
+		$this->out("\t\t cake testsuite core case file");
+		$this->out("\t\t cake testsuite core case router");
+		$this->out("\t\t cake testsuite core case set");
 		$this->out('');
-		$this->out("\t\tcake testsuite app group mygroup");
-		$this->out("\t\tcake testsuite core group acl");
-		$this->out("\t\tcake testsuite core group socket");
+		$this->out("\t\t cake testsuite app group mygroup");
+		$this->out("\t\t cake testsuite core group acl");
+		$this->out("\t\t cake testsuite core group socket");
 		$this->out('');
-		$this->out("\t\tcake testsuite bugs case models/bug");
-		$this->out("\t\t  // for the plugin 'bugs' and its test case 'models/bug'");
-		$this->out("\t\tcake testsuite bugs group bug");
-		$this->out("\t\t  // for the plugin bugs and its test group 'bug'");
+		$this->out("\t\t cake testsuite bugs case models/bug  // for the plugin 'bugs' and its test case 'bug'");
+		$this->out("\t\t cake testsuite bugs group bug  // for the plugin bugs and its test group 'bug'");
+		$this->out("\t\t cake testsuite bugs_me case models/bug  // for the plugin 'bugs_me' and its test case 'bug'");
+		$this->out("\t\t cake testsuite bugs_me group bug  // for the plugin bugs_me and its test group 'bug'");
 		$this->out('');
 		$this->out('Code Coverage Analysis: ');
 		$this->out("\n\nAppend 'cov' to any of the above in order to enable code coverage analysis");
@@ -312,19 +314,11 @@ class TestSuiteShell extends Shell {
 		);
 
 		if (array_key_exists($category, $paths)) {
-			$folder = $paths[$category] . 'tests';
+			$folder = $paths[$category];
 		} else {
-			$scoredCategory = Inflector::underscore($category);
-			$folder = APP . 'plugins' . DS . $scoredCategory . DS;
-			$pluginPaths = Configure::read('pluginPaths');
-			foreach ($pluginPaths as $path) {
-				if (file_exists($path . $scoredCategory . DS . 'tests')) {
-					$folder = $path . $scoredCategory . DS . 'tests';
-					break;
-				}
-			}
+			$folder = APP.'plugins'.DS.Inflector::underscore($category).DS;
 		}
-		return $folder;
+		return $folder.'tests';
 	}
 /**
  * Sets some get vars needed for TestManager

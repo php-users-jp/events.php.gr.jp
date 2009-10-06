@@ -1,40 +1,42 @@
 <?php
-/* SVN FILE: $Id: file.php 8120 2009-03-19 20:25:10Z gwoo $ */
+/* SVN FILE: $Id: file.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * File Storage engine for cache
  *
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.cache
- * @since         CakePHP(tm) v 1.2.0.4933
- * @version       $Revision: 8120 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-03-19 13:25:10 -0700 (Thu, 19 Mar 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.cache
+ * @since			CakePHP(tm) v 1.2.0.4933
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * File Storage engine for cache
  *
  * @todo use the File and Folder classes (if it's not a too big performance hit)
- * @package       cake
- * @subpackage    cake.cake.libs.cache
+ * @package		cake
+ * @subpackage	cake.cake.libs.cache
  */
 class FileEngine extends CacheEngine {
 /**
  * Instance of File class
  *
- * @var File
+ * @var object
  * @access private
  */
 	var $__File = null;
@@ -82,19 +84,19 @@ class FileEngine extends CacheEngine {
 			),
 			$settings
 		));
-		if (!isset($this->__File)) {
+		if(!isset($this->__File)) {
 			if (!class_exists('File')) {
-				require LIBS . 'file.php';
+				uses('file');
 			}
 			$this->__File =& new File($this->settings['path'] . DS . 'cake');
 		}
 
-		if (DIRECTORY_SEPARATOR === '\\') {
+		if(substr(PHP_OS, 0, 3) == "WIN") {
 			$this->settings['isWindows'] = true;
 		}
 
 		$this->settings['path'] = $this->__File->Folder->cd($this->settings['path']);
-		if (empty($this->settings['path'])) {
+		if(empty($this->settings['path'])) {
 			return false;
 		}
 		return $this->__active();
@@ -122,10 +124,13 @@ class FileEngine extends CacheEngine {
 			return false;
 		}
 
-		if ($this->__setKey($key) === false) {
+		if($this->__setKey($key) === false) {
 			return false;
 		}
 
+		if ($duration == null) {
+			$duration = $this->settings['duration'];
+		}
 		$lineBreak = "\n";
 
 		if ($this->settings['isWindows']) {
@@ -157,16 +162,15 @@ class FileEngine extends CacheEngine {
  * @access public
  */
 	function read($key) {
-		if ($this->__setKey($key) === false || !$this->__init || !$this->__File->exists()) {
+		if($this->__setKey($key) === false || !$this->__init) {
 			return false;
 		}
 		if ($this->settings['lock']) {
 			$this->__File->lock = true;
 		}
-		$time = time();
-		$cachetime = intval($this->__File->read(11));
+		$cachetime = $this->__File->read(11);
 
-		if ($cachetime !== false && ($cachetime < $time || ($time + $this->settings['duration']) < $cachetime)) {
+		if ($cachetime !== false && intval($cachetime) < time()) {
 			$this->__File->close();
 			$this->__File->delete();
 			return false;
@@ -177,7 +181,7 @@ class FileEngine extends CacheEngine {
 			if ($this->settings['isWindows']) {
 				$data = str_replace('\\\\\\\\', '\\', $data);
 			}
-			$data = unserialize((string)$data);
+			$data = unserialize($data);
 		}
 		$this->__File->close();
 		return $data;
@@ -190,7 +194,7 @@ class FileEngine extends CacheEngine {
  * @access public
  */
 	function delete($key) {
-		if ($this->__setKey($key) === false || !$this->__init) {
+		if($this->__setKey($key) === false || !$this->__init) {
 			return false;
 		}
 		return $this->__File->delete();
@@ -212,7 +216,7 @@ class FileEngine extends CacheEngine {
 			$threshold = $now - $this->settings['duration'];
 		}
 		while (($entry = $dir->read()) !== false) {
-			if ($this->__setKey($entry) === false) {
+			if($this->__setKey($entry) === false) {
 				continue;
 			}
 			if ($check) {
@@ -243,10 +247,7 @@ class FileEngine extends CacheEngine {
  */
 	function __setKey($key) {
 		$this->__File->Folder->cd($this->settings['path']);
-		if ($key !== $this->__File->name) {
-			$this->__File->name = $key;
-			$this->__File->path = null;
-		}
+		$this->__File->name = $key;
 		if (!$this->__File->Folder->inPath($this->__File->pwd(), true)) {
 			return false;
 		}

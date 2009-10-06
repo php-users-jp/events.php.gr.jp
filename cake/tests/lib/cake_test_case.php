@@ -1,28 +1,30 @@
 <?php
-/* SVN FILE: $Id: cake_test_case.php 8166 2009-05-04 21:17:19Z gwoo $ */
+/* SVN FILE: $Id: cake_test_case.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
- * CakeTestCase file
+ * Short description for file.
  *
  * Long description for file
  *
  * PHP versions 4 and 5
  *
  * CakePHP(tm) Tests <https://trac.cakephp.org/wiki/Developement/TestSuite>
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  *  Licensed under The Open Group Test Suite License
  *  Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
- * @package       cake
- * @subpackage    cake.cake.tests.libs
- * @since         CakePHP(tm) v 1.2.0.4667
- * @version       $Revision: 8166 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-05-04 14:17:19 -0700 (Mon, 04 May 2009) $
- * @license       http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				https://trac.cakephp.org/wiki/Developement/TestSuite CakePHP(tm) Tests
+ * @package			cake
+ * @subpackage		cake.cake.tests.libs
+ * @since			CakePHP(tm) v 1.2.0.4667
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/opengroup.php The Open Group Test Suite License
  */
 if (!class_exists('dispatcher')) {
 	require CAKE . 'dispatcher.php';
@@ -31,40 +33,20 @@ require_once CAKE_TESTS_LIB . 'cake_test_model.php';
 require_once CAKE_TESTS_LIB . 'cake_test_fixture.php';
 App::import('Vendor', 'simpletest' . DS . 'unit_tester');
 /**
- * CakeTestDispatcher
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.cake.tests.lib
+ * @package    cake
+ * @subpackage cake.cake.tests.lib
  */
 class CakeTestDispatcher extends Dispatcher {
-/**
- * controller property
- *
- * @var Controller
- * @access public
- */
 	var $controller;
 	var $testCase;
-/**
- * testCase method
- *
- * @param CakeTestCase $testCase
- * @return void
- * @access public
- */
+
 	function testCase(&$testCase) {
 		$this->testCase =& $testCase;
 	}
-/**
- * invoke method
- *
- * @param Controller $controller
- * @param array $params
- * @param boolean $missingAction
- * @return Controller
- * @access proptected
- */
-	function _invoke(&$controller, $params, $missingAction = false) {
+
+	function _invoke (&$controller, $params, $missingAction = false) {
 		$this->controller =& $controller;
 
 		if (isset($this->testCase) && method_exists($this->testCase, 'startController')) {
@@ -81,19 +63,21 @@ class CakeTestDispatcher extends Dispatcher {
 	}
 }
 /**
- * CakeTestCase class
+ * Short description for class.
  *
- * @package       cake
- * @subpackage    cake.cake.tests.lib
+ * @package    cake
+ * @subpackage cake.cake.tests.lib
  */
 class CakeTestCase extends UnitTestCase {
 /**
  * Methods used internally.
  *
  * @var array
- * @access public
+ * @access private
  */
 	var $methods = array('start', 'end', 'startcase', 'endcase', 'starttest', 'endtest');
+	var $__truncated = true;
+	var $__savedGetData = array();
 /**
  * By default, all fixtures attached to this class will be truncated and reloaded after each test.
  * Set this to false to handle manually
@@ -103,13 +87,6 @@ class CakeTestCase extends UnitTestCase {
  */
 	var $autoFixtures = true;
 /**
- * Set this to false to avoid tables to be dropped if they already exist
- *
- * @var boolean
- * @access public
- */
-	var $dropTables = true;
-/**
  * Maps fixture class names to fixture identifiers as included in CakeTestCase::$fixtures
  *
  * @var array
@@ -117,63 +94,43 @@ class CakeTestCase extends UnitTestCase {
  */
 	var $_fixtureClassMap = array();
 /**
- * truncated property
- *
- * @var boolean
- * @access private
- */
-	var $__truncated = true;
-/**
- * savedGetData property
- *
- * @var array
- * @access private
- */
-	var $__savedGetData = array();
-/**
  * Called when a test case (group of methods) is about to start (to be overriden when needed.)
  *
- * @param string $method Test method about to get executed.
- * @return void
- * @access public
+ * @param string $method	Test method about to get executed.
+ *
+ * @access protected
  */
 	function startCase() {
 	}
 /**
  * Called when a test case (group of methods) has been executed (to be overriden when needed.)
  *
- * @param string $method Test method about that was executed.
- * @return void
- * @access public
+ * @param string $method	Test method about that was executed.
+ *
+ * @access protected
  */
 	function endCase() {
 	}
 /**
  * Called when a test case method is about to start (to be overriden when needed.)
  *
- * @param string $method Test method about to get executed.
- * @return void
- * @access public
+ * @param string $method	Test method about to get executed.
+ *
+ * @access protected
  */
 	function startTest($method) {
 	}
 /**
  * Called when a test case method has been executed (to be overriden when needed.)
  *
- * @param string $method Test method about that was executed.
- * @return void
- * @access public
+ * @param string $method	Test method about that was executed.
+ *
+ * @access protected
  */
 	function endTest($method) {
 	}
 /**
  * Overrides SimpleTestCase::assert to enable calling of skipIf() from within tests
- *
- * @param Expectation $expectation
- * @param mixed $compare
- * @param string $message
- * @return boolean|null
- * @access public
  */
 	function assert(&$expectation, $compare, $message = '%s') {
 		if ($this->_should_skip) {
@@ -183,11 +140,6 @@ class CakeTestCase extends UnitTestCase {
 	}
 /**
  * Overrides SimpleTestCase::skipIf to provide a boolean return value
- *
- * @param boolean $shouldSkip
- * @param string $message
- * @return boolean
- * @access public
  */
 	function skipIf($shouldSkip, $message = '%s') {
 		parent::skipIf($shouldSkip, $message);
@@ -198,45 +150,31 @@ class CakeTestCase extends UnitTestCase {
  *
  * @param Controller $controller	Controller that's about to be invoked.
  * @param array $params	Additional parameters as sent by testAction().
- * @return void
- * @access public
  */
 	function startController(&$controller, $params = array()) {
 		if (isset($params['fixturize']) && ((is_array($params['fixturize']) && !empty($params['fixturize'])) || $params['fixturize'] === true)) {
 			if (!isset($this->db)) {
 				$this->_initDb();
 			}
-
-			if ($controller->uses === false) {
-				$list = array($controller->modelClass);
-			} else {
-				$list = is_array($controller->uses) ? $controller->uses : array($controller->uses);
-			}
-
+			$classRegistry =& ClassRegistry::getInstance();
 			$models = array();
-			ClassRegistry::config(array('ds' => $params['connection']));
 
-			foreach ($list as $name) {
-				if ((is_array($params['fixturize']) && in_array($name, $params['fixturize'])) || $params['fixturize'] === true) {
-					if (class_exists($name) || App::import('Model', $name)) {
-						$object =& ClassRegistry::init($name);
-						//switch back to specified datasource.
-						$object->setDataSource($params['connection']);
-						$db =& ConnectionManager::getDataSource($object->useDbConfig);
-						$db->cacheSources = false;
-
-						$models[$object->alias] = array(
-							'table' => $object->table,
-							'model' => $object->alias,
-							'key' => strtolower($name),
-						);
-					}
+			foreach ($classRegistry->__map as $key => $name) {
+				$object =& $classRegistry->getObject(Inflector::camelize($key));
+				if (is_subclass_of($object, 'Model') && ((is_array($params['fixturize']) && in_array($object->alias, $params['fixturize'])) || $params['fixturize'] === true)) {
+					$models[$object->alias] = array(
+						'table' => $object->table,
+						'model' => $object->alias,
+						'key' => Inflector::camelize($key));
 				}
 			}
-			ClassRegistry::config(array('ds' => 'test_suite'));
 
 			if (!empty($models) && isset($this->db)) {
-				$this->_actionFixtures = array();
+				$this->_queries = array(
+					'create' => array(),
+					'insert' => array(),
+					'drop' => array()
+				);
 
 				foreach ($models as $model) {
 					$fixture =& new CakeTestFixture($this->db);
@@ -244,15 +182,38 @@ class CakeTestCase extends UnitTestCase {
 					$fixture->name = $model['model'] . 'Test';
 					$fixture->table = $model['table'];
 					$fixture->import = array('model' => $model['model'], 'records' => true);
+
 					$fixture->init();
 
-					$fixture->create($this->db);
-					$fixture->insert($this->db);
-					$this->_actionFixtures[] =& $fixture;
+					$createFixture = $fixture->create($this->db);
+					$insertsFixture = $fixture->insert();
+					$dropFixture = $fixture->drop();
+
+					if (!empty($createFixture)) {
+						$this->_queries['create'] = array_merge($this->_queries['create'], array($createFixture));
+					}
+					if (!empty($insertsFixture)) {
+						$this->_queries['insert'] = array_merge($this->_queries['insert'], $insertsFixture);
+					}
+					if (!empty($dropFixture)) {
+						$this->_queries['drop'] = array_merge($this->_queries['drop'], array($dropFixture));
+					}
+				}
+
+				foreach ($this->_queries['create'] as $query) {
+					if (isset($query) && $query !== false) {
+						$this->db->execute($query);
+					}
+				}
+
+				foreach ($this->_queries['insert'] as $query) {
+					if (isset($query) && $query !== false) {
+						$this->db->execute($query);
+					}
 				}
 
 				foreach ($models as $model) {
-					$object =& ClassRegistry::getObject($model['key']);
+					$object =& $classRegistry->getObject($model['key']);
 					if ($object !== false) {
 						$object->setDataSource('test_suite');
 						$object->cacheSources = false;
@@ -264,35 +225,28 @@ class CakeTestCase extends UnitTestCase {
 /**
  * Callback issued when a controller's action has been invoked through testAction().
  *
- * @param Controller $controller Controller that has been invoked.
- * @param array $params	Additional parameters as sent by testAction().
- * @return void
- * @access public
+ * @param Controller $controller	Controller that has been invoked.
+ * * @param array $params	Additional parameters as sent by testAction().
  */
 	function endController(&$controller, $params = array()) {
-		if (isset($this->db) && isset($this->_actionFixtures) && !empty($this->_actionFixtures) && $this->dropTables) {
-			foreach ($this->_actionFixtures as $fixture) {
-				$fixture->drop($this->db);
+		if (isset($this->db) && isset($this->_queries) && !empty($this->_queries) && !empty($this->_queries['drop'])) {
+			foreach ($this->_queries['drop'] as $query) {
+				if (isset($query) && $query !== false) {
+					$this->db->execute($query);
+				}
 			}
 		}
 	}
 /**
  * Executes a Cake URL, and can get (depending on the $params['return'] value):
  *
- * Params:
- * - 'return' has several possible values:
- *   1. 'result': Whatever the action returns (and also specifies $this->params['requested'] for controller)
- *   2. 'view': The rendered view, without the layout
- *   3. 'contents': The rendered view, within the layout.
- *   4. 'vars': the view vars
+ * 1. 'result': Whatever the action returns (and also specifies $this->params['requested'] for controller)
+ * 2. 'view': The rendered view, without the layout
+ * 3. 'contents': The rendered view, within the layout.
+ * 4. 'vars': the view vars
  *
- * - 'fixturize' - Set to true if you want to copy model data from 'connection' to the test_suite connection
- * - 'data' - The data you want to insert into $this->data in the controller.
- * - 'connection' - Which connection to use in conjunction with fixturize (defaults to 'default')
- * - 'method' - What type of HTTP method to simulate (defaults to post)
- *
- * @param string $url Cake URL to execute (e.g: /articles/view/455)
- * @param mixed $params Parameters (see above), or simply a string of what to return
+ * @param string $url	Cake URL to execute (e.g: /articles/view/455)
+ * @param array $params	Parameters, or simply a string of what to return
  * @return mixed Whatever is returned depending of requested result
  * @access public
  */
@@ -301,13 +255,13 @@ class CakeTestCase extends UnitTestCase {
 			'return' => 'result',
 			'fixturize' => false,
 			'data' => array(),
-			'method' => 'post',
-			'connection' => 'default'
+			'method' => 'post'
 		);
 
 		if (is_string($params)) {
 			$params = array('return' => $params);
 		}
+
 		$params = array_merge($default, $params);
 
 		$toSave = array(
@@ -322,13 +276,15 @@ class CakeTestCase extends UnitTestCase {
 				? array_intersect_key($_GET, $toSave)
 				: $this->__savedGetData;
 
-		$data = (!empty($params['data'])) ? $params['data'] : array();
+		$data = (!empty($params['data']))
+					? array('data' => $params['data'])
+					: array();
 
 		if (strtolower($params['method']) == 'get') {
 			$_GET = array_merge($this->__savedGetData, $data);
 			$_POST = array();
 		} else {
-			$_POST = array('data' => $data);
+			$_POST = $data;
 			$_GET = $this->__savedGetData;
 		}
 
@@ -369,10 +325,11 @@ class CakeTestCase extends UnitTestCase {
 			$result = @$dispatcher->dispatch($url, $params);
 		}
 
-		if (isset($this->_actionFixtures)) {
-			unset($this->_actionFixtures);
-		}
 		ClassRegistry::flush();
+
+		if (isset($this->_queries)) {
+			unset($this->_queries);
+		}
 
 		return $result;
 	}
@@ -380,7 +337,7 @@ class CakeTestCase extends UnitTestCase {
  * Announces the start of a test.
  *
  * @param string $method Test method just started.
- * @return void
+ *
  * @access public
  */
 	function before($method) {
@@ -410,62 +367,45 @@ class CakeTestCase extends UnitTestCase {
 /**
  * Runs as first test to create tables.
  *
- * @return void
  * @access public
  */
 	function start() {
 		if (isset($this->_fixtures) && isset($this->db)) {
-			Configure::write('Cache.disable', true);
 			$cacheSources = $this->db->cacheSources;
 			$this->db->cacheSources = false;
 			$sources = $this->db->listSources();
 			$this->db->cacheSources = $cacheSources;
 
-			if (!$this->dropTables) {
-				return;
-			}
 			foreach ($this->_fixtures as $fixture) {
 				if (in_array($fixture->table, $sources)) {
 					$fixture->drop($this->db);
-					$fixture->create($this->db);
-				} elseif (!in_array($fixture->table, $sources)) {
-					$fixture->create($this->db);
 				}
+
+				$fixture->create($this->db);
 			}
 		}
 	}
 /**
  * Runs as last test to drop tables.
  *
- * @return void
  * @access public
  */
 	function end() {
 		if (isset($this->_fixtures) && isset($this->db)) {
-			if ($this->dropTables) {
-				foreach (array_reverse($this->_fixtures) as $fixture) {
-					$fixture->drop($this->db);
-				}
+			foreach (array_reverse($this->_fixtures) as $fixture) {
+				$fixture->drop($this->db);
 			}
-			$this->db->sources(true);
-			Configure::write('Cache.disable', false);
-		}
-
-		if (class_exists('ClassRegistry')) {
-			ClassRegistry::flush();
 		}
 	}
 /**
  * Announces the end of a test.
  *
  * @param string $method Test method just finished.
- * @return void
+ *
  * @access public
  */
 	function after($method) {
-		$isTestMethod = !in_array(strtolower($method), array('start', 'end'));
-
-		if (isset($this->_fixtures) && isset($this->db) && $isTestMethod) {
+		if (isset($this->_fixtures) && isset($this->db) && !in_array(strtolower($method), array('start', 'end'))) {
 			foreach ($this->_fixtures as $fixture) {
 				$fixture->truncate($this->db);
 			}
@@ -485,22 +425,19 @@ class CakeTestCase extends UnitTestCase {
  * Gets a list of test names. Normally that will be all internal methods that start with the
  * name "test". This method should be overridden if you want a different rule.
  *
- * @return array List of test names.
+ * @return array	List of test names.
+ *
  * @access public
  */
 	function getTests() {
-		return array_merge(
-			array('start', 'startCase'),
-			array_diff(parent::getTests(), array('testAction', 'testaction')),
-			array('endCase', 'end')
-		);
+		$methods = array_diff(parent::getTests(), array('testAction', 'testaction'));
+		$methods = array_merge(array_merge(array('start', 'startCase'), $methods), array('endCase', 'end'));
+		return $methods;
 	}
 /**
  * Chooses which fixtures to load for a given test
  *
- * @param string $fixture Each parameter is a model name that corresponds to a
- *                        fixture, i.e. 'Post', 'Author', etc.
- * @return void
+ * @param string $fixture Each parameter is a model name that corresponds to a fixture, i.e. 'Post', 'Author', etc.
  * @access public
  * @see CakeTestCase::$autoFixtures
  */
@@ -513,16 +450,14 @@ class CakeTestCase extends UnitTestCase {
 				$fixture->truncate($this->db);
 				$fixture->insert($this->db);
 			} else {
-				trigger_error("Referenced fixture class {$class} not found", E_USER_WARNING);
+				trigger_error("Non-existent fixture class {$class} referenced in test", E_USER_WARNING);
 			}
 		}
 	}
 /**
- * Takes an array $expected and generates a regex from it to match the provided $string.
- * Samples for $expected:
+ * Takes an array $expected and generates a regex from it to match the provided $string. Samples for $expected:
  *
- * Checks for an input tag with a name attribute (contains any non-empty value) and an id
- * attribute that contains 'my-input':
+ * Checks for an input tag with a name attribute (contains any value) and an id attribute that contains 'my-input':
  * 	array('input' => array('name', 'id' => 'my-input'))
  *
  * Checks for two p elements with some text in them:
@@ -535,20 +470,19 @@ class CakeTestCase extends UnitTestCase {
  * 		'/p'
  *	)
  *
- * You can also specify a pattern expression as part of the attribute values, or the tag
- * being defined, if you prepend the value with preg: and enclose it with slashes, like so:
+ * You can also specify a pattern expression as part of the attribute values, or the tag being defined,
+ * if you prepend the value with preg: and enclose it with slashes, like so:
  *	array(
  *  	array('input' => array('name', 'id' => 'preg:/FieldName\d+/')),
  *  	'preg:/My\s+field/'
  *	)
  *
- * Important: This function is very forgiving about whitespace and also accepts any
- * permutation of attribute order. It will also allow whitespaces between specified tags.
+ * Important: This function is very forgiving about whitespace and also accepts any permutation of attribute order.
+ * It will also allow whitespaces between specified tags.
  *
  * @param string $string An HTML/XHTML/XML string
  * @param array $expected An array, see above
  * @param string $message SimpleTest failure output string
- * @return boolean
  * @access public
  */
 	function assertTags($string, $expected, $fullDebug = false) {
@@ -567,11 +501,8 @@ class CakeTestCase extends UnitTestCase {
 			if (is_string($tags) && $tags{0} == '<') {
 				$tags = array(substr($tags, 1) => array());
 			} elseif (is_string($tags)) {
-				$tagsTrimmed = preg_replace('/\s+/m', '', $tags);
-
-				if (preg_match('/^\*?\//', $tags, $match) && $tagsTrimmed !== '//') {
+				if (preg_match('/^\*?\//', $tags, $match)) {
 					$prefix = array(null, null);
-
 					if ($match[0] == '*/') {
 						$prefix = array('Anything, ', '.*?');
 					}
@@ -618,7 +549,7 @@ class CakeTestCase extends UnitTestCase {
 							$attr = $val;
 							$val = '.+?';
 							$explanations[] = sprintf('Attribute "%s" present', $attr);
-						} elseif (!empty($val) && preg_match('/^preg\:\/(.+)\/$/i', $val, $matches)) {
+						} else if (!empty($val) && preg_match('/^preg\:\/(.+)\/$/i', $val, $matches)) {
 							$quotes = '"?';
 							$val = $matches[1];
 							$explanations[] = sprintf('Attribute "%s" matches "%s"', $attr, $val);
@@ -670,45 +601,70 @@ class CakeTestCase extends UnitTestCase {
 		return $this->assert(new TrueExpectation(), true, '%s');
 	}
 /**
+ * Generates all permutation of an array $items and returns them in a new array.
+ *
+ * @param array $items An array of items
+ * @return array
+ * @access public
+ */
+	function __array_permute($items, $perms = array()) {
+		static $permuted;
+		if (empty($perms)) {
+			$permuted = array();
+		}
+
+		if (empty($items)) {
+			$permuted[] = $perms;
+		} else {
+			$numItems = count($items) - 1;
+			for ($i = $numItems; $i >= 0; --$i) {
+				$newItems = $items;
+				$newPerms = $perms;
+				list($tmp) = array_splice($newItems, $i, 1);
+				array_unshift($newPerms, $tmp);
+				$this->__array_permute($newItems, $newPerms);
+			}
+			return $permuted;
+		}
+	}
+/**
  * Initialize DB connection.
  *
- * @return void
  * @access protected
  */
 	function _initDb() {
-		$testDbAvailable = in_array('test', array_keys(ConnectionManager::enumConnectionObjects()));
+		$testDbAvailable = false;
 
-		$_prefix = null;
+		if (class_exists('DATABASE_CONFIG')) {
+			$dbConfig =& new DATABASE_CONFIG();
+			$testDbAvailable = isset($dbConfig->test);
+		}
 
 		if ($testDbAvailable) {
 			// Try for test DB
 			restore_error_handler();
 			@$db =& ConnectionManager::getDataSource('test');
 			set_error_handler('simpleTestErrorHandler');
+
 			$testDbAvailable = $db->isConnected();
 		}
 
 		// Try for default DB
 		if (!$testDbAvailable) {
 			$db =& ConnectionManager::getDataSource('default');
-			$_prefix = $db->config['prefix'];
 			$db->config['prefix'] = 'test_suite_';
 		}
 
 		ConnectionManager::create('test_suite', $db->config);
-		$db->config['prefix'] = $_prefix;
-
 		// Get db connection
 		$this->db =& ConnectionManager::getDataSource('test_suite');
 		$this->db->cacheSources  = false;
-
-		ClassRegistry::config(array('ds' => 'test_suite'));
+		$this->db->fullDebug = false;
 	}
 /**
  * Load fixtures specified in var $fixtures.
  *
- * @return void
- * @access protected
+ * @access private
  */
 	function _loadFixtures() {
 		if (!isset($this->fixtures) || empty($this->fixtures)) {
@@ -727,7 +683,7 @@ class CakeTestCase extends UnitTestCase {
 			if (strpos($fixture, 'core.') === 0) {
 				$fixture = substr($fixture, strlen('core.'));
 				foreach (Configure::corePaths('cake') as $key => $path) {
-					$fixturePaths[] = $path . 'tests' . DS . 'fixtures';
+					$fixturePaths[] = $path . DS . 'tests' . DS . 'fixtures';
 				}
 			} elseif (strpos($fixture, 'app.') === 0) {
 				$fixture = substr($fixture, strlen('app.'));
@@ -744,13 +700,6 @@ class CakeTestCase extends UnitTestCase {
 					TESTS . 'fixtures',
 					VENDORS . 'tests' . DS . 'fixtures'
 				);
-				$pluginPaths = Configure::read('pluginPaths');
-				foreach ($pluginPaths as $path) {
-					if (file_exists($path . $pluginName . DS . 'tests' . DS. 'fixtures')) {
-						$fixturePaths[0] = $path . $pluginName . DS . 'tests' . DS. 'fixtures';
-						break;
-					}
-				}
 			} else {
 				$fixturePaths = array(
 					TESTS . 'fixtures',
@@ -776,33 +725,6 @@ class CakeTestCase extends UnitTestCase {
 
 		if (empty($this->_fixtures)) {
 			unset($this->_fixtures);
-		}
-	}
-/**
- * Generates all permutation of an array $items and returns them in a new array.
- *
- * @param array $items An array of items
- * @return array
- * @access private
- */
-	function __array_permute($items, $perms = array()) {
-		static $permuted;
-		if (empty($perms)) {
-			$permuted = array();
-		}
-
-		if (empty($items)) {
-			$permuted[] = $perms;
-		} else {
-			$numItems = count($items) - 1;
-			for ($i = $numItems; $i >= 0; --$i) {
-				$newItems = $items;
-				$newPerms = $perms;
-				list($tmp) = array_splice($newItems, $i, 1);
-				array_unshift($newPerms, $tmp);
-				$this->__array_permute($newItems, $newPerms);
-			}
-			return $permuted;
 		}
 	}
 }

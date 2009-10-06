@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: i18n.php 8120 2009-03-19 20:25:10Z gwoo $ */
+/* SVN FILE: $Id: i18n.php 7118 2008-06-04 20:49:29Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -7,22 +7,24 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs
- * @since         CakePHP(tm) v 1.2.0.4116
- * @version       $Revision: 8120 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-03-19 13:25:10 -0700 (Thu, 19 Mar 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs
+ * @since			CakePHP(tm) v 1.2.0.4116
+ * @version			$Revision: 7118 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Included libraries.
@@ -33,14 +35,14 @@ App::import('Core', 'l10n');
  *
  * Long description for file
  *
- * @package       cake
- * @subpackage    cake.cake.libs
+ * @package		cake
+ * @subpackage	cake.cake.libs
  */
 class I18n extends Object {
 /**
  * Instance of the I10n class for localization
  *
- * @var I10n
+ * @var object
  * @access public
  */
 	var $l10n = null;
@@ -51,13 +53,6 @@ class I18n extends Object {
  * @access public
  */
 	var $domain = null;
-/**
- * Current category of translation
- *
- * @var string
- * @access public
- */
-	var $category = 'LC_MESSAGES';
 /**
  * Current language used for translations
  *
@@ -122,28 +117,21 @@ class I18n extends Object {
  * @access public
  */
 	function translate($singular, $plural = null, $domain = null, $category = null, $count = null) {
-		$_this =& I18n::getInstance();
-
-		if (strpos($singular, "\r\n") !== false) {
-			$singular = str_replace("\r\n", "\n", $singular);
-		}
-		if ($plural !== null && strpos($plural, "\r\n") !== false) {
-			$plural = str_replace("\r\n", "\n", $plural);
+		if (!$category) {
+			$category = 5;
 		}
 
-		if (is_numeric($category)) {
-			$_this->category = $_this->__categories[$category];
-		}
 		$language = Configure::read('Config.language');
-
 		if (!empty($_SESSION['Config']['language'])) {
 			$language = $_SESSION['Config']['language'];
 		}
+		$_this =& I18n::getInstance();
 
 		if (($_this->__lang && $_this->__lang !== $language) || !$_this->__lang) {
 			$lang = $_this->l10n->get($language);
 			$_this->__lang = $lang;
 		}
+		$_this->category = $_this->__categories[$category];
 
 		if (is_null($domain)) {
 			$domain = 'default';
@@ -160,23 +148,23 @@ class I18n extends Object {
 		}
 
 		if (!isset($count)) {
-			$plurals = 0;
+			$pli = 0;
 		} elseif (!empty($_this->__domains[$_this->category][$_this->__lang][$domain]["%plural-c"]) && $_this->__noLocale === false) {
-			$header = $_this->__domains[$_this->category][$_this->__lang][$domain]["%plural-c"];
-			$plurals = $_this->__pluralGuess($header, $count);
+			$ph = $_this->__domains[$_this->category][$_this->__lang][$domain]["%plural-c"];
+			$pli = $_this->__pluralGuess($ph, $count);
 		} else {
 			if ($count != 1) {
-				$plurals = 1;
+				$pli = 1;
 			} else {
-				$plurals = 0;
+				$pli = 0;
 			}
 		}
 
 		if (!empty($_this->__domains[$_this->category][$_this->__lang][$domain][$singular])) {
-			if (($trans = $_this->__domains[$_this->category][$_this->__lang][$domain][$singular]) || ($plurals) && ($trans = $_this->__domains[$_this->category][$_this->__lang][$domain][$plural])) {
+			if (($trans = $_this->__domains[$_this->category][$_this->__lang][$domain][$singular]) || ($pli) && ($trans = $_this->__domains[$_this->category][$_this->__lang][$domain][$plural])) {
 				if (is_array($trans)) {
-					if (isset($trans[$plurals])) {
-						$trans = $trans[$plurals];
+					if (isset($trans[$pli])) {
+						$trans = $trans[$pli];
 					}
 				}
 				if (strlen($trans)) {
@@ -186,7 +174,7 @@ class I18n extends Object {
 			}
 		}
 
-		if (!empty($plurals)) {
+		if (!empty($pli)) {
 			return($plural);
 		}
 		return($singular);
@@ -194,50 +182,134 @@ class I18n extends Object {
 /**
  * Attempts to find the plural form of a string.
  *
- * @param string $header Type
+ * @param string $type Type
  * @param integrer $n Number
  * @return integer plural match
  * @access private
  */
-	function __pluralGuess($header, $n) {
-		if (!is_string($header) || $header === "nplurals=1;plural=0;" || !isset($header[0])) {
-			return 0;
-		}
+	function __pluralGuess(&$type, $n) {
+		if (is_string($type)) {
+			if (($type == "nplurals=1;plural=0;") || !strlen($type)) {
+				$type = -1;
+			} elseif ($type == "nplurals=2;plural=n!=1;") {
+				$type = 1;
+			} elseif ($type == "nplurals=2;plural=n>1;") {
+				$type = 2;
+			} elseif (strpos($type, "n%100!=11")) {
 
-		if ($header === "nplurals=2;plural=n!=1;") {
-			return $n != 1 ? 1 : 0;
-		} elseif ($header === "nplurals=2;plural=n>1;") {
-			return $n > 1 ? 1 : 0;
-		}
-
-		if (strpos($header, "plurals=3")) {
-			if (strpos($header, "100!=11")) {
-				if (strpos($header, "10<=4")) {
-					return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
-				} elseif (strpos($header, "100<10")) {
-					return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n % 10 >= 2 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+				if (strpos($type, "n!=0")) {
+					$type = 3;
 				}
-				return $n % 10 == 1 && $n % 100 != 11 ? 0 : ($n != 0 ? 1 : 2);
-			} elseif (strpos($header, "n==2")) {
-				return $n == 1 ? 0 : ($n == 2 ? 1 : 2);
-			} elseif (strpos($header, "n==0")) {
-				return $n == 1 ? 0 : ($n == 0 || ($n % 100 > 0 && $n % 100 < 20) ? 1 : 2);
-			} elseif (strpos($header, "n>=2")) {
-				return $n == 1 ? 0 : ($n >= 2 && $n <= 4 ? 1 : 2);
-			} elseif (strpos($header, "10>=2")) {
-				return $n == 1 ? 0 : ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20) ? 1 : 2);
+
+				if (strpos($type, "n%10<=4")) {
+					$type = 4;
+				}
+
+				if (strpos($type, "n%10>=2")) {
+					$type = 5;
+				}
+			} elseif (strpos($type, "n<=4")) {
+				$type = 6;
+			} elseif (strpos($type, "n==2")) {
+				$type = 9;
+			} elseif (strpos($type, "n%10>=2")) {
+				$type = 7;
+			} elseif (strpos($type, "n%100==3")) {
+				$type = 8;
+			} elseif (strpos($type, "n%100<20")) {
+				$type = 10;
 			}
-			return $n % 10 == 1 ? 0 : ($n % 10 == 2 ? 1 : 2);
-		} elseif (strpos($header, "plurals=4")) {
-			if (strpos($header, "100==2")) {
-				return $n % 100 == 1 ? 0 : ($n % 100 == 2 ? 1 : ($n % 100 == 3 || $n % 100 == 4 ? 2 : 3));
-			} elseif (strpos($header, "n>=3")) {
-				return $n == 1 ? 0 : ($n == 2 ? 1 : ($n == 0 || ($n >= 3 && $n <= 10) ? 2 : 3));
-			} elseif (strpos($header, "100>=1")) {
-				return $n == 1 ? 0 : ($n == 0 || ($n % 100 >= 1 && $n % 100 <= 10) ? 1 : ($n % 100 >= 11 && $n % 100 <= 20 ? 2 : 3));
-			}
-		} elseif (strpos($header, "plurals=5")) {
-			return $n == 1 ? 0 : ($n == 2 ? 1 : ($n >= 3 && $n <= 6 ? 2 : ($n >= 7 && $n <= 10 ? 3 : 4)));
+		}
+
+		switch ($type) {
+			case -1:
+				return 0;
+			case 1:
+				if ($n != 1) {
+					return 1;
+				}
+				return 0;
+			case 2:
+				if ($n > 1) {
+					return 1;
+				}
+				return 0;
+			case 3:
+				if (($n % 10 == 1) && ($n % 100 != 11)) {
+					return 0;
+				}
+
+				if ($n != 0 ) {
+					return 1;
+				}
+				return 2;
+			case 4:
+				if (($n % 10 == 1) && ($n % 100 != 11)) {
+					return 0;
+				}
+
+				if (($n % 10 >= 2) && ($n % 10 <= 4) && ($n % 100 < 10 || $n % 100 >= 20)) {
+					return 1;
+				}
+				return 2;
+			case 5:
+				if (($n % 10 == 1) && ($n % 100 != 11)) {
+					return 0;
+				}
+
+				if (($n %10 >= 2) && ($n % 100 < 10 || $n % 100 >= 20)) {
+					return 1;
+				}
+				return 2;
+			case 6:
+				if ($n==1) {
+					return 0;
+				}
+
+				if ($n >= 2 && $n <= 4) {
+					return 1;
+				}
+				return 2;
+			case 7:
+				if ($n==1) {
+					return 0;
+				}
+
+				if ($n % 10 >= 2 && $n % 10 <= 4 && ($n % 100 < 10 || $n % 100 >= 20)) {
+					return 1;
+				}
+				return 2;
+			case 8:
+				if ($n % 100 == 1) {
+					return 0;
+				}
+
+				if ($n % 100 == 2) {
+					return 1;
+				}
+
+				if ($n % 100 == 3 || $n % 100 == 4) {
+					return 2;
+				}
+				return 3;
+			case 9:
+				if ($n == 1) {
+					return 0;
+				}
+
+				if ($n == 2) {
+					return 1;
+				}
+				return 2;
+			case 10:
+				if ($n == 1) {
+					return 0;
+				}
+
+				if ($n == 0 || $n % 100 > 0 && $n % 100 < 20) {
+					return 1;
+				}
+				return 2;
 		}
 	}
 /**
@@ -248,79 +320,76 @@ class I18n extends Object {
  * @access private
  */
 	function __bindTextDomain($domain) {
-		$this->__noLocale = true;
+		$_this =& I18n::getInstance();
+		$_this->__noLocale = true;
 		$core = true;
 		$merge = array();
-		$searchPaths = Configure::read('localePaths');
+
+		$searchPath[] = APP . 'locale';
+		$paths = Configure::read('Locale.path');
+
+		if ($paths) {
+			$searchPath[] = $paths;
+		}
+
 		$plugins = Configure::listObjects('plugin');
 
 		if (!empty($plugins)) {
-			$pluginPaths = Configure::read('pluginPaths');
 
-			foreach ($plugins as $plugin) {
-				$plugin = Inflector::underscore($plugin);
-				if ($plugin === $domain) {
-					foreach ($pluginPaths as $pluginPath) {
-						$searchPaths[] = $pluginPath . DS . $plugin . DS . 'locale';
-					}
-					$searchPaths = array_reverse($searchPaths);
-					break;
-				}
-			}
 		}
 
-		foreach ($searchPaths as $directory) {
-			foreach ($this->l10n->languagePath as $lang) {
-				$file = $directory . DS . $lang . DS . $this->category . DS . $domain;
+		foreach ($searchPath as $directory) {
+			foreach ($_this->l10n->languagePath as $lang) {
+				$file = $directory . DS . $lang . DS . $_this->category . DS . $domain;
 
 				if ($core) {
-					$app = $directory . DS . $lang . DS . $this->category . DS . 'core';
+					$app = $directory . DS . $lang . DS . $_this->category . DS . 'core';
 					if (file_exists($fn = "$app.mo")) {
-						$this->__loadMo($fn, $domain);
-						$this->__noLocale = false;
-						$merge[$this->category][$this->__lang][$domain] = $this->__domains[$this->category][$this->__lang][$domain];
+						$_this->__loadMo($fn, $domain);
+						$_this->__noLocale = false;
+						$merge[$_this->category][$_this->__lang][$domain] = $_this->__domains[$_this->category][$_this->__lang][$domain];
 						$core = null;
 					} elseif (file_exists($fn = "$app.po") && ($f = fopen($fn, "r"))) {
-						$this->__loadPo($f, $domain);
-						$this->__noLocale = false;
-						$merge[$this->category][$this->__lang][$domain] = $this->__domains[$this->category][$this->__lang][$domain];
+						$_this->__loadPo($f, $domain);
+						$_this->__noLocale = false;
+						$merge[$_this->category][$_this->__lang][$domain] = $_this->__domains[$_this->category][$_this->__lang][$domain];
 						$core = null;
 					}
 				}
 
 				if (file_exists($fn = "$file.mo")) {
-					$this->__loadMo($fn, $domain);
-					$this->__noLocale = false;
+					$_this->__loadMo($fn, $domain);
+					$_this->__noLocale = false;
 					break 2;
 				} elseif (file_exists($fn = "$file.po") && ($f = fopen($fn, "r"))) {
-					$this->__loadPo($f, $domain);
-					$this->__noLocale = false;
+					$_this->__loadPo($f, $domain);
+					$_this->__noLocale = false;
 					break 2;
 				}
 			}
 		}
 
-		if (empty($this->__domains[$this->category][$this->__lang][$domain])) {
-			$this->__domains[$this->category][$this->__lang][$domain] = array();
+		if (empty($_this->__domains[$_this->category][$_this->__lang][$domain])) {
+			$_this->__domains[$_this->category][$_this->__lang][$domain] = array();
 			return($domain);
 		}
 
-		if ($head = $this->__domains[$this->category][$this->__lang][$domain][""]) {
+		if ($head = $_this->__domains[$_this->category][$_this->__lang][$domain][""]) {
 			foreach (explode("\n", $head) as $line) {
 				$header = strtok($line,":");
 				$line = trim(strtok("\n"));
-				$this->__domains[$this->category][$this->__lang][$domain]["%po-header"][strtolower($header)] = $line;
+				$_this->__domains[$_this->category][$_this->__lang][$domain]["%po-header"][strtolower($header)] = $line;
 			}
 
-			if (isset($this->__domains[$this->category][$this->__lang][$domain]["%po-header"]["plural-forms"])) {
-				$switch = preg_replace("/(?:[() {}\\[\\]^\\s*\\]]+)/", "", $this->__domains[$this->category][$this->__lang][$domain]["%po-header"]["plural-forms"]);
-				$this->__domains[$this->category][$this->__lang][$domain]["%plural-c"] = $switch;
-				unset($this->__domains[$this->category][$this->__lang][$domain]["%po-header"]);
+			if (isset($_this->__domains[$_this->category][$_this->__lang][$domain]["%po-header"]["plural-forms"])) {
+				$switch = preg_replace("/[() {}\\[\\]^\\s*\\]]+/", "", $_this->__domains[$_this->category][$_this->__lang][$domain]["%po-header"]["plural-forms"]);
+				$_this->__domains[$_this->category][$_this->__lang][$domain]["%plural-c"] = $switch;
+				unset($_this->__domains[$_this->category][$_this->__lang][$domain]["%po-header"]);
 			}
-			$this->__domains = Set::pushDiff($this->__domains, $merge);
+			$_this->__domains = Set::pushDiff($_this->__domains, $merge);
 
-			if (isset($this->__domains[$this->category][$this->__lang][$domain][null])) {
-				unset($this->__domains[$this->category][$this->__lang][$domain][null]);
+			if (isset($_this->__domains[$_this->category][$_this->__lang][$domain][null])) {
+				unset($_this->__domains[$_this->category][$_this->__lang][$domain][null]);
 			}
 		}
 		return($domain);
@@ -333,6 +402,7 @@ class I18n extends Object {
  * @access private
  */
 	function __loadMo($file, $domain) {
+		$_this =& I18n::getInstance();
 		$data = file_get_contents($file);
 
 		if ($data) {
@@ -355,10 +425,10 @@ class I18n extends Object {
 					if (strpos($msgstr, "\000")) {
 						$msgstr = explode("\000", $msgstr);
 					}
-					$this->__domains[$this->category][$this->__lang][$domain][$msgid] = $msgstr;
+					$_this->__domains[$_this->category][$_this->__lang][$domain][$msgid] = $msgstr;
 
 					if (isset($msgid_plural)) {
-						$this->__domains[$this->category][$this->__lang][$domain][$msgid_plural] =& $this->__domains[$this->category][$this->__lang][$domain][$msgid];
+						$_this->__domains[$_this->category][$_this->__lang][$domain][$msgid_plural] =& $_this->__domains[$_this->category][$_this->__lang][$domain][$msgid];
 					}
 				}
 			}
@@ -373,6 +443,7 @@ class I18n extends Object {
  * @access private
  */
 	function __loadPo($file, $domain) {
+		$_this =& I18n::getInstance();
 		$type = 0;
 		$translations = array();
 		$translationKey = "";
@@ -381,9 +452,11 @@ class I18n extends Object {
 
 		do {
 			$line = trim(fgets($file, 1024));
+
 			if ($line == "" || $line[0] == "#") {
 				continue;
 			}
+
 			if (preg_match("/msgid[[:space:]]+\"(.+)\"$/i", $line, $regs)) {
 				$type = 1;
 				$translationKey = stripcslashes($regs[1]);
@@ -403,18 +476,19 @@ class I18n extends Object {
 				$translations[$translationKey] .= stripcslashes($regs[1]);
 			} elseif (preg_match("/msgid_plural[[:space:]]+\".*\"$/i", $line, $regs)) {
 				$type = 6;
-			} elseif (preg_match("/^\"(.*)\"$/i", $line, $regs) && $type == 6 && $translationKey) {
-				$type = 6;
-			} elseif (preg_match("/msgstr\[(\d+)\][[:space:]]+\"(.+)\"$/i", $line, $regs) && ($type == 6 || $type == 7) && $translationKey) {
+			} elseif (preg_match("/msgstr\[(\d+)\][[:space:]]+\"(.+)\"$/i", $line, $regs) && ($type == 6) && $translationKey) {
 				$plural = $regs[1];
 				$translations[$translationKey][$plural] = stripcslashes($regs[2]);
-				$type = 7;
-			} elseif (preg_match("/msgstr\[(\d+)\][[:space:]]+\"\"$/i", $line, $regs) && ($type == 6 || $type == 7) && $translationKey) {
+				$type = 6;
+			} elseif (preg_match("/msgstr\[(\d+)\][[:space:]]+\"\"$/i", $line, $regs) && ($type == 6) && $translationKey) {
 				$plural = $regs[1];
 				$translations[$translationKey][$plural] = "";
-				$type = 7;
-			} elseif (preg_match("/^\"(.*)\"$/i", $line, $regs) && $type == 7 && $translationKey) {
-				$translations[$translationKey][$plural] .= stripcslashes($regs[1]);
+				$type = 6;
+			} elseif (preg_match("/^\"(.*)\"$/i", $line, $regs) && $type == 6 && $translationKey) {
+				unset($translations[$translationKey]);
+				$type = 0;
+				$translationKey = "";
+				$plural = 0;
 			} elseif (preg_match("/msgstr[[:space:]]+\"(.+)\"$/i", $line, $regs) && $type == 2 && !$translationKey) {
 				$header .= stripcslashes($regs[1]);
 				$type = 5;
@@ -430,9 +504,10 @@ class I18n extends Object {
 				$plural = 0;
 			}
 		} while (!feof($file));
+
 		fclose($file);
 		$merge[""] = $header;
-		return $this->__domains[$this->category][$this->__lang][$domain] = array_merge($merge ,$translations);
+		return $_this->__domains[$_this->category][$_this->__lang][$domain] = array_merge($merge ,$translations);
 	}
 /**
  * Object destructor
@@ -441,8 +516,9 @@ class I18n extends Object {
  * @access private
  */
 	function __destruct() {
-		if ($this->__cache) {
-			Cache::write($this->domain, array_filter($this->__domains), '_cake_core_');
+		$_this =& I18n::getInstance();
+		if ($_this->__cache) {
+			Cache::write($_this->domain, array_filter($_this->__domains), '_cake_core_');
 		}
 	}
 }

@@ -155,9 +155,7 @@ class Event extends AppModel
         }
 
         foreach ($result as $key => $row) {
-          if (isset($result[$key]['Event']['description'])) {
             $result[$key]['Event']['description'] = $this->convertDescription($row['Event']['description'], $this->joined($row['Event']['id']));
-          }
         }
 
         return $result;

@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: scaffold.php 8120 2009-03-19 20:25:10Z gwoo $ */
+/* SVN FILE: $Id: scaffold.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Scaffold.
  *
@@ -7,22 +7,24 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.controller
- * @since         Cake v 0.10.0.1076
- * @version       $Revision: 8120 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-03-19 13:25:10 -0700 (Thu, 19 Mar 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.controller
+ * @since		Cake v 0.10.0.1076
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Scaffolding is a set of automatic views, forms and controllers for starting web development work faster.
@@ -32,14 +34,14 @@
  * and afford the web developer an early look at the data, and the possibility to over-ride
  * scaffolded actions with custom-made ones.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.controller
+ * @package		cake
+ * @subpackage	cake.cake.libs.controller
  */
 class Scaffold extends Object {
 /**
  * Controller object
  *
- * @var Controller
+ * @var object
  * @access public
  */
 	var $controller = null;
@@ -135,22 +137,38 @@ class Scaffold extends Object {
  */
 	function __construct(&$controller, $params) {
 		$this->controller =& $controller;
-
+		
 		$count = count($this->__passedVars);
 		for ($j = 0; $j < $count; $j++) {
 			$var = $this->__passedVars[$j];
 			$this->{$var} = $controller->{$var};
 		}
-
+		
 		$this->redirect = array('action'=> 'index');
 
+		if (!in_array('Form', $this->controller->helpers)) {
+			$this->controller->helpers[] = 'Form';
+		}
+
+		if ($this->controller->constructClasses() === false) {
+			return $this->cakeError('missingModel', array(array('className' => $this->modelKey, 'webroot' => '', 'base' => $this->controller->base)));
+		}
+
+		$class = $controller->uses[0];
+		if (strpos($class, '.') !== false) {
+			list($plugin, $class) = explode('.', $class);
+		}
+
+		if (!empty($controller->uses) && class_exists($class)) {
+			$controller->modelClass = $class;
+			$controller->modelKey = Inflector::underscore($class);
+		}
 		$this->modelClass = $controller->modelClass;
 		$this->modelKey = $controller->modelKey;
 
 		if (!is_object($this->controller->{$this->modelClass})) {
 			return $this->cakeError('missingModel', array(array('className' => $this->modelClass, 'webroot' => '', 'base' => $controller->base)));
 		}
-
 		$this->ScaffoldModel =& $this->controller->{$this->modelClass};
 		$this->scaffoldTitle = Inflector::humanize($this->viewPath);
 		$this->scaffoldActions = $controller->scaffold;
@@ -177,8 +195,7 @@ class Scaffold extends Object {
 /**
  * Outputs the content of a scaffold method passing it through the Controller::afterFilter()
  *
- * @return void
- * @access protected
+ * @access private
  */
 	function _output() {
 		$this->controller->afterFilter();
@@ -222,7 +239,7 @@ class Scaffold extends Object {
 	function __scaffoldIndex($params) {
 		if ($this->controller->_beforeScaffold('index')) {
 			$this->ScaffoldModel->recursive = 0;
-			$this->controller->set(Inflector::variable($this->controller->name), $this->controller->paginate());
+			$this->controller->set(Inflector::variable($this->controller->name), $this->controller->paginate()); 	
 			$this->controller->render($this->action, $this->layout);
 			$this->_output();
 		} elseif ($this->controller->_scaffoldError('index') === false) {
@@ -258,11 +275,11 @@ class Scaffold extends Object {
 
 		if ($this->controller->_beforeScaffold($action)) {
 			if ($action == 'edit') {
-				if (isset($params['pass'][0])) {
+				if(isset($params['pass'][0])) {
 					$this->ScaffoldModel->id = $params['pass'][0];
 				}
 
-				if (!$this->ScaffoldModel->exists()) {
+				if(!$this->ScaffoldModel->exists()) {
 					if (isset($this->controller->Session) && $this->controller->Session->valid() != false) {
 						$this->controller->Session->setFlash(sprintf(__("Invalid id for %s::edit()", true), Inflector::humanize($this->modelKey)));
 						$this->controller->redirect($this->redirect);
@@ -304,7 +321,7 @@ class Scaffold extends Object {
 			}
 
 			foreach ($this->ScaffoldModel->belongsTo as $assocName => $assocData) {
-				$varName = Inflector::variable(Inflector::pluralize(preg_replace('/(?:_id)$/', '', $assocData['foreignKey'])));
+				$varName = Inflector::variable(Inflector::pluralize(preg_replace('/_id$/', '', $assocData['foreignKey'])));
 				$this->controller->set($varName, $this->ScaffoldModel->{$assocName}->find('list'));
 			}
 			foreach ($this->ScaffoldModel->hasAndBelongsToMany as $assocName => $assocData) {
@@ -392,7 +409,7 @@ class Scaffold extends Object {
 				if (!empty($admin)) {
 					$params['action'] = str_replace($admin . '_', '', $params['action']);
 				}
-				switch ($params['action']) {
+				switch($params['action']) {
 					case 'index':
 						$this->__scaffoldIndex($params);
 					break;
@@ -438,7 +455,7 @@ class Scaffold extends Object {
 		$keys = array('belongsTo', 'hasOne', 'hasMany', 'hasAndBelongsToMany');
 		$associations = array();
 
-		foreach ($keys as $key => $type) {
+		foreach ($keys as $key => $type){
 			foreach ($this->ScaffoldModel->{$type} as $assocKey => $assocData) {
 				$associations[$type][$assocKey]['primaryKey'] = $this->ScaffoldModel->{$assocKey}->primaryKey;
 				$associations[$type][$assocKey]['displayField'] = $this->ScaffoldModel->{$assocKey}->displayField;
@@ -453,8 +470,8 @@ class Scaffold extends Object {
 /**
  * Scaffold View.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.controller
+ * @package		cake
+ * @subpackage	cake.cake.libs.controller
 */
 if (!class_exists('ThemeView')) {
 	App::import('View', 'Theme');
@@ -472,17 +489,7 @@ class ScaffoldView extends ThemeView {
 			$name = $this->action;
 		}
 		$name = Inflector::underscore($name);
-		$admin = Configure::read('Routing.admin');
-
-		if (!empty($admin) && strpos($name, $admin . '_') !== false) {
-			$name = substr($name, strlen($admin) + 1);
-		}
-
-		if ($name === 'add') {
-			$name = 'edit';
-		}
-
-		$scaffoldAction = 'scaffold.' . $name;
+		$scaffoldAction = 'scaffold.'.$name;
 
 		if (!is_null($this->subDir)) {
 			$subDir = strtolower($this->subDir) . DS;
@@ -490,18 +497,27 @@ class ScaffoldView extends ThemeView {
 			$subDir = null;
 		}
 
+		if ($name === 'add') {
+			$name = 'edit';
+		}
+
 		$names[] = $this->viewPath . DS . $subDir . $scaffoldAction;
 		$names[] = 'scaffolds' . DS . $subDir . $name;
-
+		
+		$admin = Configure::read('Routing.admin');
+		if (!empty($admin) && strpos($name, $admin.'_') !== false) {
+			$names[] = 'scaffolds' . DS . $subDir . substr($name, strlen($admin) +1);
+		}
 		$paths = $this->_paths($this->plugin);
 
-		$exts = array($this->ext, '.ctp', '.thtml');
 		foreach ($paths as $path) {
 			foreach ($names as $name) {
-				foreach ($exts as $ext) {
-					if (file_exists($path . $name . $ext)) {
-						return $path . $name . $ext;
-					}
+				if (file_exists($path . $name . $this->ext)) {
+					return $path . $name . $this->ext;
+				} elseif (file_exists($path . $name . '.ctp')) {
+					return $path . $name . '.thtml';
+				} elseif (file_exists($path . $name . '.thtml')) {
+					return $path . $name . '.thtml';
 				}
 			}
 		}

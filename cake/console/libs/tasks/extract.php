@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: extract.php 8120 2009-03-19 20:25:10Z gwoo $ */
+/* SVN FILE: $Id: extract.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -7,22 +7,24 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *                              1785 E. Sahara Avenue, Suite 490-204
+ *                              Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.console.libs
- * @since         CakePHP(tm) v 1.2.0.5012
- * @version       $Revision: 8120 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-03-19 13:25:10 -0700 (Thu, 19 Mar 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright       Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link                http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package         cake
+ * @subpackage      cake.cake.console.libs
+ * @since           CakePHP(tm) v 1.2.0.5012
+ * @version         $Revision: 7296 $
+ * @modifiedby      $LastChangedBy: gwoo $
+ * @lastmodified    $Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license         http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Only used when -debug option
@@ -54,8 +56,8 @@
 /**
  * Language string extractor
  *
- * @package       cake
- * @subpackage    cake.cake.console.libs
+ * @package     cake
+ * @subpackage  cake.cake.console.libs
  */
 class ExtractTask extends Shell{
 /**
@@ -135,7 +137,7 @@ class ExtractTask extends Shell{
 		} else {
 			$response = '';
 			while ($response == '') {
-				$response = $this->in("What is the full path you would like to extract?\nExample: " . $this->params['root'] . DS . "myapp\n[Q]uit", null, $this->params['working']);
+				$response = $this->in("What is the full path you would like to extract?\nExample: " . $this->params['root'] . DS . "myapp\n[Q]uit", null, 'Q');
 				if (strtoupper($response) === 'Q') {
 					$this->out('Extract Aborted');
 					$this->_stop();
@@ -619,7 +621,6 @@ class ExtractTask extends Shell{
 		} else {
 			$string = strtr($string, array("\\'" => "'", "\\\\" => "\\"));
 		}
-		$string = str_replace("\r\n", "\n", $string);
 		return addcslashes($string, "\0..\37\\\"");
 	}
 /**
@@ -667,9 +668,6 @@ class ExtractTask extends Shell{
 		}
 		$files = glob("$path*.{php,ctp,thtml,inc,tpl}", GLOB_BRACE);
 		$dirs = glob("$path*", GLOB_ONLYDIR);
-
-		$files = $files ? $files : array();
-		$dirs = $dirs ? $dirs : array();
 
 		foreach ($dirs as $dir) {
 			if (!preg_match("!(^|.+/)(CVS|.svn)$!", $dir)) {

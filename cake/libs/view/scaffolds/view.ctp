@@ -1,25 +1,27 @@
 <?php
-/* SVN FILE: $Id: view.ctp 7945 2008-12-19 02:16:01Z gwoo $ */
+/* SVN FILE: $Id: view.ctp 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.view.templates.scaffolds
- * @since         CakePHP(tm) v 0.10.0.1076
- * @version       $Revision: 7945 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2008-12-18 18:16:01 -0800 (Thu, 18 Dec 2008) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.view.templates.scaffolds
+ * @since			CakePHP(tm) v 0.10.0.1076
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 ?>
 <div class="<?php echo $pluralVar;?> view">
@@ -33,19 +35,19 @@ foreach ($scaffoldFields as $_field) {
 		$class = ' class="altrow"';
 	}
 	$isKey = false;
-	if (!empty($associations['belongsTo'])) {
+	if(!empty($associations['belongsTo'])) {
 		foreach ($associations['belongsTo'] as $_alias => $_details) {
-			if ($_field === $_details['foreignKey']) {
+			if($_field === $_details['foreignKey']) {
 				$isKey = true;
 				echo "\t\t<dt{$class}>".Inflector::humanize($_alias)."</dt>\n";
-				echo "\t\t<dd{$class}>\n\t\t\t" . $html->link(${$singularVar}[$_alias][$_details['displayField']], array('controller'=> $_details['controller'], 'action'=>'view', ${$singularVar}[$_alias][$_details['primaryKey']])) . "\n\t\t&nbsp;</dd>\n";
+				echo "\t\t<dd{$class}>\n\t\t\t" . $html->link(${$singularVar}[$_alias][$_details['displayField']], array('controller'=> $_details['controller'], 'action'=>'view', ${$singularVar}[$_alias][$_details['primaryKey']])) . "\n\t\t</dd>\n";
 				break;
 			}
 		}
 	}
-	if ($isKey !== true) {
+	if($isKey !== true) {
 		echo "\t\t<dt{$class}>".Inflector::humanize($_field)."</dt>\n";
-		echo "\t\t<dd{$class}>\n\t\t\t{${$singularVar}[$modelClass][$_field]}\n&nbsp;\t\t</dd>\n";
+		echo "\t\t<dd{$class}>\n\t\t\t" . ${$singularVar}[$modelClass][$_field] . " \n\t\t</dd>\n";
 	}
 }
 ?>
@@ -61,7 +63,7 @@ foreach ($scaffoldFields as $_field) {
 
 	$done = array();
 	foreach ($associations as $_type => $_data) {
-		foreach ($_data as $_alias => $_details) {
+		foreach($_data as $_alias => $_details) {
 			if ($_details['controller'] != $this->name && !in_array($_details['controller'], $done)) {
 				echo "\t\t<li>".$html->link(sprintf(__('List %s', true), Inflector::humanize($_details['controller'])), array('controller'=> $_details['controller'], 'action'=>'index'))."</li>\n";
 				echo "\t\t<li>".$html->link(sprintf(__('New %s', true), Inflector::humanize(Inflector::underscore($_alias))), array('controller'=> $_details['controller'], 'action'=>'add'))."</li>\n";
@@ -73,7 +75,7 @@ foreach ($scaffoldFields as $_field) {
 	</ul>
 </div>
 <?php
-if (!empty($associations['hasOne'])) :
+if(!empty($associations['hasOne'])) :
 foreach ($associations['hasOne'] as $_alias => $_details): ?>
 <div class="related">
 	<h3><?php echo sprintf(__("Related %s", true), Inflector::humanize($_details['controller']));?></h3>
@@ -95,7 +97,7 @@ foreach ($associations['hasOne'] as $_alias => $_details): ?>
 <?php endif; ?>
 	<div class="actions">
 		<ul>
-			<li><?php echo $html->link(sprintf(__('Edit %s', true), Inflector::humanize(Inflector::underscore($_alias))), array('controller'=> $_details['controller'], 'action'=>'edit', ${$singularVar}[$_alias][$_details['primaryKey']]))."</li>\n";?>
+			<li><?php echo $html->link(sprintf(__('Edit %s', true), Inflector::humanize(Inflector::underscore($_alias))), array('controller'=> $details['controller'], 'action'=>'edit', ${$singularVar}[$_alias][$_details['primaryKey']]))."</li>\n";?>
 		</ul>
 	</div>
 </div>
@@ -103,10 +105,10 @@ foreach ($associations['hasOne'] as $_alias => $_details): ?>
 endforeach;
 endif;
 
-if (empty($associations['hasMany'])) {
+if(empty($associations['hasMany'])) {
 	$associations['hasMany'] = array();
 }
-if (empty($associations['hasAndBelongsToMany'])) {
+if(empty($associations['hasAndBelongsToMany'])) {
 	$associations['hasAndBelongsToMany'] = array();
 }
 $relations = array_merge($associations['hasMany'], $associations['hasAndBelongsToMany']);

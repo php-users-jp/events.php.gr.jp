@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: cache.php 8120 2009-03-19 20:25:10Z gwoo $ */
+/* SVN FILE: $Id: cache.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * Short description for file.
  *
@@ -7,30 +7,32 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
- * @since         CakePHP(tm) v 1.0.0.2277
- * @version       $Revision: 8120 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-03-19 13:25:10 -0700 (Thu, 19 Mar 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.view.helpers
+ * @since			CakePHP(tm) v 1.0.0.2277
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Short description for file.
  *
  * Long description for file
  *
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
+ * @package		cake
+ * @subpackage	cake.cake.libs.view.helpers
  */
 class CacheHelper extends AppHelper {
 /**
@@ -52,7 +54,7 @@ class CacheHelper extends AppHelper {
 /**
  * holds the View object passed in final call to CacheHelper::cache()
  *
- * @var View
+ * @var object
  * @access public
  */
 	var $view;
@@ -75,15 +77,12 @@ class CacheHelper extends AppHelper {
 		$cacheTime = 0;
 		$useCallbacks = false;
 		if (is_array($this->cacheAction)) {
-			$contoller = Inflector::underscore($this->controllerName);
 			$check = str_replace('/', '_', $this->here);
 			$replace = str_replace('/', '_', $this->base);
 			$match = str_replace($this->base, '', $this->here);
 			$match = str_replace('//', '/', $match);
-			$match = str_replace('/' . $contoller . '/', '', $match);
 			$match = str_replace('/' . $this->controllerName . '/', '', $match);
 			$check = str_replace($replace, '', $check);
-			$check = str_replace('_' . $contoller . '_', '', $check);
 			$check = str_replace('_' . $this->controllerName . '_', '', $check);
 			$check = Inflector::slug($check);
 			$check = preg_replace('/^_+/', '', $check);
@@ -161,20 +160,12 @@ class CacheHelper extends AppHelper {
 		preg_match_all('/(<cake:nocache>(?<=<cake:nocache>)[\\s\\S]*?(?=<\/cake:nocache>)<\/cake:nocache>)/i', $cache, $oresult, PREG_PATTERN_ORDER);
 		preg_match_all('/(?<=<cake:nocache>)([\\s\\S]*?)(?=<\/cake:nocache>)/i', $file, $result, PREG_PATTERN_ORDER);
 
-		if (!empty($this->__replace)) {
-			foreach ($oresult['0'] as $k => $element) {
-				$index = array_search($element, $this->__match);
-				if ($index !== false) {
-					array_splice($oresult[0], $k, 1);
-				}
-			}
-		}
-
 		if (!empty($result['0'])) {
 			$count = 0;
-			foreach ($result['0'] as $block) {
+
+			foreach ($result['0'] as $result) {
 				if (isset($oresult['0'][$count])) {
-					$this->__replace[] = $block;
+					$this->__replace[] = $result;
 					$this->__match[] = $oresult['0'][$count];
 				}
 				$count++;
@@ -234,7 +225,7 @@ class CacheHelper extends AppHelper {
 		if ($this->here == '/') {
 			$path = 'home';
 		}
-		$cache = strtolower(Inflector::slug($path));
+		$cache = Inflector::slug($path);
 
 		if (empty($cache)) {
 			return;

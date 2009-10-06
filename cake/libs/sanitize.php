@@ -1,5 +1,5 @@
 <?php
-/* SVN FILE: $Id: sanitize.php 7945 2008-12-19 02:16:01Z gwoo $ */
+/* SVN FILE: $Id: sanitize.php 7118 2008-06-04 20:49:29Z gwoo $ */
 /**
  * Washes strings from unwanted noise.
  *
@@ -7,22 +7,24 @@
  *
  * PHP versions 4 and 5
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs
- * @since         CakePHP(tm) v 0.10.0.1076
- * @version       $Revision: 7945 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2008-12-18 18:16:01 -0800 (Thu, 18 Dec 2008) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs
+ * @since			CakePHP(tm) v 0.10.0.1076
+ * @version			$Revision: 7118 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-04 13:49:29 -0700 (Wed, 04 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 /**
  * Data Sanitization.
@@ -30,8 +32,8 @@
  * Removal of alpahnumeric characters, SQL-safe slash-added strings, HTML-friendly strings,
  * and all of the above on arrays.
  *
- * @package       cake
- * @subpackage    cake.cake.libs
+ * @package		cake
+ * @subpackage	cake.cake.libs
  */
 class Sanitize {
 /**
@@ -71,7 +73,7 @@ class Sanitize {
  */
 	function escape($string, $connection = 'default') {
 		$db =& ConnectionManager::getDataSource($connection);
-		if (is_numeric($string) || $string === null || is_bool($string)) {
+		if (is_numeric($string)  || $string === null) {
 			return $string;
 		}
 		$string = substr($db->value($string), 1);
@@ -101,7 +103,6 @@ class Sanitize {
  * Strips extra whitespace from output
  *
  * @param string $str String to sanitize
- * @return string whitespace sanitized string
  * @access public
  * @static
  */
@@ -113,7 +114,6 @@ class Sanitize {
  * Strips image tags from output
  *
  * @param string $str String to sanitize
- * @return string Sting with images stripped.
  * @access public
  * @static
  */
@@ -127,7 +127,6 @@ class Sanitize {
  * Strips scripts and stylesheets from output
  *
  * @param string $str String to sanitize
- * @return string String with <script>, <style>, <link> elements removed.
  * @access public
  * @static
  */
@@ -138,7 +137,6 @@ class Sanitize {
  * Strips extra whitespace, images, scripts and stylesheets from output
  *
  * @param string $str String to sanitize
- * @return string sanitized string
  * @access public
  */
 	function stripAll($str) {
@@ -153,7 +151,6 @@ class Sanitize {
  *
  * @param string $str String to sanitize
  * @param string $tag Tag to remove (add more parameters as needed)
- * @return string sanitized String
  * @access public
  * @static
  */
@@ -162,7 +159,7 @@ class Sanitize {
 		$str = $params[0];
 
 		for ($i = 1; $i < count($params); $i++) {
-			$str = preg_replace('/<' . $params[$i] . '\b[^>]*>/i', '', $str);
+			$str = preg_replace('/<' . $params[$i] . '[^>]*>/i', '', $str);
 			$str = preg_replace('/<\/' . $params[$i] . '[^>]*>/i', '', $str);
 		}
 		return $str;
@@ -243,7 +240,7 @@ class Sanitize {
  */
 	function formatColumns(&$model) {
 		foreach ($model->data as $name => $values) {
-			if ($name == $model->alias) {
+			if ($name == $model->name) {
 				$curModel =& $model;
 			} elseif (isset($model->{$name}) && is_object($model->{$name}) && is_subclass_of($model->{$name}, 'Model')) {
 				$curModel =& $model->{$name};
@@ -265,7 +262,7 @@ class Sanitize {
 
 						if (isset($colData['formatter']) || isset($colData['format'])) {
 
-							switch (strtolower($colData['formatter'])) {
+							switch(strtolower($colData['formatter'])) {
 								case 'date':
 									$data = date($colData['format'], strtotime($data));
 								break;
@@ -282,7 +279,7 @@ class Sanitize {
 						}
 						$model->data[$name][$column]=$data;
 						/*
-						switch ($colType) {
+						switch($colType) {
 							case 'integer':
 							case 'int':
 								return  $data;

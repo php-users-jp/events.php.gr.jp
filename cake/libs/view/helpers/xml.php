@@ -1,26 +1,28 @@
 <?php
-/* SVN FILE: $Id: xml.php 8120 2009-03-19 20:25:10Z gwoo $ */
+/* SVN FILE: $Id: xml.php 7296 2008-06-27 09:09:03Z gwoo $ */
 /**
  * XML Helper class file.
  *
  * Simplifies the output of XML documents.
  *
- * CakePHP(tm) :  Rapid Development Framework (http://www.cakephp.org)
- * Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
+ * CakePHP(tm) :  Rapid Development Framework <http://www.cakephp.org/>
+ * Copyright 2005-2008, Cake Software Foundation, Inc.
+ *								1785 E. Sahara Avenue, Suite 490-204
+ *								Las Vegas, Nevada 89104
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
  * @filesource
- * @copyright     Copyright 2005-2008, Cake Software Foundation, Inc. (http://www.cakefoundation.org)
- * @link          http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
- * @since         CakePHP(tm) v 1.2
- * @version       $Revision: 8120 $
- * @modifiedby    $LastChangedBy: gwoo $
- * @lastmodified  $Date: 2009-03-19 13:25:10 -0700 (Thu, 19 Mar 2009) $
- * @license       http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright		Copyright 2005-2008, Cake Software Foundation, Inc.
+ * @link				http://www.cakefoundation.org/projects/info/cakephp CakePHP(tm) Project
+ * @package			cake
+ * @subpackage		cake.cake.libs.view.helpers
+ * @since			CakePHP(tm) v 1.2
+ * @version			$Revision: 7296 $
+ * @modifiedby		$LastChangedBy: gwoo $
+ * @lastmodified	$Date: 2008-06-27 02:09:03 -0700 (Fri, 27 Jun 2008) $
+ * @license			http://www.opensource.org/licenses/mit-license.php The MIT License
  */
 App::import('Core', array('Xml', 'Set'));
 
@@ -29,10 +31,11 @@ App::import('Core', array('Xml', 'Set'));
  *
  * XmlHelper encloses all methods needed while working with XML documents.
  *
- * @package       cake
- * @subpackage    cake.cake.libs.view.helpers
+ * @package		cake
+ * @subpackage	cake.cake.libs.view.helpers
  */
 class XmlHelper extends AppHelper {
+
 /**
  * Default document encoding
  *
@@ -148,16 +151,12 @@ class XmlHelper extends AppHelper {
  * Serializes a model resultset into XML
  *
  * @param  mixed  $data The content to be converted to XML
- * @param  array  $options The data formatting options.  For a list of valid options, see
- *                         XmlNode::__construct().
+ * @param  array  $options The data formatting options
  * @return string A copy of $data in XML format
- * @see XmlNode
  */
 	function serialize($data, $options = array()) {
-		$options += array('attributes' => false, 'format' => 'attributes');
-		$data =& new Xml($data, $options);
-		return $data->toString($options + array('header' => false));
+		$data =& new Xml($data, array_merge(array('attributes' => false, 'format' => 'attributes'), $options));
+		return $data->toString(array_merge(array('header' => false), $options));
 	}
 }
-
 ?>
