@@ -15,7 +15,7 @@ class EventsController extends AppController
 {
     var $name = 'Event';
     var $helpers = array('Rss', 'Datespan', 'Javascript');
-    var $uses = array('Event', 'Trackback','User');
+    var $uses = array('Event', 'Trackback','User', 'Twitter');
 
     /**
      * index
@@ -128,6 +128,9 @@ class EventsController extends AppController
         $this->set('attendee_nokori', $re['Event']['max_register'] - $attendee_count);
         $this->set('is_over', $this->Event->isOver($id));
         $this->set('data', $re);
+        
+        $this->set( 'twitter', $this->Twitter->read(array("%23phpstudy","%23phpstudy-{$id}")) ) ;
+        $this->set( 'twitter_hashtag', "#phpstudy,#phpstudy-{$id}" ) ;
     }
 
     /**

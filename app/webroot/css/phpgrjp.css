@@ -332,6 +332,23 @@ div#comments div.section p{
         border: none;
 }
 
+.twitter-post {
+	border-bottom: 1px dashed #B5D6FF;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 3px;
+}
+
+.twitter-post img{
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.twitter-post-body {
+  font-size:small;
+  margin-bottom: 3px;
+}
 /* header */
 
 #header {
