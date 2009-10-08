@@ -129,8 +129,8 @@ class EventsController extends AppController
         $this->set('is_over', $this->Event->isOver($id));
         $this->set('data', $re);
         
-        $this->set( 'twitter', $this->Twitter->read(array("%23phpstudy","%23phpstudy-{$id}")) ) ;
-        $this->set( 'twitter_hashtag', "#phpstudy,#phpstudy-{$id}" ) ;
+        $this->set( 'twitter', $this->Twitter->read(array("%23phpstudy","%23phpstudy_{$id}")) ) ;
+        $this->set( 'twitter_hashtag', "#phpstudy,#phpstudy_{$id}" ) ;
     }
 
     /**
