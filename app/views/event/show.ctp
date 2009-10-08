@@ -179,7 +179,7 @@ echo $form->end('コメントする');
 			'http://twitter.com/' . $tweet->from_user,
 			array('class' => 'author', 'target' => '_blank')
 		); ?><br />
-		<?php echo ($tweet->text); ?>
+		<?php echo ($tweet->text); ?><br />
 		(<?php echo $html->link(
 			$time->relativeTime($tweet->created_at),
 			"http://twitter.com/{$tweet->from_user}/status/{$tweet->id}",
