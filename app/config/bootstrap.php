@@ -34,7 +34,7 @@
  * You can also use this to include or require any files in your application.
  *
  */
-Configure::write('Event.version', '2.0.4');
+Configure::write('Event.version', '2.0.6');
 
 /**
  * The settings below can be used to set additional paths to models, views and controllers.
