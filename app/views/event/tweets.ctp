@@ -1,3 +1,9 @@
+<?php if (isset($twitter->error)) { ?>
+<div class="twitter-error">
+	エラーが発生しました。<br />
+	(<?php e($twitter->error); ?>)
+</div>
+<?php } ?>
 <?php foreach ($twitter->results as $tweet) { ?>
 <div class="twitter-post">
 	<div class="twitter-post-image">
