@@ -332,6 +332,11 @@ div#comments div.section p{
         border: none;
 }
 
+.twitter form {
+    margin: 0px auto;
+    padding: 0px;
+}
+
 .twitter-post {
 	border-bottom: 1px dashed #B5D6FF;
   margin-left: 20px;
@@ -348,6 +353,20 @@ div#comments div.section p{
 .twitter-post-body {
   font-size:small;
   margin-bottom: 3px;
+}
+
+.ajax_loading {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.twitter_controll {
+  text-align: right;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+	border-bottom: 1px dashed #B5D6FF;
 }
 /* header */
 

@@ -162,32 +162,35 @@ echo $form->end('コメントする');
   </div>
 <?php endif; ?>
 <div class="twitter">
+<?php echo $javascript->link('prototype'); ?>
+<?php
+$options = array(
+    "update" => "ajax_responce",
+    "loading" => "Element.hide('twitter_controll'); Element.hide('ajax_responce'); Element.show('ajax_loading');",
+    "complete" => "Element.show('twitter_controll'); Element.show('ajax_responce'); Element.hide('ajax_loading');",
+    );
+echo $ajax->form("/tweets/1", "post", $options);
+$remoteFunction = $ajax->remoteFunction( 
+	array( 
+		'url' => array( 'controller' => 'events', 'action' => 'tweets', 1 ),
+		'update' => 'ajax_responce',
+	    "loading" => "Element.hide('twitter_controll'); Element.show('ajax_loading');",
+	    "complete" => "Element.show('twitter_controll'); Element.hide('ajax_loading');",
+	) 
+); 
+?>
+<script>
+Event.observe(window, 'load', <?php echo $remoteFunction ;?>, false);
+</script>
 <h3>Twitterコメント一覧(ハッシュタグ:&nbsp;<?php echo $twitter_hashtag; ?>)</h3>
-<?php foreach ($twitter->results as $tweet) { ?>
-<div class="twitter-post">
-	<div class="twitter-post-image">
-		<?php echo $html->link(
-				$html->image($tweet->profile_image_url, array('alt'=> $tweet->from_user, 'border'=>"0")),
-				"http://twitter.com/{$tweet->from_user}",
-				array('class' => 'author', 'target' => '_blank'),
-				false,false
-			) ;?>
-	</div>
-	<div class="twitter-post-body">
-		<?php echo $html->link(
-			$tweet->from_user,
-			'http://twitter.com/' . $tweet->from_user,
-			array('class' => 'author', 'target' => '_blank')
-		); ?><br />
-		<?php echo ($tweet->text); ?><br />
-		(<?php echo $html->link(
-			$time->relativeTime($tweet->created_at),
-			"http://twitter.com/{$tweet->from_user}/status/{$tweet->id}",
-			array('class' => 'timestamp', 'target' => '_blank')
-		); ?>)<br style="clear: both;" />
-	</div>
+<div class="twitter_controll" id="twitter_controll"><input type="submit" value="リロード" id="ajax_button"></div>
+<div id="ajax_loading" class="ajax_loading" style="display:none;">
+<?php e($html->image( 'ajax-loader.gif' )) ; ?><br />
+ロード中...
 </div>
-<?php } ?>
+<div id="ajax_responce">
+</div>
+
 </div>
 
 <div id="trackback">

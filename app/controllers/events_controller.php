@@ -14,7 +14,7 @@
 class EventsController extends AppController
 {
     var $name = 'Event';
-    var $helpers = array('Rss', 'Datespan', 'Javascript');
+    var $helpers = array('Rss', 'Datespan', 'Javascript', 'Ajax');
     var $uses = array('Event', 'Trackback','User', 'Twitter');
 
     /**
@@ -276,6 +276,19 @@ class EventsController extends AppController
         $this->redirect('/events/control');
     }
 
+    function tweets($id)
+    {
+  		header("Cache-Control: no-cache, must-revalidate");
+  		header("Cache-Control: post-check=0, pre-check=0", false);
+  		header("Pragma: no-cache");
+
+  		Configure::write('debug', 0);
+
+  		$this->layout = "ajax";
+      $id = (int)$id;
+      $this->set( 'twitter', $this->Twitter->read(array("%23phpstudy","%23phpstudy_{$id}")) ) ;
+      $this->set( 'twitter_hashtag', "#phpstudy,#phpstudy_{$id}" ) ;
+    }
 }
 
 ?>
