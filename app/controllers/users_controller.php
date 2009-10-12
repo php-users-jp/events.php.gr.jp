@@ -147,11 +147,11 @@ class UsersController extends AppController
             $data = $this->data;
             $this->User->create();
             $savedata = array(
-                'User.username' => $username,
-                'User.provider_url' => $provider_url,
-                'vpassword' => $this->Auth->password(time()),
-                'User.nickname' => $data['User']['nickname'],
-                'User.role' => 'user',
+                'username' => $username,
+                'provider_url' => $provider_url,
+                'password' => $this->Auth->password(time()),
+                'nickname' => $data['User']['nickname'],
+                'role' => 'user',
             );
             $this->User->set($savedata);
             $validates = $this->User->validates();
@@ -160,7 +160,7 @@ class UsersController extends AppController
                 $this->Session->delete('identity_url');
                 $this->Session->setFlash('ニックネームの登録が終了しました。');
 
-                foreach ($savedata['User'] as $key => $value) {
+                foreach ($savedata as $key => $value) {
                     $this->Session->write($key, $value);
                 }
                 $this->Session->write('id', $this->User->getInsertID());
