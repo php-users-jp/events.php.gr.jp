@@ -16,7 +16,8 @@ class EventsController extends AppController
     var $name = 'Event';
     var $helpers = array('Rss', 'Datespan', 'Javascript', 'Ajax');
     var $uses = array('Event', 'Trackback','User', 'Twitter');
-
+    var $components = array('RequestHandler') ;
+    
     /**
      * index
      *
@@ -277,6 +278,10 @@ class EventsController extends AppController
 
     function tweets($id)
     {
+      if ( !$this->RequestHandler->isAjax() ) {
+        $this->redirect( "/events/show/{$id}" ) ;
+        return ;
+      }
   		header("Cache-Control: no-cache, must-revalidate");
   		header("Cache-Control: post-check=0, pre-check=0", false);
   		header("Pragma: no-cache");

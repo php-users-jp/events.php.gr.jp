@@ -18,12 +18,18 @@ class Twitter extends AppModel {
         $q .= $key ; 
       }
     }
-    
+
+//		Cache::set(array('duration' => self::CACHE_DURATION));
 		if (!$tweets = Cache::read($q, 'default')) {
+		  $this->log("TwitterCache MISS({$q})", LOG_ERR) ;
       App::import('Core', 'HttpSocket');
   		$this->Socket = new HttpSocket(self::API_SEARCH);
 		  $tweets = json_decode($this->Socket->get("/search.json?q={$q}&rpp={$rpp}"));
+//		  Cache::set(array('duration' => self::CACHE_DURATION));
+//			Cache::write($q, $tweets, 'default');
 			Cache::write($q, $tweets, array('duration' => self::CACHE_DURATION));
+		} else {
+		  $this->log("TwitterCache HIT({$q})", LOG_ERR ) ;
 		}
 
 		return $tweets ;

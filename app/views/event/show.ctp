@@ -169,10 +169,10 @@ $options = array(
     "loading" => "Element.hide('twitter_controll'); Element.hide('ajax_responce'); Element.show('ajax_loading');",
     "complete" => "Element.show('twitter_controll'); Element.show('ajax_responce'); Element.hide('ajax_loading');",
     );
-echo $ajax->form("/tweets/1", "post", $options);
+echo $ajax->form("/tweets/{$event_id}", "post", $options);
 $remoteFunction = $ajax->remoteFunction( 
 	array( 
-		'url' => array( 'controller' => 'events', 'action' => 'tweets', 1 ),
+		'url' => array( 'controller' => 'events', 'action' => 'tweets', $event_id ),
 		'update' => 'ajax_responce',
 	    "loading" => "Element.hide('twitter_controll'); Element.show('ajax_loading');",
 	    "complete" => "Element.show('twitter_controll'); Element.hide('ajax_loading');",
