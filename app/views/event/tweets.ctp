@@ -1,9 +1,14 @@
 <?php if (isset($twitter->error)) { ?>
 <div class="twitter-error">
-	エラーが発生しました。<br />
-	(<?php e($twitter->error); ?>)
+Twitter is over capacity.<br />
+Too many tweets! Please wait a moment and try again.
 </div>
-<?php } ?>
+<?php } else { ?>
+<?php if ( !is_array($twitter->results) || count($twitter->results)<=0 ) { ?>
+<div class="ajax_loading">
+コメントがありません。
+</div>
+<?php } else { ?>
 <?php foreach ($twitter->results as $tweet) { ?>
 <div class="twitter-post">
 	<div class="twitter-post-image">
@@ -28,4 +33,6 @@
 		); ?>)<br style="clear: both;" />
 	</div>
 </div>
+<?php } ?>
+<?php } ?>
 <?php } ?>
